@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>LippinPharma | Pharmacology</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
     <style>
         /* Premium Pharmacy Theme Base */
         :root {
@@ -65,7 +66,6 @@
         .nav-icon { font-size: 1.3rem; }
         .admin-nav { color: var(--danger) !important; }
 
-        /* Navigation Content Switching Tabs */
         .app-tab { display: none; animation: fadeIn 0.3s ease; }
         .app-tab.active-tab { display: block; }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
@@ -96,7 +96,6 @@
         .wa-btn:hover { transform: scale(1.08); }
         #wa-chat-box { position: absolute; bottom: 68px; right: 0; background: white; width: 280px; border-radius: 12px; box-shadow: 0 8px 30px rgba(0,0,0,0.15); padding: 15px; display: none; flex-direction: column; gap: 10px; border: 1px solid #edf2f7; }
 
-        /* MCQ Quiz Layout Styles */
         .quiz-option { display: block; background: #f8fafc; padding: 12px 15px; border: 1.5px solid #e2e8f0; border-radius: 8px; margin-top: 8px; cursor: pointer; transition: 0.2s; font-weight: 500; font-size: 0.92rem; }
         .quiz-option:hover { background: var(--light-green); border-color: var(--primary-green); }
 
@@ -115,6 +114,1895 @@
 
     <div id="splash-screen">
         <img src="logo.webp" alt="Logo" class="app-logo-splash" onerror="this.src='https://via.placeholder.com/120/069C54/ffffff?text=LP'">
+        <h1 class="splash-title">LippinPharma</h1>
+        <p style="font-size: 0.95rem; opacity: 0.9; margin-top: 5px;">Pharmacology App</p>
+        <div class="spinner"></div>
+        <p style="position: absolute; bottom: 30px; font-size: 0.85rem; opacity: 0.8; font-weight: 500;">Powered by Arfi</p>
+    </div>
+
+    <div id="login-screen" class="center-wrapper hidden">
+        <div class="card-box">
+            <img src="logo.webp" alt="Logo" class="app-logo-form" onerror="this.src='https://via.placeholder.com/70/069C54/ffffff?text=LP'">
+            <h2 style="margin: 0 0 5px 0;">Welcome Back</h2>
+            <p style="color: var(--text-muted); font-size: 0.85rem; margin-bottom: 20px;">Sign in to access your dashboard</p>
+            <div class="input-group"><input type="email" id="email" placeholder="Email Address"></div>
+            <div class="input-group"><input type="password" id="password" placeholder="Password"></div>
+            <button class="btn btn-primary" id="btn-login">Sign In / Sign Up</button>
+            <div class="divider">OR</div>
+            <button class="btn btn-google" id="btn-google">🌐 Continue with Google</button>
+        </div>
+    </div>
+
+    <div id="profile-screen" class="center-wrapper hidden">
+        <div class="card-box">
+            <h2 style="margin: 0 0 5px 0;">Setup Profile</h2>
+            <p style="color: var(--text-muted); font-size: 0.85rem; margin-bottom: 10px;">Complete registration for admin dashboard records</p>
+            
+            <input type="file" id="prof-pic-input" accept="image/*" style="display:none !important;">
+            <div class="profile-pic-container" id="prof-pic-preview">
+                <span>📷</span><div>Add Photo</div>
+            </div>
+            
+            <div class="input-group"><input type="text" id="prof-name" placeholder="Full Name" required></div>
+            <div class="input-group"><input type="tel" id="prof-phone" placeholder="Mobile / WhatsApp" required></div>
+            <div class="input-group"><input type="text" id="prof-college" placeholder="College Name" required></div>
+            <button class="btn btn-primary" id="btn-save-profile" style="margin-top: 10px;">Save Profile</button>
+        </div>
+    </div>
+
+    <div id="dashboard-screen" class="hidden">
+        
+        <div class="main-content">
+            
+            <div id="tab-home" class="app-tab active-tab">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+                    <h2 style="margin:0; color: var(--dark-green);" id="welcome-title">Dashboard</h2>
+                    <div id="dashboard-user-pic" style="width: 45px; height: 45px; border-radius: 50%; background-size:cover; border:2px solid var(--primary-green); background-image:url('https://via.placeholder.com/45')"></div>
+                </div>
+                
+                <div style="background: linear-gradient(135deg, var(--primary-green), var(--dark-green)); color: white; padding: 25px 20px; border-radius: 12px; margin-bottom: 20px; box-shadow: 0 8px 20px rgba(6, 156, 84, 0.25);">
+                    <h3 style="margin: 0 0 5px 0; font-size: 1.3rem;">Today's Target</h3>
+                    <p style="margin: 0; font-size: 0.9rem; opacity: 0.9;">10 New automated daily MCQs generated from Lippincott text guidelines.</p>
+                    <button onclick="switchTab('tab-tests')" style="background: white; color: var(--primary-green); border: none; padding: 10px 20px; border-radius: 6px; font-weight: bold; margin-top: 15px; cursor: pointer;">Take Daily Quiz ⏱️</button>
+                </div>
+                <h3 style="color: var(--text-dark); margin-bottom: 12px; font-size: 1.1rem;">Latest Uploads</h3>
+                <div id="home-recent-activity"><p style="font-size:0.85rem; color:var(--text-muted);">Syncing platform activity feed...</p></div>
+            </div>
+
+            <div id="tab-lectures" class="app-tab">
+                <h2 style="color: var(--dark-green); margin-bottom: 15px;">Smart Lectures</h2>
+                <div class="input-group" style="margin-bottom: 20px;">
+                    <input type="text" id="search-lectures" placeholder="🔍 Search topics (e.g. Kinetics, Autonomic)..." style="border-radius: 25px; padding-left: 20px; border: 2px solid var(--primary-green);">
+                </div>
+                <div id="lectures-container"></div>
+            </div>
+
+            <div id="tab-material" class="app-tab">
+                <h2 style="color: var(--dark-green); margin-bottom: 15px;">Study Material</h2>
+                <p style="color: var(--text-muted); font-size: 0.9rem; margin-bottom: 20px;">Download textbooks summaries, PDFs, and presentation slides uploaded by admin.</p>
+                <div id="materials-container"><p style="font-size:0.9rem; color:var(--text-muted);">Loading downloadable items...</p></div>
+            </div>
+
+            <div id="tab-tests" class="app-tab">
+                <h2 style="color: var(--dark-green); margin-bottom: 10px;">Testing Framework</h2>
+                
+                <div class="content-card" style="background: var(--light-green); border: 1px dashed var(--primary-green);">
+                    <h3 style="margin-top:0; color: var(--dark-green); font-size:1.1rem;">⚡ Custom Test Generator</h3>
+                    <p style="font-size:0.8rem; margin: -5px 0 15px 0; color: var(--text-dark);">Enter your Lippincott topic name and number of questions to generate an instant mock quiz.</p>
+                    <div style="display: flex; gap:10px; margin-bottom:10px; flex-wrap: wrap;">
+                        <input type="text" id="ai-topic" placeholder="Topic Name (e.g., Beta-Blockers)" style="flex:2; min-width:180px;">
+                        <input type="number" id="ai-count" placeholder="Count" min="1" max="20" value="5" style="flex:1; min-width:70px;">
+                    </div>
+                    <button class="btn btn-primary" id="btn-generate-ai-test">Generate Quiz 🚀</button>
+                </div>
+
+                <div class="content-card" id="quiz-block-space">
+                    <h3 id="quiz-title-heading" style="margin-top:0; color:var(--primary-green);">Daily Evaluation Test</h3>
+                    <div id="quiz-render-area"><p style="font-size:0.9rem; color:var(--text-muted);">Select or generate a quiz structure to begin evaluation parameters.</p></div>
+                </div>
+            </div>
+
+            <div id="tab-profile" class="app-tab">
+                <h2 style="color: var(--dark-green); margin-bottom: 20px;">User Profile</h2>
+                <div class="content-card" style="text-align: center;">
+                    <div id="profile-page-pic" style="width: 100px; height: 100px; border-radius: 50%; background-size:cover; margin: 0 auto 15px auto; border:3px solid var(--primary-green); background-image:url('https://via.placeholder.com/100')"></div>
+                    <h3 id="profile-page-name" style="margin:0 0 5px 0;">Student Record</h3>
+                    <p id="profile-page-email" style="margin:0 0 15px 0; color:var(--text-muted); font-size:0.9rem;"></p>
+                    
+                    <button class="btn btn-google" id="btn-edit-profile-trigger" style="max-width: 200px; margin: 0 auto 15px auto;">✏️ Edit Profile</button>
+                    
+                    <div id="edit-profile-form" class="hidden" style="text-align: left; background: #f8fafc; padding: 15px; border-radius: 12px; margin-bottom: 15px; border: 1px solid #e2e8f0;">
+                        <h4 style="margin-top: 0; color: var(--dark-green);">Update Information</h4>
+                        <div class="input-group"><label>Full Name</label><input type="text" id="edit-prof-name"></div>
+                        <div class="input-group"><label>Mobile / WhatsApp</label><input type="tel" id="edit-prof-phone"></div>
+                        <div class="input-group"><label>College Name</label><input type="text" id="edit-prof-college"></div>
+                        <button class="btn btn-primary" id="btn-update-profile">Save Changes</button>
+                        <button class="btn btn-google" id="btn-cancel-edit" style="margin-top: 10px;">Cancel</button>
+                    </div>
+
+                    <button class="btn btn-danger" id="btn-logout" style="margin-top: 10px; max-width:200px; margin-left:auto; margin-right:auto;">🚪 Logout Securely</button>
+                </div>
+                
+                <div class="content-card" style="text-align: left; margin-top: 15px;">
+                    <h3 style="color: var(--dark-green); margin-top: 0;">My Queries & Replies</h3>
+                    <div id="student-queries-list"><p style="font-size:0.85rem; color:var(--text-muted);">Loading queries...</p></div>
+                </div>
+            </div>
+
+            <div id="tab-admin" class="app-tab">
+                <div class="admin-header">
+                    <h2 style="margin:0; color:var(--danger);">Admin Control Workspace</h2>
+                    <p style="margin:2px 0 0 0; font-size:0.82rem;">Superuser Portal Node Enabled. Hello Arfi.</p>
+                </div>
+
+                <div class="content-card" style="border: 1px solid var(--primary-green);">
+                    <h3 style="margin-top:0; font-size:1rem; color:var(--primary-green);">📝 Compose Smart Topic Note</h3>
+                    <p style="font-size:0.8rem; margin: -5px 0 15px 0; color: var(--text-dark);">Type simple text. System will auto-design it into a colorful downloadable PDF for students.</p>
+                    <div class="input-group"><input type="text" id="admin-note-title" placeholder="Topic Title (e.g. ANS Introduction)"></div>
+                    <div class="input-group"><textarea id="admin-note-content" rows="5" placeholder="Write or paste your simple text here..."></textarea></div>
+                    <button class="btn btn-primary" id="btn-compose-note">Publish Smart PDF Note</button>
+                </div>
+
+                <div class="content-card" style="border: 1px solid var(--danger);">
+                    <h3 style="margin-top:0; font-size:1rem; color:var(--danger);">🔑 Generator API Key Configuration</h3>
+                    <div class="input-group"><input type="text" id="admin-gemini-input" placeholder="Paste active API cloud token"></div>
+                    <button class="btn btn-danger" id="btn-save-gemini">Sync & Deploy New Key Live</button>
+                </div>
+
+                <div class="content-card">
+                    <h3 style="margin-top:0; font-size:1rem;">🛠️ Manage Published Content</h3>
+                    <h4 style="margin:5px 0; color:var(--primary-green);">Lectures</h4>
+                    <div id="admin-manage-lectures"></div>
+                    <h4 style="margin:15px 0 5px 0; color:var(--primary-green);">Study Materials & Notes</h4>
+                    <div id="admin-manage-materials"></div>
+                </div>
+
+                <div class="content-card">
+                    <h3 style="margin-top:0; font-size:1rem;">🔔 System Notifications</h3>
+                    <div id="admin-notifications-list"></div>
+                </div>
+
+                <div class="content-card">
+                    <h3 style="margin-top:0; font-size:1rem;">Add Video Lecture Node</h3>
+                    <div class="input-group"><input type="text" id="admin-lec-title" placeholder="Lecture Title / Index Key"></div>
+                    <div class="input-group"><input type="url" id="admin-lec-link" placeholder="YouTube URL Link"></div>
+                    <button class="btn btn-primary" id="btn-add-lecture">Publish Video Node</button>
+                </div>
+
+                <div class="content-card">
+                    <h3 style="margin-top:0; font-size:1rem;">Upload External PDF / PPT</h3>
+                    <div class="input-group"><input type="text" id="admin-mat-title" placeholder="Material Item Title"></div>
+                    <div class="input-group" style="background: #f8fafc; padding: 10px; border-radius: 8px; border: 1px dashed var(--primary-green);">
+                        <input type="file" id="admin-mat-file" accept=".pdf,.ppt,.pptx,.doc,.docx">
+                        <div style="text-align: center; margin: 5px 0; font-size: 0.8rem; font-weight: bold; color: gray;">OR</div>
+                        <input type="url" id="admin-mat-link" placeholder="Paste Direct Link Here">
+                    </div>
+                    <button class="btn btn-primary" id="btn-add-material">Upload External File</button>
+                </div>
+
+                <div class="content-card">
+                    <h3 style="margin-top:0; font-size:1rem;">Student Comments Feed</h3>
+                    <div id="admin-comments-list"></div>
+                </div>
+
+                <div class="content-card">
+                    <h3 style="margin-top:0; font-size:1rem;">Users Log Directory</h3>
+                    <div class="input-group" style="margin-bottom: 15px;">
+                        <input type="text" id="admin-search-users" placeholder="🔍 Search students..." style="border: 1.5px solid var(--danger);">
+                    </div>
+                    <div id="admin-users-list"><p style="font-size:0.85rem; color:var(--text-muted);">Loading log records...</p></div>
+                </div>
+                <button class="btn btn-danger" id="btn-admin-logout" style="margin-top: 15px;">🚪 Terminate Control Session</button>
+            </div>
+        </div>
+
+        <div class="nav-bar">
+            <div class="nav-item active" onclick="switchTab('tab-home', this)">
+                <span class="nav-icon">🏠</span><span>Home</span>
+            </div>
+            <div class="nav-item" onclick="switchTab('tab-lectures', this)">
+                <span class="nav-icon">📺</span><span>Lectures</span>
+            </div>
+            <div class="nav-item" onclick="switchTab('tab-material', this)">
+                <span class="nav-icon">📥</span><span>Material</span>
+            </div>
+            <div class="nav-item" onclick="switchTab('tab-tests', this)">
+                <span class="nav-icon">📝</span><span>Tests</span>
+            </div>
+            <div class="nav-item" onclick="switchTab('tab-profile', this)">
+                <span class="nav-icon">👤</span><span>Profile</span>
+            </div>
+            <div class="nav-item hidden" id="admin-nav-item" onclick="switchTab('tab-admin', this)">
+                <span class="nav-icon">⚙️</span><span class="admin-nav">Admin</span>
+            </div>
+        </div>
+    </div>
+
+    <div id="wa-widget">
+        <div id="wa-chat-box">
+            <h4 style="margin:0 0 5px 0; color:var(--dark-green);">Direct Line Helpdesk</h4>
+            <textarea id="wa-msg-text" rows="3" placeholder="Write your urgent message query here..."></textarea>
+            <button class="btn btn-primary" id="btn-send-wa" style="background:var(--whatsapp);">Launch WhatsApp Secure</button>
+        </div>
+        <div class="wa-btn" id="wa-toggle-btn">
+            <svg viewBox="0 0 448 512"><path d="M380.9 97.1C339 55.1 283.2 32 223.9 32c-122.4 0-222 99.6-222 222 0 39.1 10.2 77.3 29.6 111L0 480l117.7-30.9c32.4 17.7 68.9 27 106.1 27h.1c122.3 0 224.1-99.6 224.1-222 0-59.3-25.2-115-67.1-157zm-157 341.6c-33.2 0-65.7-8.9-94-25.7l-6.7-4-69.8 18.3L72 359.2l-4.4-7c-18.5-29.4-28.2-63.3-28.2-98.2 0-101.7 82.8-184.5 184.6-184.5 49.3 0 95.6 19.2 130.4 54.1 34.8 34.9 56.2 81.2 56.1 130.5 0 101.8-84.9 184.6-186.6 184.6zm101.2-138.2c-5.5-2.8-32.8-16.2-37.9-18-5.1-1.9-8.8-2.8-12.5 2.8-3.7 5.6-14.3 18-17.6 21.8-3.2 3.7-6.5 4.2-12 1.4-32.6-16.3-54-29.1-75.5-66-5.7-9.8 5.7-9.1 16.3-30.3 1.8-3.7.9-6.9-.5-9.7-1.4-2.8-12.5-30.1-17.1-41.2-4.5-10.8-9.1-9.3-12.5-9.5-3.2-.2-6.9-.2-10.6-.2-3.7 0-9.7 1.4-14.8 6.9-5.1 5.6-19.4 19-19.4 46.3 0 27.3 19.9 53.7 22.6 57.4 2.8 3.7 39.1 59.7 94.8 83.8 35.2 15.2 49 16.5 66.6 13.9 10.7-1.6 32.8-13.4 37.4-26.4 4.6-13 4.6-24.1 3.2-26.4-1.3-2.5-5-3.9-10.5-6.6z"/></svg>
+        </div>
+    </div>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/12.15.0/firebase-app.js";
+        import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, signInWithPopup, GoogleAuthProvider, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/12.15.0/firebase-auth.js";
+        import { getFirestore, doc, setDoc, getDoc, collection, addDoc, getDocs, updateDoc, deleteDoc } from "https://www.gstatic.com/firebasejs/12.15.0/firebase-firestore.js";
+        import { getStorage, ref, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/12.15.0/firebase-storage.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyDzXX21yLZHWagjZ9G8L6R5OIcJBPPhRcg",
+            authDomain: "lippinpharma-e758f.firebaseapp.com",
+            projectId: "lippinpharma-e758f",
+            storageBucket: "lippinpharma-e758f.firebasestorage.app",
+            messagingSenderId: "828017458601",
+            appId: "1:828017458601:web:ae687eea3978a7002198b8"
+        };
+
+        // User Provided Base Key
+        let GEMINI_API_KEY = "AQ.Ab8RN6LDULmCGLDIll0iV_ypEW4ZGuHipGDIaDz5oq4bdjBhMg";
+
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getFirestore(app);
+        const storage = getStorage(app);
+        const provider = new GoogleAuthProvider();
+
+        let currentUser = null;
+        let currentUserData = null;
+        let selectedFile = null;
+        let allLectures = [];
+        let adminAllUsers = [];
+
+        window.showToast = function(message, type = 'success') {
+            const box = document.getElementById('notification-box');
+            document.getElementById('noti-msg').innerText = message;
+            box.className = type === 'success' ? 'noti-success show' : 'noti-error show';
+            document.getElementById('noti-icon').innerText = type === 'success' ? '✅' : '⚠️';
+            setTimeout(() => { box.classList.remove('show'); }, 4000);
+        }
+
+        window.switchTab = function(tabId, element = null) {
+            document.querySelectorAll('.app-tab').forEach(t => t.classList.remove('active-tab'));
+            document.getElementById(tabId).classList.add('active-tab');
+            if(element) {
+                document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+                element.classList.add('active');
+            }
+        }
+
+        // --- PDF Generation System For Composed Notes ---
+        window.downloadComposedPDF = function(title, content) {
+            showToast("Designing and compiling PDF. Please wait...", "success");
+            const element = document.createElement('div');
+            // Premium PDF Styling Template
+            element.innerHTML = `
+                <div style="padding: 40px; font-family: 'Segoe UI', Arial, sans-serif; color: #2d3748; background: #ffffff;">
+                    <div style="text-align: center; border-bottom: 3px solid #069C54; padding-bottom: 15px; margin-bottom: 30px;">
+                        <h1 style="color: #047840; margin: 0; font-size: 28px;">${title}</h1>
+                        <p style="color: #718096; margin: 5px 0 0 0; font-size: 14px;">Official Study Material</p>
+                    </div>
+                    <div style="font-size: 16px; line-height: 1.8; color: #2d3748; white-space: pre-wrap; text-align: justify;">
+                        ${content}
+                    </div>
+                    <div style="margin-top: 50px; text-align: center; border-top: 1px solid #e2e8f0; padding-top: 20px;">
+                        <p style="color: #069C54; font-weight: bold; margin: 0; font-size:18px;">Powered by LippinPharma App</p>
+                        <p style="color: #718096; font-size: 12px; margin: 5px 0 0 0;">Prepared specially for UHS 3rd Semester Students</p>
+                    </div>
+                </div>
+            `;
+            
+            const opt = {
+                margin:       0.5,
+                filename:     `${title}.pdf`,
+                image:        { type: 'jpeg', quality: 0.98 },
+                html2canvas:  { scale: 2 },
+                jsPDF:        { unit: 'in', format: 'letter', orientation: 'portrait' }
+            };
+            
+            html2pdf().set(opt).from(element).save().then(() => {
+                showToast("PDF Downloaded successfully!", "success");
+            });
+        }
+
+        // WhatsApp Setup
+        document.getElementById('wa-toggle-btn').addEventListener('click', () => {
+            const box = document.getElementById('wa-chat-box');
+            box.style.display = box.style.display === 'flex' ? 'none' : 'flex';
+        });
+
+        document.getElementById('btn-send-wa').addEventListener('click', () => {
+            const customQuery = document.getElementById('wa-msg-text').value;
+            const sName = currentUserData ? currentUserData.name : "Student";
+            const textString = `Hi This is ${sName} here from LippinPharma.`;
+            const targetURI = `https://wa.me/923156765582?text=${encodeURIComponent(textString + (customQuery ? "\nQuery: " + customQuery : ""))}`;
+            window.open(targetURI, '_blank');
+            document.getElementById('wa-msg-text').value = '';
+            document.getElementById('wa-chat-box').style.display = 'none';
+        });
+
+        function getYouTubeEmbedUrl(urlStr) {
+            if(!urlStr) return "";
+            let regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=)([^#\&\?]*).*/;
+            let match = urlStr.match(regExp);
+            if (match && match[2].length === 11) {
+                return `https://www.youtube.com/embed/${match[2]}?modestbranding=1&rel=0&showinfo=0&controls=1`;
+            }
+            return urlStr;
+        }
+
+        const fileInput = document.getElementById('prof-pic-input');
+        const picContainerFrame = document.getElementById('prof-pic-preview');
+
+        if(picContainerFrame) {
+            picContainerFrame.addEventListener('click', () => fileInput.click());
+        }
+        
+        fileInput.addEventListener('change', (e) => {
+            const file = e.target.files[0];
+            if(file) {
+                selectedFile = file;
+                const reader = new FileReader();
+                reader.onload = event => {
+                    picContainerFrame.style.backgroundImage = `url(${event.target.result})`;
+                    picContainerFrame.innerHTML = ''; 
+                }
+                reader.readAsDataURL(file);
+            }
+        });
+
+        const SESSION_TIMEOUT = 30 * 60 * 1000;
+        function pingSession() { localStorage.setItem('sessionTick', Date.now()); }
+        document.addEventListener('click', pingSession);
+        document.addEventListener('keypress', pingSession);
+
+        function verifyActiveSession() {
+            const timestamp = localStorage.getItem('sessionTick');
+            if(timestamp && (Date.now() - parseInt(timestamp) > SESSION_TIMEOUT)) {
+                if(auth.currentUser) {
+                    signOut(auth).then(() => {
+                        localStorage.clear();
+                        alert("Session closed due to inactivity. Login required.");
+                        window.location.reload();
+                    });
+                }
+            } else pingSession();
+        }
+
+        async function runCloudGeminiSync() {
+            try {
+                const configSnap = await getDoc(doc(db, "settings", "config"));
+                if(configSnap.exists() && configSnap.data().geminiKey) {
+                    GEMINI_API_KEY = configSnap.data().geminiKey;
+                }
+            } catch(e) { console.log("Baseline Key Engaged."); }
+            
+            if(auth.currentUser && auth.currentUser.email === "uarajpoot31@gmail.com") {
+                document.getElementById('admin-gemini-input').value = GEMINI_API_KEY;
+            }
+        }
+
+        setTimeout(() => {
+            onAuthStateChanged(auth, async (user) => {
+                document.getElementById('splash-screen').style.opacity = '0';
+                setTimeout(() => { document.getElementById('splash-screen').style.display = 'none'; }, 600);
+                if (user) {
+                    verifyActiveSession();
+                    currentUser = user;
+                    await runCloudGeminiSync();
+                    checkUserProfile(user);
+                } else {
+                    document.getElementById('login-screen').classList.remove('hidden');
+                }
+            });
+        }, 2000);
+
+        async function checkUserProfile(user) {
+            const snap = await getDoc(doc(db, "users", user.uid));
+            if(snap.exists()) {
+                currentUserData = snap.data();
+                if(currentUserData.isBlocked === true) {
+                    showToast("⛔ Access Denied: Your account has been blocked by Admin.", "error");
+                    setTimeout(() => { signOut(auth).then(() => { localStorage.clear(); window.location.reload(); }); }, 2500);
+                    return;
+                }
+
+                if(user.email === "uarajpoot31@gmail.com") {
+                    document.getElementById('admin-nav-item').classList.remove('hidden');
+                    fetchAdminDirectory();
+                    fetchAdminManageContent(); 
+                }
+
+                updateProfileUI(currentUserData, user.email);
+                document.getElementById('login-screen').classList.add('hidden');
+                document.getElementById('profile-screen').classList.add('hidden');
+                document.getElementById('dashboard-screen').classList.remove('hidden');
+                document.getElementById('wa-widget').style.display = 'block';
+                
+                fetchLectures(); fetchMaterials(); fetchStudentQueries(); runDailyAIQuizSync(); 
+            } else {
+                document.getElementById('login-screen').classList.add('hidden');
+                document.getElementById('profile-screen').classList.remove('hidden');
+            }
+        }
+
+        function updateProfileUI(data, email) {
+            document.getElementById('welcome-title').innerText = `Hi, ${data.name}`;
+            document.getElementById('profile-page-name').innerText = data.name;
+            document.getElementById('profile-page-email').innerText = email;
+            const srcPic = data.profilePic || "https://via.placeholder.com/150";
+            document.getElementById('dashboard-user-pic').style.backgroundImage = `url(${srcPic})`;
+            document.getElementById('profile-page-pic').style.backgroundImage = `url(${srcPic})`;
+        }
+
+        document.getElementById('btn-edit-profile-trigger').addEventListener('click', () => {
+            document.getElementById('edit-profile-form').classList.remove('hidden');
+            document.getElementById('btn-edit-profile-trigger').classList.add('hidden');
+            document.getElementById('edit-prof-name').value = currentUserData.name || '';
+            document.getElementById('edit-prof-phone').value = currentUserData.phone || '';
+            document.getElementById('edit-prof-college').value = currentUserData.college || '';
+        });
+
+        document.getElementById('btn-cancel-edit').addEventListener('click', () => {
+            document.getElementById('edit-profile-form').classList.add('hidden');
+            document.getElementById('btn-edit-profile-trigger').classList.remove('hidden');
+        });
+
+        document.getElementById('btn-update-profile').addEventListener('click', async () => {
+            const newName = document.getElementById('edit-prof-name').value;
+            const newPhone = document.getElementById('edit-prof-phone').value;
+            const newCollege = document.getElementById('edit-prof-college').value;
+            if(!newName || !newPhone || !newCollege) return showToast("All fields are required.", "error");
+
+            let changes = [];
+            if(newName !== currentUserData.name) changes.push(`Name: ${currentUserData.name} ➡️ ${newName}`);
+            if(newPhone !== currentUserData.phone) changes.push(`Phone: ${currentUserData.phone} ➡️ ${newPhone}`);
+            if(newCollege !== currentUserData.college) changes.push(`College: ${currentUserData.college} ➡️ ${newCollege}`);
+            if(changes.length === 0) return showToast("No changes detected.", "error");
+
+            showToast("Updating profile...", "success");
+            try {
+                await updateDoc(doc(db, "users", currentUser.uid), { name: newName, phone: newPhone, college: newCollege });
+                await addDoc(collection(db, "notifications"), { studentEmail: currentUser.email, studentName: currentUserData.name, message: changes.join(" | "), date: new Date().toISOString() });
+                currentUserData.name = newName; currentUserData.phone = newPhone; currentUserData.college = newCollege;
+                updateProfileUI(currentUserData, currentUser.email);
+                document.getElementById('edit-profile-form').classList.add('hidden');
+                document.getElementById('btn-edit-profile-trigger').classList.remove('hidden');
+                if(currentUser.email === "uarajpoot31@gmail.com") fetchAdminNotifications();
+            } catch (error) { showToast(`Update failed: ${error.message}`, "error"); }
+        });
+
+        async function fetchLectures() {
+            const snap = await getDocs(collection(db, "lectures"));
+            allLectures = [];
+            let html = '';
+            snap.forEach(doc => {
+                let data = doc.data();
+                allLectures.push({ id: doc.id, ...data });
+                let secureEmbed = getYouTubeEmbedUrl(data.link);
+                html += `
+                <div class="content-card">
+                    <div class="video-container"><iframe src="${secureEmbed}" allowfullscreen></iframe></div>
+                    <h4 style="margin:5px 0; font-size:1.05rem;">${data.title}</h4>
+                    <div class="comment-box">
+                        <input type="text" id="cmt-${doc.id}" class="comment-input" placeholder="Ask a question about this topic...">
+                        <button class="btn-comment" onclick="postCommentNode('${doc.id}', '${data.title}')">Post</button>
+                    </div>
+                </div>`;
+            });
+            document.getElementById('lectures-container').innerHTML = html || "<p style='font-size:0.9rem; color:gray;'>No video files live.</p>";
+        }
+
+        document.getElementById('search-lectures').addEventListener('input', (e) => {
+            let key = e.target.value.toLowerCase();
+            let matches = allLectures.filter(l => l.title.toLowerCase().includes(key));
+            let html = '';
+            matches.forEach(data => {
+                let secureEmbed = getYouTubeEmbedUrl(data.link);
+                html += `
+                <div class="content-card">
+                    <div class="video-container"><iframe src="${secureEmbed}" allowfullscreen></iframe></div>
+                    <h4 style="margin:5px 0;">${data.title}</h4>
+                </div>`;
+            });
+            document.getElementById('lectures-container').innerHTML = html;
+        });
+
+        // FETCH MATERIALS (Handling both Files and Composed Auto-PDFs)
+        async function fetchMaterials() {
+            const snap = await getDocs(collection(db, "materials"));
+            let html = '';
+            snap.forEach(doc => {
+                let item = doc.data();
+                let isComposed = item.type === 'composed';
+                let actionBtn = isComposed ? 
+                    `<button onclick="downloadComposedPDF('${item.title}', \`${item.content.replace(/`/g, "\\`")}\`)" style="background:var(--primary-green); color:white; border:none; padding:8px 14px; border-radius:6px; font-size:0.82rem; font-weight:bold; cursor:pointer;">Auto-PDF ⬇️</button>` :
+                    `<a href="${item.fileUrl}" target="_blank" download style="background:var(--primary-green); color:white; text-decoration:none; padding:8px 14px; border-radius:6px; font-size:0.82rem; font-weight:bold; display:inline-block;">Download</a>`;
+                
+                html += `
+                <div class="content-card" style="display:flex; justify-content:space-between; align-items:center;">
+                    <div>
+                        <div style="font-weight:600; color:var(--text-dark);">${isComposed ? '📝' : '📄'} ${item.title}</div>
+                        <div style="font-size:0.75rem; color:var(--text-muted);">${isComposed ? 'Smart Format Topic Note' : 'Admin File Asset'}</div>
+                    </div>
+                    ${actionBtn}
+                </div>`;
+            });
+            document.getElementById('materials-container').innerHTML = html || "<p style='font-size:0.9rem; color:gray;'>No learning file packages cataloged.</p>";
+        }
+
+        window.postCommentNode = async function(lecId, lecTitle) {
+            let val = document.getElementById(`cmt-${lecId}`).value;
+            if(!val) return;
+            showToast("Submitting comment...");
+            await addDoc(collection(db, "comments"), {
+                lectureId: lecId, lectureTitle: lecTitle, studentEmail: currentUser.email,
+                studentName: currentUserData.name, text: val, date: new Date().toISOString(), adminReply: ""
+            });
+            document.getElementById(`cmt-${lecId}`).value = '';
+            showToast("Sent to Admin!");
+            fetchStudentQueries(); 
+        }
+
+        async function fetchStudentQueries() {
+            const snap = await getDocs(collection(db, "comments"));
+            let html = '';
+            snap.forEach(doc => {
+                let c = doc.data();
+                if(c.studentEmail === currentUser.email) {
+                    html += `
+                    <div style="background: #f8fafc; padding: 12px; border-radius: 8px; margin-bottom: 10px; border-left: 3px solid var(--primary-green);">
+                        <div style="font-size:0.75rem; color:gray; margin-bottom:5px;">Topic: ${c.lectureTitle}</div>
+                        <div style="font-size:0.9rem; font-weight:600; margin: 4px 0; color:var(--text-dark);">Q: ${c.text}</div>
+                        <div style="font-size:0.85rem; color: ${c.adminReply ? 'var(--dark-green)' : '#e53e3e'}; margin-top:8px; padding-top:8px; border-top:1px dashed #e2e8f0;">
+                            <b>Admin Reply:</b> ${c.adminReply ? c.adminReply : '<i>Pending response...</i>'}
+                        </div>
+                    </div>`;
+                }
+            });
+            document.getElementById('student-queries-list').innerHTML = html || "<p style='font-size:0.8rem; color:gray;'>You haven't asked any questions yet.</p>";
+        }
+
+        // --- UPDATED ERROR HANDLING GEMINI MODEL ---
+        async function queryGeminiModel(promptMessage) {
+            if(!GEMINI_API_KEY) return "ERROR";
+            try {
+                let endpoint = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${GEMINI_API_KEY}`;
+                let response = await fetch(endpoint, {
+                    method: 'POST', headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ contents: [{ parts: [{ text: promptMessage }] }] })
+                });
+                let data = await response.json();
+                return data.candidates[0].content.parts[0].text;
+            } catch (e) { return "ERROR"; }
+        }
+
+        async function runDailyAIQuizSync() {
+            let todayKey = new Date().toISOString().split('T')[0];
+            let checkDoc = await getDoc(doc(db, "daily_quizzes", todayKey));
+            if(checkDoc.exists()) {
+                renderEvaluationBlock(checkDoc.data().questions);
+            } else {
+                let requestInstruction = `Generate exactly 10 medical multiple choice questions for nursing students based strictly on Lippincott Pharmacology. Output must be a valid JSON array. Format pattern: [{"question": "Text?", "options": ["A", "B", "C", "D"], "correctIndex": 0}].`;
+                let rawAIString = await queryGeminiModel(requestInstruction);
+                if(rawAIString !== "ERROR") {
+                    let s = rawAIString.indexOf('[');
+                    let e = rawAIString.lastIndexOf(']');
+                    if(s !== -1 && e !== -1) {
+                        try {
+                            let parsedArr = JSON.parse(rawAIString.substring(s, e + 1));
+                            await setDoc(doc(db, "daily_quizzes", todayKey), { questions: parsedArr, generatedAt: todayKey });
+                            renderEvaluationBlock(parsedArr);
+                        } catch(err) { console.log("Daily JSON parse fail."); }
+                    }
+                }
+            }
+        }
+
+        document.getElementById('btn-generate-ai-test').addEventListener('click', async () => {
+            let targetTopic = document.getElementById('ai-topic').value;
+            let targetCount = document.getElementById('ai-count').value || 5;
+            if(!targetTopic) return showToast("Topic name blank.", "error");
+            showToast("Analyzing request matrix...");
+
+            let strictRulePrompt = `You are a validator for Lippincott Pharmacology. The user wants ${targetCount} multiple choice questions about "${targetTopic}". CRITICAL SECURITY CHECK: If "${targetTopic}" is completely unrelated to pharmacology, medicine, or drugs, you must reply exactly with the single word ERROR. If valid, generate questions as a clean JSON array structure: [{"question": "Query", "options": ["1","2","3","4"], "correctIndex": 0}].`;
+            
+            let resultPayload = await queryGeminiModel(strictRulePrompt);
+            if(resultPayload.includes("ERROR") || resultPayload === "ERROR") {
+                return showToast("⚠️ Unexpected error. Invalid API Key or Out of scope topic.", "error");
+            }
+
+            // Safe JSON Extraction
+            let s = resultPayload.indexOf('[');
+            let e = resultPayload.lastIndexOf(']');
+            if(s !== -1 && e !== -1) {
+                try {
+                    let quizData = JSON.parse(resultPayload.substring(s, e + 1));
+                    document.getElementById('quiz-title-heading').innerText = `Custom Quiz: ${targetTopic}`;
+                    renderEvaluationBlock(quizData);
+                    showToast("Test generated successfully.");
+                } catch (jsonErr) { showToast("⚠️ Unexpected error in format.", "error"); }
+            } else {
+                showToast("⚠️ Unexpected error generating quiz.", "error");
+            }
+        });
+
+        function renderEvaluationBlock(questionsArray) {
+            let container = document.getElementById('quiz-render-area');
+            let html = '';
+            questionsArray.forEach((q, idx) => {
+                html += `
+                <div style="margin-bottom:15px; border-bottom:1px solid #f1f5f9; padding-bottom:12px;">
+                    <div style="font-weight:600; font-size:0.95rem;">Q${idx+1}: ${q.question}</div>`;
+                q.options.forEach((opt, oIdx) => {
+                    html += `<div class="quiz-option" onclick="evaluateSelectionNode(this, ${oIdx}, ${q.correctIndex})">${opt}</div>`;
+                });
+                html += `</div>`;
+            });
+            container.innerHTML = html;
+        }
+
+        window.evaluateSelectionNode = function(el, selectedIndex, targetCorrectIndex) {
+            let parent = el.parentNode;
+            let options = parent.querySelectorAll('.quiz-option');
+            options.forEach(o => o.style.pointerEvents = 'none'); 
+            if(selectedIndex === targetCorrectIndex) {
+                el.style.background = '#d1fae5'; el.style.borderColor = 'var(--primary-green)';
+            } else {
+                el.style.background = '#fee2e2'; el.style.borderColor = 'var(--danger)';
+                options[targetCorrectIndex].style.background = '#d1fae5';
+            }
+        }
+
+        // ==========================================
+        // ADMINISTRATIVE ACTIONS
+        // ==========================================
+        
+        // NEW FEATURE: Admin Compose Note to Auto-PDF
+        document.getElementById('btn-compose-note').addEventListener('click', async () => {
+            let t = document.getElementById('admin-note-title').value;
+            let c = document.getElementById('admin-note-content').value;
+            if(!t || !c) return showToast("Title and content required.", "error");
+            
+            showToast("Publishing Smart Note...");
+            await addDoc(collection(db, "materials"), {
+                title: t, content: c, type: 'composed', timestamp: new Date().toISOString()
+            });
+            showToast("Smart Note published for students!", "success");
+            document.getElementById('admin-note-title').value = '';
+            document.getElementById('admin-note-content').value = '';
+            fetchMaterials(); fetchAdminManageContent();
+        });
+
+        document.getElementById('btn-save-gemini').addEventListener('click', async () => {
+            let inputKey = document.getElementById('admin-gemini-input').value;
+            if(!inputKey) return showToast("API Key cannot be blank.", "error");
+            showToast("Deploying Key...");
+            try {
+                await setDoc(doc(db, "settings", "config"), { geminiKey: inputKey.trim(), updatedAt: new Date().toISOString() });
+                GEMINI_API_KEY = inputKey.trim();
+                showToast("Key successfully pushed live!", "success");
+            } catch(e) { showToast(`Failed: ${e.message}`, "error"); }
+        });
+
+        async function fetchAdminManageContent() {
+            const lecSnap = await getDocs(collection(db, "lectures"));
+            let lHtml = '';
+            lecSnap.forEach(d => {
+                lHtml += `<div class="admin-manage-item">
+                    <span style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 70%;">▶️ ${d.data().title}</span>
+                    <button class="btn-delete" onclick="deleteLectureNode('${d.id}')">🗑️ Delete</button>
+                </div>`;
+            });
+            document.getElementById('admin-manage-lectures').innerHTML = lHtml || "<p style='font-size:0.8rem; color:gray;'>No lectures found.</p>";
+
+            const matSnap = await getDocs(collection(db, "materials"));
+            let mHtml = '';
+            matSnap.forEach(d => {
+                mHtml += `<div class="admin-manage-item">
+                    <span style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 70%;">📄 ${d.data().title}</span>
+                    <button class="btn-delete" onclick="deleteMaterialNode('${d.id}')">🗑️ Delete</button>
+                </div>`;
+            });
+            document.getElementById('admin-manage-materials').innerHTML = mHtml || "<p style='font-size:0.8rem; color:gray;'>No materials found.</p>";
+        }
+
+        window.deleteLectureNode = async function(id) {
+            if(confirm("Permanently delete this video lecture?")) {
+                await deleteDoc(doc(db, "lectures", id));
+                fetchLectures(); fetchAdminManageContent();
+            }
+        }
+
+        window.deleteMaterialNode = async function(id) {
+            if(confirm("Permanently delete this material?")) {
+                await deleteDoc(doc(db, "materials", id));
+                fetchMaterials(); fetchAdminManageContent();
+            }
+        }
+        
+        document.getElementById('btn-add-lecture').addEventListener('click', async () => {
+            let t = document.getElementById('admin-lec-title').value;
+            let l = document.getElementById('admin-lec-link').value;
+            if(!t || !l) return showToast("All inputs required.", "error");
+            await addDoc(collection(db, "lectures"), { title: t, link: l, date: new Date().toISOString() });
+            showToast("Video published.");
+            document.getElementById('admin-lec-title').value = '';
+            document.getElementById('admin-lec-link').value = '';
+            fetchLectures(); fetchAdminManageContent();
+        });
+
+        document.getElementById('btn-add-material').addEventListener('click', async () => {
+            let title = document.getElementById('admin-mat-title').value;
+            let fileElement = document.getElementById('admin-mat-file').files[0];
+            let linkInput = document.getElementById('admin-mat-link').value;
+            if(!title) return showToast("Title missing.", "error");
+            if(!fileElement && !linkInput) return showToast("Provide a file OR link.", "error");
+            showToast("Processing file upload...");
+            try {
+                let downloadUrl = "", fName = "";
+                if(fileElement) {
+                    let fileStorageRef = ref(storage, `materials/${Date.now()}_${fileElement.name}`);
+                    let snapshot = await uploadBytes(fileStorageRef, fileElement);
+                    downloadUrl = await getDownloadURL(snapshot.ref);
+                    fName = fileElement.name;
+                } else if(linkInput) {
+                    downloadUrl = linkInput; fName = "External Link";
+                }
+                await addDoc(collection(db, "materials"), { title: title, fileUrl: downloadUrl, fileName: fName, type: 'file', timestamp: new Date().toISOString() });
+                showToast("Material asset synced live.");
+                document.getElementById('admin-mat-title').value = ''; document.getElementById('admin-mat-file').value = ''; document.getElementById('admin-mat-link').value = '';
+                fetchMaterials(); fetchAdminManageContent();
+            } catch (err) { showToast(`Upload aborted: Check Storage Rules.`, "error"); }
+        });
+
+        async function fetchAdminNotifications() {
+            const snap = await getDocs(collection(db, "notifications"));
+            let html = '';
+            snap.forEach(doc => {
+                let n = doc.data();
+                html += `
+                <div class="admin-comment-item" style="border-left-color: var(--warning);">
+                    <div style="font-size:0.75rem; color:var(--warning); font-weight:bold;">🕒 ${new Date(n.date).toLocaleString()}</div>
+                    <div style="font-weight:600; font-size:0.85rem; margin:2px 0;">👤 ${n.studentName} (${n.studentEmail})</div>
+                    <div style="font-size:0.85rem; color:#4a5568; margin-top:5px;">📝 <b>Changed:</b> ${n.message}</div>
+                </div>`;
+            });
+            document.getElementById('admin-notifications-list').innerHTML = html || "<p style='font-size:0.85rem; color:gray;'>No system notifications.</p>";
+        }
+
+        async function fetchAdminComments() {
+            const snap = await getDocs(collection(db, "comments"));
+            let html = '';
+            snap.forEach(doc => {
+                let c = doc.data();
+                html += `
+                <div class="admin-comment-item">
+                    <div style="font-size:0.7rem; color:var(--primary-green); font-weight:bold;">Topic: ${c.lectureTitle}</div>
+                    <div style="font-weight:600; font-size:0.85rem; margin:2px 0;">Student: ${c.studentName}</div>
+                    <div style="font-size:0.85rem; color:#4a5568; margin-bottom: 8px;">Q: "${c.text}"</div>
+                    ${c.adminReply ? `<div style="font-size:0.8rem; color:var(--dark-green);"><b>Replied:</b> ${c.adminReply}</div>` : 
+                    `<div class="comment-box" style="margin-top:5px; padding-top:5px; border-top:none;">
+                        <input type="text" id="admin-reply-${doc.id}" class="comment-input" placeholder="Type your reply here..." style="font-size:0.75rem; padding: 6px 10px;">
+                        <button class="btn-comment" onclick="submitAdminReply('${doc.id}')" style="font-size:0.75rem; padding:0 12px;">Reply</button>
+                    </div>`}
+                </div>`;
+            });
+            document.getElementById('admin-comments-list').innerHTML = html || "<p style='font-size:0.8rem; color:gray;'>Empty queries dashboard.</p>";
+        }
+
+        window.submitAdminReply = async function(commentId) {
+            let text = document.getElementById(`admin-reply-${commentId}`).value;
+            if(!text) return showToast("Reply empty.", "error");
+            await updateDoc(doc(db, "comments", commentId), { adminReply: text });
+            fetchAdminComments(); 
+        }
+
+        async function fetchAdminDirectory() {
+            fetchAdminComments(); fetchAdminNotifications();
+            const snap = await getDocs(collection(db, "users"));
+            adminAllUsers = [];
+            snap.forEach(doc => { adminAllUsers.push({ id: doc.id, ...doc.data() }); });
+            renderAdminUserDirectory(adminAllUsers);
+        }
+
+        function renderAdminUserDirectory(usersArr) {
+            let html = '';
+            usersArr.forEach(u => {
+                let cleanPhone = u.phone ? u.phone.replace(/[^0-9]/g, '') : "";
+                if(cleanPhone.startsWith('0')) cleanPhone = '92' + cleanPhone.substring(1);
+                html += `
+                <div class="user-list-item">
+                    <div class="user-list-info-row">
+                        <div class="user-list-img" style="background-image:url(${u.profilePic || 'https://via.placeholder.com/40'})"></div>
+                        <div>
+                            <div style="font-weight:bold; font-size:0.9rem; color:${u.isBlocked ? 'var(--danger)' : 'var(--text-dark)'};">
+                                ${u.name} ${u.isBlocked ? '⚠️ [BLOCKED]' : ''}</div>
+                            <div style="font-size:0.72rem; color:gray;">${u.college} | ID: ${u.email}</div>
+                        </div>
+                    </div>
+                    <div style="display:flex; gap:8px; width:100%; margin-top:5px;">
+                        <button class="btn-delete" style="flex:1; padding: 6px; background: ${u.isBlocked ? 'var(--primary-green)' : 'var(--danger)'};" onclick="toggleBlockUser('${u.id}', ${u.isBlocked || false})">
+                            ${u.isBlocked ? '✅ Unblock User' : '🚫 Block User'}</button>
+                        <a href="https://wa.me/${cleanPhone}" target="_blank" style="flex:1; background: var(--whatsapp); color: white; text-decoration: none; padding: 6px; border-radius: 6px; font-size: 0.75rem; font-weight: bold; display: flex; justify-content: center; align-items: center;">
+                            💬 WhatsApp Chat</a>
+                    </div>
+                </div>`;
+            });
+            document.getElementById('admin-users-list').innerHTML = html || "<p style='font-size:0.85rem; color:gray;'>No students.</p>";
+        }
+
+        document.getElementById('admin-search-users').addEventListener('input', (e) => {
+            let val = e.target.value.toLowerCase();
+            let matches = adminAllUsers.filter(u => (u.name && u.name.toLowerCase().includes(val)) || (u.college && u.college.toLowerCase().includes(val)) || (u.email && u.email.toLowerCase().includes(val)));
+            renderAdminUserDirectory(matches);
+        });
+
+        window.toggleBlockUser = async function(userId, currentBlockStatus) {
+            if(confirm(currentBlockStatus ? "Unblock this student?" : "Block this student?")) {
+                await updateDoc(doc(db, "users", userId), { isBlocked: !currentBlockStatus });
+                fetchAdminDirectory();
+            }
+        }
+
+        document.getElementById('btn-login').addEventListener('click', async () => {
+            const e = document.getElementById('email').value, p = document.getElementById('password').value;
+            if(!e || !p) return showToast("Credentials blank.", "error");
+            try { await signInWithEmailAndPassword(auth, e, p); } 
+            catch (err) {
+                if(err.code === 'auth/user-not-found' || err.code === 'auth/invalid-credential') {
+                    try { await createUserWithEmailAndPassword(auth, e, p); showToast("Account Created."); } 
+                    catch (er) { showToast(er.message, "error"); }
+                } else { showToast(err.message, "error"); }
+            }
+        });
+
+        document.getElementById('btn-google').addEventListener('click', async () => {
+            try { await signInWithPopup(auth, provider); } 
+            catch (err) { showToast(err.message, "error"); }
+        });
+
+        document.getElementById('btn-save-profile').addEventListener('click', async () => {
+            const name = document.getElementById('prof-name').value;
+            const phone = document.getElementById('prof-phone').value;
+            const college = document.getElementById('prof-college').value;
+            if(!name || !phone || !college) return showToast("Details mandatory.", "error");
+            showToast("Syncing user data...");
+            let picUrl = "";
+            if(selectedFile) {
+                try {
+                    const sRef = ref(storage, `profile_pics/${currentUser.uid}_${Date.now()}`);
+                    await uploadBytes(sRef, selectedFile);
+                    picUrl = await getDownloadURL(sRef);
+                } catch(imgErr) { console.log("Missing storage parameters."); }
+            }
+            try {
+                await setDoc(doc(db, "users", currentUser.uid), {
+                    name, phone, college, email: currentUser.email, profilePic: picUrl, isBlocked: false, createdAt: new Date().toISOString()
+                });
+                document.getElementById('profile-screen').classList.add('hidden');
+                document.getElementById('dashboard-screen').classList.remove('hidden');
+                document.getElementById('wa-widget').style.display = 'block';
+                currentUserData = {name, phone, college, profilePic: picUrl, isBlocked: false};
+                updateProfileUI(currentUserData, currentUser.email);
+                fetchLectures(); fetchMaterials(); fetchStudentQueries();
+            } catch(dbErr) { showToast(`Failed: ${dbErr.message}`, "error"); }
+        });
+
+        const forceTerminationHandler = () => { signOut(auth).then(() => { localStorage.clear(); window.location.reload(); }); };
+        document.getElementById('btn-logout').addEventListener('click', forceTerminationHandler);
+        document.getElementById('btn-admin-logout').addEventListener('click', forceTerminationHandler);
+    </script>
+</body>
+</html>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LippinPharma | Pharmacology</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+    <style>
+        /* Premium Pharmacy Theme Base */
+        :root {
+            --primary-green: #069C54;
+            --dark-green: #047840;
+            --light-green: #e6f6ed;
+            --bg-color: #f7fbf9;
+            --text-dark: #2d3748;
+            --text-muted: #718096;
+            --white: #ffffff;
+            --danger: #e53e3e;
+            --whatsapp: #25D366;
+            --warning: #ed8936;
+        }
+
+        body, html { margin: 0; padding: 0; height: 100%; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: var(--bg-color); color: var(--text-dark); overflow-x: hidden; -webkit-font-smoothing: antialiased; }
+        .hidden { display: none !important; }
+
+        /* Notifications (Toast UI) */
+        #notification-box { position: fixed; top: -100px; left: 50%; transform: translateX(-50%); background-color: var(--text-dark); color: var(--white); padding: 14px 28px; border-radius: 8px; box-shadow: 0 4px 15px rgba(0,0,0,0.15); font-size: 0.95rem; font-weight: 500; z-index: 2000; transition: top 0.4s ease; display: flex; align-items: center; gap: 10px; max-width: 90%; text-align: center; }
+        #notification-box.show { top: 20px; }
+        .noti-success { border-left: 4px solid var(--primary-green); }
+        .noti-error { border-left: 4px solid var(--danger); }
+
+        /* Splash Screen */
+        #splash-screen { display: flex; flex-direction: column; justify-content: center; align-items: center; height: 100vh; background-color: var(--primary-green); color: var(--white); transition: opacity 0.6s ease; position: absolute; width: 100%; z-index: 100; }
+        .app-logo-splash { width: 120px; height: 120px; object-fit: cover; border-radius: 50%; border: 4px solid var(--white); box-shadow: 0 0 0 4px var(--dark-green), 0 6px 15px rgba(0,0,0,0.25); margin-bottom: 25px; background-color: var(--white); }
+        .splash-title { font-size: 2.2rem; font-weight: 700; margin: 0; letter-spacing: 1px; }
+        .spinner { border: 3px solid rgba(255,255,255,0.3); border-top: 3px solid var(--white); border-radius: 50%; width: 35px; height: 35px; animation: spin 1s linear infinite; margin-top: 30px; }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+
+        /* Authentication Layout */
+        .center-wrapper { display: flex; justify-content: center; align-items: center; min-height: 100vh; background-color: var(--light-green); padding: 15px; box-sizing: border-box; }
+        .card-box { background: var(--white); padding: 35px 30px; border-radius: 16px; width: 100%; max-width: 360px; text-align: center; box-shadow: 0 10px 30px rgba(6, 156, 84, 0.1); border: 1px solid rgba(6, 156, 84, 0.05); }
+        .app-logo-form { width: 70px; height: 70px; object-fit: cover; border-radius: 50%; border: 2px solid var(--primary-green); margin-bottom: 15px; background-color: var(--white); }
+        
+        .input-group { margin-bottom: 15px; text-align: left; }
+        input, select, textarea { width: 100%; padding: 12px 14px; border: 1.5px solid #e2e8f0; border-radius: 8px; box-sizing: border-box; font-size: 0.95rem; background-color: #f8fafc; transition: 0.3s; color: var(--text-dark); font-family: inherit; }
+        input:focus, textarea:focus, select:focus { outline: none; border-color: var(--primary-green); background-color: var(--white); box-shadow: 0 0 0 3px rgba(6, 156, 84, 0.1); }
+        
+        /* Fixed Profile Pic Frame */
+        .profile-pic-container { width: 100px; height: 100px; background-color: #f8fafc; background-size: cover; background-position: center; border-radius: 50%; margin: 15px auto 20px auto; display: flex; flex-direction: column; align-items: center; justify-content: center; border: 3px dashed var(--primary-green); cursor: pointer; color: var(--primary-green); font-size: 0.85rem; font-weight: 600; box-shadow: 0 4px 10px rgba(0,0,0,0.05); overflow: hidden; position: relative; }
+        .profile-pic-container span { font-size: 1.6rem; margin-bottom: 2px; }
+
+        /* Premium Buttons UI */
+        .btn { border: none; padding: 12px; border-radius: 8px; cursor: pointer; width: 100%; font-weight: 600; font-size: 1rem; transition: 0.3s; display: flex; justify-content: center; align-items: center; gap: 10px; }
+        .btn-primary { background: var(--primary-green); color: var(--white); }
+        .btn-primary:hover { background: var(--dark-green); }
+        .btn-danger { background: var(--danger); color: var(--white); }
+        .btn-danger:hover { background: #c53030; }
+        .btn-google { background: var(--white); color: var(--text-dark); border: 1px solid #e2e8f0; margin-top: 15px; }
+        .btn-google:hover { background: #f8fafc; }
+
+        /* Core Structure Layout */
+        .main-content { flex-grow: 1; padding: 20px; overflow-y: auto; height: calc(100vh - 75px); box-sizing: border-box; }
+        .nav-bar { background-color: var(--white); display: flex; justify-content: space-around; padding: 12px 0; box-shadow: 0 -4px 20px rgba(0,0,0,0.05); z-index: 50; position: fixed; bottom: 0; width: 100%; border-top: 1px solid #edf2f7; }
+        .nav-item { color: var(--text-muted); text-align: center; font-size: 0.72rem; cursor: pointer; transition: 0.3s; display: flex; flex-direction: column; align-items: center; gap: 4px; font-weight: 600; flex: 1; }
+        .nav-item.active { color: var(--primary-green); }
+        .nav-icon { font-size: 1.3rem; }
+        .admin-nav { color: var(--danger) !important; }
+
+        .app-tab { display: none; animation: fadeIn 0.3s ease; }
+        .app-tab.active-tab { display: block; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
+
+        /* Cards Layout */
+        .content-card { background: var(--white); padding: 20px; border-radius: 12px; margin-bottom: 15px; box-shadow: 0 2px 10px rgba(0,0,0,0.03); border: 1px solid #edf2f7; }
+        .video-container { position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden; border-radius: 8px; margin-bottom: 10px; background: #000; box-shadow: 0 4px 10px rgba(0,0,0,0.08); }
+        .video-container iframe { position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: 0; }
+        
+        .comment-box { display: flex; gap: 10px; margin-top: 15px; border-top: 1px solid #f1f5f9; padding-top: 12px; }
+        .comment-input { flex: 1; padding: 10px 14px; font-size: 0.85rem; border: 1px solid #e2e8f0; border-radius: 20px; background: #f8fafc; }
+        .btn-comment { background: var(--primary-green); color: white; border: none; padding: 0 16px; border-radius: 20px; font-size: 0.85rem; cursor: pointer; font-weight: bold; }
+
+        /* Admin UI System */
+        .admin-header { background: #fff5f5; border-left: 4px solid var(--danger); padding: 15px; border-radius: 8px; margin-bottom: 15px; }
+        .user-list-item { display: flex; flex-direction: column; gap: 8px; padding: 12px; border-bottom: 1px solid #edf2f7; }
+        .user-list-info-row { display: flex; align-items: center; gap: 15px; }
+        .user-list-img { width: 42px; height: 42px; border-radius: 50%; background-size: cover; background-color: #f1f5f9; border: 1px solid #e2e8f0; flex-shrink: 0; }
+        .admin-comment-item { background: #f8fafc; padding: 12px; border-radius: 8px; margin-bottom: 10px; border-left: 3px solid var(--primary-green); box-shadow: 0 1px 3px rgba(0,0,0,0.02); }
+        .admin-manage-item { display: flex; justify-content: space-between; align-items: center; padding: 10px; border-bottom: 1px solid #edf2f7; font-size: 0.85rem; }
+        .admin-manage-item:last-child { border-bottom: none; }
+        .btn-delete { background: var(--danger); color: white; border: none; border-radius: 6px; padding: 6px 12px; font-size: 0.75rem; cursor: pointer; font-weight: bold; }
+
+        /* WhatsApp Native SVG Button Floating UI */
+        #wa-widget { position: fixed; bottom: 85px; right: 20px; z-index: 1000; display: none; }
+        .wa-btn { width: 56px; height: 56px; background-color: var(--whatsapp); color: white; border-radius: 50%; display: flex; justify-content: center; align-items: center; box-shadow: 0 4px 16px rgba(37, 211, 102, 0.4); cursor: pointer; transition: 0.3s; }
+        .wa-btn svg { width: 30px; height: 30px; fill: white; }
+        .wa-btn:hover { transform: scale(1.08); }
+        #wa-chat-box { position: absolute; bottom: 68px; right: 0; background: white; width: 280px; border-radius: 12px; box-shadow: 0 8px 30px rgba(0,0,0,0.15); padding: 15px; display: none; flex-direction: column; gap: 10px; border: 1px solid #edf2f7; }
+
+        .quiz-option { display: block; background: #f8fafc; padding: 12px 15px; border: 1.5px solid #e2e8f0; border-radius: 8px; margin-top: 8px; cursor: pointer; transition: 0.2s; font-weight: 500; font-size: 0.92rem; }
+        .quiz-option:hover { background: var(--light-green); border-color: var(--primary-green); }
+
+        @media (min-width: 769px) {
+            #dashboard-screen { display: flex; flex-direction: column-reverse; height: 100vh; }
+            .nav-bar { position: sticky; top: 0; bottom: auto; box-shadow: 0 4px 20px rgba(0,0,0,0.05); border-bottom: 1px solid #edf2f7; border-top: none; padding: 14px 0; }
+            .main-content { height: auto; padding: 30px; }
+            .nav-item { flex-direction: row; font-size: 0.9rem; justify-content: center; gap: 8px; }
+            #wa-widget { bottom: 30px; }
+        }
+    </style>
+</head>
+<body>
+
+    <div id="notification-box"><span id="noti-icon">✅</span><span id="noti-msg">System Action</span></div>
+
+    <div id="splash-screen">
+        <img src="logo.webp" alt="Logo" class="app-logo-splash" onerror="this.src='https://via.placeholder.com/120/069C54/ffffff?text=LP'">
+        <h1 class="splash-title">LippinPharma</h1>
+        <p style="font-size: 0.95rem; opacity: 0.9; margin-top: 5px;">Pharmacology App</p>
+        <div class="spinner"></div>
+        <p style="position: absolute; bottom: 30px; font-size: 0.85rem; opacity: 0.8; font-weight: 500;">Powered by Arfi</p>
+    </div>
+
+    <div id="login-screen" class="center-wrapper hidden">
+        <div class="card-box">
+            <img src="logo.webp" alt="Logo" class="app-logo-form" onerror="this.src='https://via.placeholder.com/70/069C54/ffffff?text=LP'">
+            <h2 style="margin: 0 0 5px 0;">Welcome Back</h2>
+            <p style="color: var(--text-muted); font-size: 0.85rem; margin-bottom: 20px;">Sign in to access your dashboard</p>
+            <div class="input-group"><input type="email" id="email" placeholder="Email Address"></div>
+            <div class="input-group"><input type="password" id="password" placeholder="Password"></div>
+            <button class="btn btn-primary" id="btn-login">Sign In / Sign Up</button>
+            <div class="divider">OR</div>
+            <button class="btn btn-google" id="btn-google">🌐 Continue with Google</button>
+        </div>
+    </div>
+
+    <div id="profile-screen" class="center-wrapper hidden">
+        <div class="card-box">
+            <h2 style="margin: 0 0 5px 0;">Setup Profile</h2>
+            <p style="color: var(--text-muted); font-size: 0.85rem; margin-bottom: 10px;">Complete registration for admin dashboard records</p>
+            
+            <input type="file" id="prof-pic-input" accept="image/*" style="display:none !important;">
+            <div class="profile-pic-container" id="prof-pic-preview">
+                <span>📷</span><div>Add Photo</div>
+            </div>
+            
+            <div class="input-group"><input type="text" id="prof-name" placeholder="Full Name" required></div>
+            <div class="input-group"><input type="tel" id="prof-phone" placeholder="Mobile / WhatsApp" required></div>
+            <div class="input-group"><input type="text" id="prof-college" placeholder="College Name" required></div>
+            <button class="btn btn-primary" id="btn-save-profile" style="margin-top: 10px;">Save Profile</button>
+        </div>
+    </div>
+
+    <div id="dashboard-screen" class="hidden">
+        
+        <div class="main-content">
+            
+            <div id="tab-home" class="app-tab active-tab">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+                    <h2 style="margin:0; color: var(--dark-green);" id="welcome-title">Dashboard</h2>
+                    <div id="dashboard-user-pic" style="width: 45px; height: 45px; border-radius: 50%; background-size:cover; border:2px solid var(--primary-green); background-image:url('https://via.placeholder.com/45')"></div>
+                </div>
+                
+                <div style="background: linear-gradient(135deg, var(--primary-green), var(--dark-green)); color: white; padding: 25px 20px; border-radius: 12px; margin-bottom: 20px; box-shadow: 0 8px 20px rgba(6, 156, 84, 0.25);">
+                    <h3 style="margin: 0 0 5px 0; font-size: 1.3rem;">Today's Target</h3>
+                    <p style="margin: 0; font-size: 0.9rem; opacity: 0.9;">10 New automated daily MCQs generated from Lippincott text guidelines.</p>
+                    <button onclick="switchTab('tab-tests')" style="background: white; color: var(--primary-green); border: none; padding: 10px 20px; border-radius: 6px; font-weight: bold; margin-top: 15px; cursor: pointer;">Take Daily Quiz ⏱️</button>
+                </div>
+                <h3 style="color: var(--text-dark); margin-bottom: 12px; font-size: 1.1rem;">Latest Uploads</h3>
+                <div id="home-recent-activity"><p style="font-size:0.85rem; color:var(--text-muted);">Syncing platform activity feed...</p></div>
+            </div>
+
+            <div id="tab-lectures" class="app-tab">
+                <h2 style="color: var(--dark-green); margin-bottom: 15px;">Smart Lectures</h2>
+                <div class="input-group" style="margin-bottom: 20px;">
+                    <input type="text" id="search-lectures" placeholder="🔍 Search topics (e.g. Kinetics, Autonomic)..." style="border-radius: 25px; padding-left: 20px; border: 2px solid var(--primary-green);">
+                </div>
+                <div id="lectures-container"></div>
+            </div>
+
+            <div id="tab-material" class="app-tab">
+                <h2 style="color: var(--dark-green); margin-bottom: 15px;">Study Material</h2>
+                <p style="color: var(--text-muted); font-size: 0.9rem; margin-bottom: 20px;">Download textbooks summaries, PDFs, and presentation slides uploaded by admin.</p>
+                <div id="materials-container"><p style="font-size:0.9rem; color:var(--text-muted);">Loading downloadable items...</p></div>
+            </div>
+
+            <div id="tab-tests" class="app-tab">
+                <h2 style="color: var(--dark-green); margin-bottom: 10px;">Testing Framework</h2>
+                
+                <div class="content-card" style="background: var(--light-green); border: 1px dashed var(--primary-green);">
+                    <h3 style="margin-top:0; color: var(--dark-green); font-size:1.1rem;">⚡ Custom Test Generator</h3>
+                    <p style="font-size:0.8rem; margin: -5px 0 15px 0; color: var(--text-dark);">Enter your Lippincott topic name and number of questions to generate an instant mock quiz.</p>
+                    <div style="display: flex; gap:10px; margin-bottom:10px; flex-wrap: wrap;">
+                        <input type="text" id="ai-topic" placeholder="Topic Name (e.g., Beta-Blockers)" style="flex:2; min-width:180px;">
+                        <input type="number" id="ai-count" placeholder="Count" min="1" max="20" value="5" style="flex:1; min-width:70px;">
+                    </div>
+                    <button class="btn btn-primary" id="btn-generate-ai-test">Generate Quiz 🚀</button>
+                </div>
+
+                <div class="content-card" id="quiz-block-space">
+                    <h3 id="quiz-title-heading" style="margin-top:0; color:var(--primary-green);">Daily Evaluation Test</h3>
+                    <div id="quiz-render-area"><p style="font-size:0.9rem; color:var(--text-muted);">Select or generate a quiz structure to begin evaluation parameters.</p></div>
+                </div>
+            </div>
+
+            <div id="tab-profile" class="app-tab">
+                <h2 style="color: var(--dark-green); margin-bottom: 20px;">User Profile</h2>
+                <div class="content-card" style="text-align: center;">
+                    <div id="profile-page-pic" style="width: 100px; height: 100px; border-radius: 50%; background-size:cover; margin: 0 auto 15px auto; border:3px solid var(--primary-green); background-image:url('https://via.placeholder.com/100')"></div>
+                    <h3 id="profile-page-name" style="margin:0 0 5px 0;">Student Record</h3>
+                    <p id="profile-page-email" style="margin:0 0 15px 0; color:var(--text-muted); font-size:0.9rem;"></p>
+                    
+                    <button class="btn btn-google" id="btn-edit-profile-trigger" style="max-width: 200px; margin: 0 auto 15px auto;">✏️ Edit Profile</button>
+                    
+                    <div id="edit-profile-form" class="hidden" style="text-align: left; background: #f8fafc; padding: 15px; border-radius: 12px; margin-bottom: 15px; border: 1px solid #e2e8f0;">
+                        <h4 style="margin-top: 0; color: var(--dark-green);">Update Information</h4>
+                        <div class="input-group"><label>Full Name</label><input type="text" id="edit-prof-name"></div>
+                        <div class="input-group"><label>Mobile / WhatsApp</label><input type="tel" id="edit-prof-phone"></div>
+                        <div class="input-group"><label>College Name</label><input type="text" id="edit-prof-college"></div>
+                        <button class="btn btn-primary" id="btn-update-profile">Save Changes</button>
+                        <button class="btn btn-google" id="btn-cancel-edit" style="margin-top: 10px;">Cancel</button>
+                    </div>
+
+                    <button class="btn btn-danger" id="btn-logout" style="margin-top: 10px; max-width:200px; margin-left:auto; margin-right:auto;">🚪 Logout Securely</button>
+                </div>
+                
+                <div class="content-card" style="text-align: left; margin-top: 15px;">
+                    <h3 style="color: var(--dark-green); margin-top: 0;">My Queries & Replies</h3>
+                    <div id="student-queries-list"><p style="font-size:0.85rem; color:var(--text-muted);">Loading queries...</p></div>
+                </div>
+            </div>
+
+            <div id="tab-admin" class="app-tab">
+                <div class="admin-header">
+                    <h2 style="margin:0; color:var(--danger);">Admin Control Workspace</h2>
+                    <p style="margin:2px 0 0 0; font-size:0.82rem;">Superuser Portal Node Enabled. Hello Arfi.</p>
+                </div>
+
+                <div class="content-card" style="border: 1px solid var(--primary-green);">
+                    <h3 style="margin-top:0; font-size:1rem; color:var(--primary-green);">📝 Compose Smart Topic Note</h3>
+                    <p style="font-size:0.8rem; margin: -5px 0 15px 0; color: var(--text-dark);">Type simple text. System will auto-design it into a colorful downloadable PDF for students.</p>
+                    <div class="input-group"><input type="text" id="admin-note-title" placeholder="Topic Title (e.g. ANS Introduction)"></div>
+                    <div class="input-group"><textarea id="admin-note-content" rows="5" placeholder="Write or paste your simple text here..."></textarea></div>
+                    <button class="btn btn-primary" id="btn-compose-note">Publish Smart PDF Note</button>
+                </div>
+
+                <div class="content-card" style="border: 1px solid var(--danger);">
+                    <h3 style="margin-top:0; font-size:1rem; color:var(--danger);">🔑 Generator API Key Configuration</h3>
+                    <div class="input-group"><input type="text" id="admin-gemini-input" placeholder="Paste active API cloud token"></div>
+                    <button class="btn btn-danger" id="btn-save-gemini">Sync & Deploy New Key Live</button>
+                </div>
+
+                <div class="content-card">
+                    <h3 style="margin-top:0; font-size:1rem;">🛠️ Manage Published Content</h3>
+                    <h4 style="margin:5px 0; color:var(--primary-green);">Lectures</h4>
+                    <div id="admin-manage-lectures"></div>
+                    <h4 style="margin:15px 0 5px 0; color:var(--primary-green);">Study Materials & Notes</h4>
+                    <div id="admin-manage-materials"></div>
+                </div>
+
+                <div class="content-card">
+                    <h3 style="margin-top:0; font-size:1rem;">🔔 System Notifications</h3>
+                    <div id="admin-notifications-list"></div>
+                </div>
+
+                <div class="content-card">
+                    <h3 style="margin-top:0; font-size:1rem;">Add Video Lecture Node</h3>
+                    <div class="input-group"><input type="text" id="admin-lec-title" placeholder="Lecture Title / Index Key"></div>
+                    <div class="input-group"><input type="url" id="admin-lec-link" placeholder="YouTube URL Link"></div>
+                    <button class="btn btn-primary" id="btn-add-lecture">Publish Video Node</button>
+                </div>
+
+                <div class="content-card">
+                    <h3 style="margin-top:0; font-size:1rem;">Upload External PDF / PPT</h3>
+                    <div class="input-group"><input type="text" id="admin-mat-title" placeholder="Material Item Title"></div>
+                    <div class="input-group" style="background: #f8fafc; padding: 10px; border-radius: 8px; border: 1px dashed var(--primary-green);">
+                        <input type="file" id="admin-mat-file" accept=".pdf,.ppt,.pptx,.doc,.docx">
+                        <div style="text-align: center; margin: 5px 0; font-size: 0.8rem; font-weight: bold; color: gray;">OR</div>
+                        <input type="url" id="admin-mat-link" placeholder="Paste Direct Link Here">
+                    </div>
+                    <button class="btn btn-primary" id="btn-add-material">Upload External File</button>
+                </div>
+
+                <div class="content-card">
+                    <h3 style="margin-top:0; font-size:1rem;">Student Comments Feed</h3>
+                    <div id="admin-comments-list"></div>
+                </div>
+
+                <div class="content-card">
+                    <h3 style="margin-top:0; font-size:1rem;">Users Log Directory</h3>
+                    <div class="input-group" style="margin-bottom: 15px;">
+                        <input type="text" id="admin-search-users" placeholder="🔍 Search students..." style="border: 1.5px solid var(--danger);">
+                    </div>
+                    <div id="admin-users-list"><p style="font-size:0.85rem; color:var(--text-muted);">Loading log records...</p></div>
+                </div>
+                <button class="btn btn-danger" id="btn-admin-logout" style="margin-top: 15px;">🚪 Terminate Control Session</button>
+            </div>
+        </div>
+
+        <div class="nav-bar">
+            <div class="nav-item active" onclick="switchTab('tab-home', this)">
+                <span class="nav-icon">🏠</span><span>Home</span>
+            </div>
+            <div class="nav-item" onclick="switchTab('tab-lectures', this)">
+                <span class="nav-icon">📺</span><span>Lectures</span>
+            </div>
+            <div class="nav-item" onclick="switchTab('tab-material', this)">
+                <span class="nav-icon">📥</span><span>Material</span>
+            </div>
+            <div class="nav-item" onclick="switchTab('tab-tests', this)">
+                <span class="nav-icon">📝</span><span>Tests</span>
+            </div>
+            <div class="nav-item" onclick="switchTab('tab-profile', this)">
+                <span class="nav-icon">👤</span><span>Profile</span>
+            </div>
+            <div class="nav-item hidden" id="admin-nav-item" onclick="switchTab('tab-admin', this)">
+                <span class="nav-icon">⚙️</span><span class="admin-nav">Admin</span>
+            </div>
+        </div>
+    </div>
+
+    <div id="wa-widget">
+        <div id="wa-chat-box">
+            <h4 style="margin:0 0 5px 0; color:var(--dark-green);">Direct Line Helpdesk</h4>
+            <textarea id="wa-msg-text" rows="3" placeholder="Write your urgent message query here..."></textarea>
+            <button class="btn btn-primary" id="btn-send-wa" style="background:var(--whatsapp);">Launch WhatsApp Secure</button>
+        </div>
+        <div class="wa-btn" id="wa-toggle-btn">
+            <svg viewBox="0 0 448 512"><path d="M380.9 97.1C339 55.1 283.2 32 223.9 32c-122.4 0-222 99.6-222 222 0 39.1 10.2 77.3 29.6 111L0 480l117.7-30.9c32.4 17.7 68.9 27 106.1 27h.1c122.3 0 224.1-99.6 224.1-222 0-59.3-25.2-115-67.1-157zm-157 341.6c-33.2 0-65.7-8.9-94-25.7l-6.7-4-69.8 18.3L72 359.2l-4.4-7c-18.5-29.4-28.2-63.3-28.2-98.2 0-101.7 82.8-184.5 184.6-184.5 49.3 0 95.6 19.2 130.4 54.1 34.8 34.9 56.2 81.2 56.1 130.5 0 101.8-84.9 184.6-186.6 184.6zm101.2-138.2c-5.5-2.8-32.8-16.2-37.9-18-5.1-1.9-8.8-2.8-12.5 2.8-3.7 5.6-14.3 18-17.6 21.8-3.2 3.7-6.5 4.2-12 1.4-32.6-16.3-54-29.1-75.5-66-5.7-9.8 5.7-9.1 16.3-30.3 1.8-3.7.9-6.9-.5-9.7-1.4-2.8-12.5-30.1-17.1-41.2-4.5-10.8-9.1-9.3-12.5-9.5-3.2-.2-6.9-.2-10.6-.2-3.7 0-9.7 1.4-14.8 6.9-5.1 5.6-19.4 19-19.4 46.3 0 27.3 19.9 53.7 22.6 57.4 2.8 3.7 39.1 59.7 94.8 83.8 35.2 15.2 49 16.5 66.6 13.9 10.7-1.6 32.8-13.4 37.4-26.4 4.6-13 4.6-24.1 3.2-26.4-1.3-2.5-5-3.9-10.5-6.6z"/></svg>
+        </div>
+    </div>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/12.15.0/firebase-app.js";
+        import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, signInWithPopup, GoogleAuthProvider, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/12.15.0/firebase-auth.js";
+        import { getFirestore, doc, setDoc, getDoc, collection, addDoc, getDocs, updateDoc, deleteDoc } from "https://www.gstatic.com/firebasejs/12.15.0/firebase-firestore.js";
+        import { getStorage, ref, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/12.15.0/firebase-storage.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyDzXX21yLZHWagjZ9G8L6R5OIcJBPPhRcg",
+            authDomain: "lippinpharma-e758f.firebaseapp.com",
+            projectId: "lippinpharma-e758f",
+            storageBucket: "lippinpharma-e758f.firebasestorage.app",
+            messagingSenderId: "828017458601",
+            appId: "1:828017458601:web:ae687eea3978a7002198b8"
+        };
+
+        // User Provided Base Key
+        let GEMINI_API_KEY = "AQ.Ab8RN6LDULmCGLDIll0iV_ypEW4ZGuHipGDIaDz5oq4bdjBhMg";
+
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getFirestore(app);
+        const storage = getStorage(app);
+        const provider = new GoogleAuthProvider();
+
+        let currentUser = null;
+        let currentUserData = null;
+        let selectedFile = null;
+        let allLectures = [];
+        let adminAllUsers = [];
+
+        window.showToast = function(message, type = 'success') {
+            const box = document.getElementById('notification-box');
+            document.getElementById('noti-msg').innerText = message;
+            box.className = type === 'success' ? 'noti-success show' : 'noti-error show';
+            document.getElementById('noti-icon').innerText = type === 'success' ? '✅' : '⚠️';
+            setTimeout(() => { box.classList.remove('show'); }, 4000);
+        }
+
+        window.switchTab = function(tabId, element = null) {
+            document.querySelectorAll('.app-tab').forEach(t => t.classList.remove('active-tab'));
+            document.getElementById(tabId).classList.add('active-tab');
+            if(element) {
+                document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+                element.classList.add('active');
+            }
+        }
+
+        // --- PDF Generation System For Composed Notes ---
+        window.downloadComposedPDF = function(title, content) {
+            showToast("Designing and compiling PDF. Please wait...", "success");
+            const element = document.createElement('div');
+            // Premium PDF Styling Template
+            element.innerHTML = `
+                <div style="padding: 40px; font-family: 'Segoe UI', Arial, sans-serif; color: #2d3748; background: #ffffff;">
+                    <div style="text-align: center; border-bottom: 3px solid #069C54; padding-bottom: 15px; margin-bottom: 30px;">
+                        <h1 style="color: #047840; margin: 0; font-size: 28px;">${title}</h1>
+                        <p style="color: #718096; margin: 5px 0 0 0; font-size: 14px;">Official Study Material</p>
+                    </div>
+                    <div style="font-size: 16px; line-height: 1.8; color: #2d3748; white-space: pre-wrap; text-align: justify;">
+                        ${content}
+                    </div>
+                    <div style="margin-top: 50px; text-align: center; border-top: 1px solid #e2e8f0; padding-top: 20px;">
+                        <p style="color: #069C54; font-weight: bold; margin: 0; font-size:18px;">Powered by LippinPharma App</p>
+                        <p style="color: #718096; font-size: 12px; margin: 5px 0 0 0;">Prepared specially for UHS 3rd Semester Students</p>
+                    </div>
+                </div>
+            `;
+            
+            const opt = {
+                margin:       0.5,
+                filename:     `${title}.pdf`,
+                image:        { type: 'jpeg', quality: 0.98 },
+                html2canvas:  { scale: 2 },
+                jsPDF:        { unit: 'in', format: 'letter', orientation: 'portrait' }
+            };
+            
+            html2pdf().set(opt).from(element).save().then(() => {
+                showToast("PDF Downloaded successfully!", "success");
+            });
+        }
+
+        // WhatsApp Setup
+        document.getElementById('wa-toggle-btn').addEventListener('click', () => {
+            const box = document.getElementById('wa-chat-box');
+            box.style.display = box.style.display === 'flex' ? 'none' : 'flex';
+        });
+
+        document.getElementById('btn-send-wa').addEventListener('click', () => {
+            const customQuery = document.getElementById('wa-msg-text').value;
+            const sName = currentUserData ? currentUserData.name : "Student";
+            const textString = `Hi This is ${sName} here from LippinPharma.`;
+            const targetURI = `https://wa.me/923156765582?text=${encodeURIComponent(textString + (customQuery ? "\nQuery: " + customQuery : ""))}`;
+            window.open(targetURI, '_blank');
+            document.getElementById('wa-msg-text').value = '';
+            document.getElementById('wa-chat-box').style.display = 'none';
+        });
+
+        function getYouTubeEmbedUrl(urlStr) {
+            if(!urlStr) return "";
+            let regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=)([^#\&\?]*).*/;
+            let match = urlStr.match(regExp);
+            if (match && match[2].length === 11) {
+                return `https://www.youtube.com/embed/${match[2]}?modestbranding=1&rel=0&showinfo=0&controls=1`;
+            }
+            return urlStr;
+        }
+
+        const fileInput = document.getElementById('prof-pic-input');
+        const picContainerFrame = document.getElementById('prof-pic-preview');
+
+        if(picContainerFrame) {
+            picContainerFrame.addEventListener('click', () => fileInput.click());
+        }
+        
+        fileInput.addEventListener('change', (e) => {
+            const file = e.target.files[0];
+            if(file) {
+                selectedFile = file;
+                const reader = new FileReader();
+                reader.onload = event => {
+                    picContainerFrame.style.backgroundImage = `url(${event.target.result})`;
+                    picContainerFrame.innerHTML = ''; 
+                }
+                reader.readAsDataURL(file);
+            }
+        });
+
+        const SESSION_TIMEOUT = 30 * 60 * 1000;
+        function pingSession() { localStorage.setItem('sessionTick', Date.now()); }
+        document.addEventListener('click', pingSession);
+        document.addEventListener('keypress', pingSession);
+
+        function verifyActiveSession() {
+            const timestamp = localStorage.getItem('sessionTick');
+            if(timestamp && (Date.now() - parseInt(timestamp) > SESSION_TIMEOUT)) {
+                if(auth.currentUser) {
+                    signOut(auth).then(() => {
+                        localStorage.clear();
+                        alert("Session closed due to inactivity. Login required.");
+                        window.location.reload();
+                    });
+                }
+            } else pingSession();
+        }
+
+        async function runCloudGeminiSync() {
+            try {
+                const configSnap = await getDoc(doc(db, "settings", "config"));
+                if(configSnap.exists() && configSnap.data().geminiKey) {
+                    GEMINI_API_KEY = configSnap.data().geminiKey;
+                }
+            } catch(e) { console.log("Baseline Key Engaged."); }
+            
+            if(auth.currentUser && auth.currentUser.email === "uarajpoot31@gmail.com") {
+                document.getElementById('admin-gemini-input').value = GEMINI_API_KEY;
+            }
+        }
+
+        setTimeout(() => {
+            onAuthStateChanged(auth, async (user) => {
+                document.getElementById('splash-screen').style.opacity = '0';
+                setTimeout(() => { document.getElementById('splash-screen').style.display = 'none'; }, 600);
+                if (user) {
+                    verifyActiveSession();
+                    currentUser = user;
+                    await runCloudGeminiSync();
+                    checkUserProfile(user);
+                } else {
+                    document.getElementById('login-screen').classList.remove('hidden');
+                }
+            });
+        }, 2000);
+
+        async function checkUserProfile(user) {
+            const snap = await getDoc(doc(db, "users", user.uid));
+            if(snap.exists()) {
+                currentUserData = snap.data();
+                if(currentUserData.isBlocked === true) {
+                    showToast("⛔ Access Denied: Your account has been blocked by Admin.", "error");
+                    setTimeout(() => { signOut(auth).then(() => { localStorage.clear(); window.location.reload(); }); }, 2500);
+                    return;
+                }
+
+                if(user.email === "uarajpoot31@gmail.com") {
+                    document.getElementById('admin-nav-item').classList.remove('hidden');
+                    fetchAdminDirectory();
+                    fetchAdminManageContent(); 
+                }
+
+                updateProfileUI(currentUserData, user.email);
+                document.getElementById('login-screen').classList.add('hidden');
+                document.getElementById('profile-screen').classList.add('hidden');
+                document.getElementById('dashboard-screen').classList.remove('hidden');
+                document.getElementById('wa-widget').style.display = 'block';
+                
+                fetchLectures(); fetchMaterials(); fetchStudentQueries(); runDailyAIQuizSync(); 
+            } else {
+                document.getElementById('login-screen').classList.add('hidden');
+                document.getElementById('profile-screen').classList.remove('hidden');
+            }
+        }
+
+        function updateProfileUI(data, email) {
+            document.getElementById('welcome-title').innerText = `Hi, ${data.name}`;
+            document.getElementById('profile-page-name').innerText = data.name;
+            document.getElementById('profile-page-email').innerText = email;
+            const srcPic = data.profilePic || "https://via.placeholder.com/150";
+            document.getElementById('dashboard-user-pic').style.backgroundImage = `url(${srcPic})`;
+            document.getElementById('profile-page-pic').style.backgroundImage = `url(${srcPic})`;
+        }
+
+        document.getElementById('btn-edit-profile-trigger').addEventListener('click', () => {
+            document.getElementById('edit-profile-form').classList.remove('hidden');
+            document.getElementById('btn-edit-profile-trigger').classList.add('hidden');
+            document.getElementById('edit-prof-name').value = currentUserData.name || '';
+            document.getElementById('edit-prof-phone').value = currentUserData.phone || '';
+            document.getElementById('edit-prof-college').value = currentUserData.college || '';
+        });
+
+        document.getElementById('btn-cancel-edit').addEventListener('click', () => {
+            document.getElementById('edit-profile-form').classList.add('hidden');
+            document.getElementById('btn-edit-profile-trigger').classList.remove('hidden');
+        });
+
+        document.getElementById('btn-update-profile').addEventListener('click', async () => {
+            const newName = document.getElementById('edit-prof-name').value;
+            const newPhone = document.getElementById('edit-prof-phone').value;
+            const newCollege = document.getElementById('edit-prof-college').value;
+            if(!newName || !newPhone || !newCollege) return showToast("All fields are required.", "error");
+
+            let changes = [];
+            if(newName !== currentUserData.name) changes.push(`Name: ${currentUserData.name} ➡️ ${newName}`);
+            if(newPhone !== currentUserData.phone) changes.push(`Phone: ${currentUserData.phone} ➡️ ${newPhone}`);
+            if(newCollege !== currentUserData.college) changes.push(`College: ${currentUserData.college} ➡️ ${newCollege}`);
+            if(changes.length === 0) return showToast("No changes detected.", "error");
+
+            showToast("Updating profile...", "success");
+            try {
+                await updateDoc(doc(db, "users", currentUser.uid), { name: newName, phone: newPhone, college: newCollege });
+                await addDoc(collection(db, "notifications"), { studentEmail: currentUser.email, studentName: currentUserData.name, message: changes.join(" | "), date: new Date().toISOString() });
+                currentUserData.name = newName; currentUserData.phone = newPhone; currentUserData.college = newCollege;
+                updateProfileUI(currentUserData, currentUser.email);
+                document.getElementById('edit-profile-form').classList.add('hidden');
+                document.getElementById('btn-edit-profile-trigger').classList.remove('hidden');
+                if(currentUser.email === "uarajpoot31@gmail.com") fetchAdminNotifications();
+            } catch (error) { showToast(`Update failed: ${error.message}`, "error"); }
+        });
+
+        async function fetchLectures() {
+            const snap = await getDocs(collection(db, "lectures"));
+            allLectures = [];
+            let html = '';
+            snap.forEach(doc => {
+                let data = doc.data();
+                allLectures.push({ id: doc.id, ...data });
+                let secureEmbed = getYouTubeEmbedUrl(data.link);
+                html += `
+                <div class="content-card">
+                    <div class="video-container"><iframe src="${secureEmbed}" allowfullscreen></iframe></div>
+                    <h4 style="margin:5px 0; font-size:1.05rem;">${data.title}</h4>
+                    <div class="comment-box">
+                        <input type="text" id="cmt-${doc.id}" class="comment-input" placeholder="Ask a question about this topic...">
+                        <button class="btn-comment" onclick="postCommentNode('${doc.id}', '${data.title}')">Post</button>
+                    </div>
+                </div>`;
+            });
+            document.getElementById('lectures-container').innerHTML = html || "<p style='font-size:0.9rem; color:gray;'>No video files live.</p>";
+        }
+
+        document.getElementById('search-lectures').addEventListener('input', (e) => {
+            let key = e.target.value.toLowerCase();
+            let matches = allLectures.filter(l => l.title.toLowerCase().includes(key));
+            let html = '';
+            matches.forEach(data => {
+                let secureEmbed = getYouTubeEmbedUrl(data.link);
+                html += `
+                <div class="content-card">
+                    <div class="video-container"><iframe src="${secureEmbed}" allowfullscreen></iframe></div>
+                    <h4 style="margin:5px 0;">${data.title}</h4>
+                </div>`;
+            });
+            document.getElementById('lectures-container').innerHTML = html;
+        });
+
+        // FETCH MATERIALS (Handling both Files and Composed Auto-PDFs)
+        async function fetchMaterials() {
+            const snap = await getDocs(collection(db, "materials"));
+            let html = '';
+            snap.forEach(doc => {
+                let item = doc.data();
+                let isComposed = item.type === 'composed';
+                let actionBtn = isComposed ? 
+                    `<button onclick="downloadComposedPDF('${item.title}', \`${item.content.replace(/`/g, "\\`")}\`)" style="background:var(--primary-green); color:white; border:none; padding:8px 14px; border-radius:6px; font-size:0.82rem; font-weight:bold; cursor:pointer;">Auto-PDF ⬇️</button>` :
+                    `<a href="${item.fileUrl}" target="_blank" download style="background:var(--primary-green); color:white; text-decoration:none; padding:8px 14px; border-radius:6px; font-size:0.82rem; font-weight:bold; display:inline-block;">Download</a>`;
+                
+                html += `
+                <div class="content-card" style="display:flex; justify-content:space-between; align-items:center;">
+                    <div>
+                        <div style="font-weight:600; color:var(--text-dark);">${isComposed ? '📝' : '📄'} ${item.title}</div>
+                        <div style="font-size:0.75rem; color:var(--text-muted);">${isComposed ? 'Smart Format Topic Note' : 'Admin File Asset'}</div>
+                    </div>
+                    ${actionBtn}
+                </div>`;
+            });
+            document.getElementById('materials-container').innerHTML = html || "<p style='font-size:0.9rem; color:gray;'>No learning file packages cataloged.</p>";
+        }
+
+        window.postCommentNode = async function(lecId, lecTitle) {
+            let val = document.getElementById(`cmt-${lecId}`).value;
+            if(!val) return;
+            showToast("Submitting comment...");
+            await addDoc(collection(db, "comments"), {
+                lectureId: lecId, lectureTitle: lecTitle, studentEmail: currentUser.email,
+                studentName: currentUserData.name, text: val, date: new Date().toISOString(), adminReply: ""
+            });
+            document.getElementById(`cmt-${lecId}`).value = '';
+            showToast("Sent to Admin!");
+            fetchStudentQueries(); 
+        }
+
+        async function fetchStudentQueries() {
+            const snap = await getDocs(collection(db, "comments"));
+            let html = '';
+            snap.forEach(doc => {
+                let c = doc.data();
+                if(c.studentEmail === currentUser.email) {
+                    html += `
+                    <div style="background: #f8fafc; padding: 12px; border-radius: 8px; margin-bottom: 10px; border-left: 3px solid var(--primary-green);">
+                        <div style="font-size:0.75rem; color:gray; margin-bottom:5px;">Topic: ${c.lectureTitle}</div>
+                        <div style="font-size:0.9rem; font-weight:600; margin: 4px 0; color:var(--text-dark);">Q: ${c.text}</div>
+                        <div style="font-size:0.85rem; color: ${c.adminReply ? 'var(--dark-green)' : '#e53e3e'}; margin-top:8px; padding-top:8px; border-top:1px dashed #e2e8f0;">
+                            <b>Admin Reply:</b> ${c.adminReply ? c.adminReply : '<i>Pending response...</i>'}
+                        </div>
+                    </div>`;
+                }
+            });
+            document.getElementById('student-queries-list').innerHTML = html || "<p style='font-size:0.8rem; color:gray;'>You haven't asked any questions yet.</p>";
+        }
+
+        // --- UPDATED ERROR HANDLING GEMINI MODEL ---
+        async function queryGeminiModel(promptMessage) {
+            if(!GEMINI_API_KEY) return "ERROR";
+            try {
+                let endpoint = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${GEMINI_API_KEY}`;
+                let response = await fetch(endpoint, {
+                    method: 'POST', headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ contents: [{ parts: [{ text: promptMessage }] }] })
+                });
+                let data = await response.json();
+                return data.candidates[0].content.parts[0].text;
+            } catch (e) { return "ERROR"; }
+        }
+
+        async function runDailyAIQuizSync() {
+            let todayKey = new Date().toISOString().split('T')[0];
+            let checkDoc = await getDoc(doc(db, "daily_quizzes", todayKey));
+            if(checkDoc.exists()) {
+                renderEvaluationBlock(checkDoc.data().questions);
+            } else {
+                let requestInstruction = `Generate exactly 10 medical multiple choice questions for nursing students based strictly on Lippincott Pharmacology. Output must be a valid JSON array. Format pattern: [{"question": "Text?", "options": ["A", "B", "C", "D"], "correctIndex": 0}].`;
+                let rawAIString = await queryGeminiModel(requestInstruction);
+                if(rawAIString !== "ERROR") {
+                    let s = rawAIString.indexOf('[');
+                    let e = rawAIString.lastIndexOf(']');
+                    if(s !== -1 && e !== -1) {
+                        try {
+                            let parsedArr = JSON.parse(rawAIString.substring(s, e + 1));
+                            await setDoc(doc(db, "daily_quizzes", todayKey), { questions: parsedArr, generatedAt: todayKey });
+                            renderEvaluationBlock(parsedArr);
+                        } catch(err) { console.log("Daily JSON parse fail."); }
+                    }
+                }
+            }
+        }
+
+        document.getElementById('btn-generate-ai-test').addEventListener('click', async () => {
+            let targetTopic = document.getElementById('ai-topic').value;
+            let targetCount = document.getElementById('ai-count').value || 5;
+            if(!targetTopic) return showToast("Topic name blank.", "error");
+            showToast("Analyzing request matrix...");
+
+            let strictRulePrompt = `You are a validator for Lippincott Pharmacology. The user wants ${targetCount} multiple choice questions about "${targetTopic}". CRITICAL SECURITY CHECK: If "${targetTopic}" is completely unrelated to pharmacology, medicine, or drugs, you must reply exactly with the single word ERROR. If valid, generate questions as a clean JSON array structure: [{"question": "Query", "options": ["1","2","3","4"], "correctIndex": 0}].`;
+            
+            let resultPayload = await queryGeminiModel(strictRulePrompt);
+            if(resultPayload.includes("ERROR") || resultPayload === "ERROR") {
+                return showToast("⚠️ Unexpected error. Invalid API Key or Out of scope topic.", "error");
+            }
+
+            // Safe JSON Extraction
+            let s = resultPayload.indexOf('[');
+            let e = resultPayload.lastIndexOf(']');
+            if(s !== -1 && e !== -1) {
+                try {
+                    let quizData = JSON.parse(resultPayload.substring(s, e + 1));
+                    document.getElementById('quiz-title-heading').innerText = `Custom Quiz: ${targetTopic}`;
+                    renderEvaluationBlock(quizData);
+                    showToast("Test generated successfully.");
+                } catch (jsonErr) { showToast("⚠️ Unexpected error in format.", "error"); }
+            } else {
+                showToast("⚠️ Unexpected error generating quiz.", "error");
+            }
+        });
+
+        function renderEvaluationBlock(questionsArray) {
+            let container = document.getElementById('quiz-render-area');
+            let html = '';
+            questionsArray.forEach((q, idx) => {
+                html += `
+                <div style="margin-bottom:15px; border-bottom:1px solid #f1f5f9; padding-bottom:12px;">
+                    <div style="font-weight:600; font-size:0.95rem;">Q${idx+1}: ${q.question}</div>`;
+                q.options.forEach((opt, oIdx) => {
+                    html += `<div class="quiz-option" onclick="evaluateSelectionNode(this, ${oIdx}, ${q.correctIndex})">${opt}</div>`;
+                });
+                html += `</div>`;
+            });
+            container.innerHTML = html;
+        }
+
+        window.evaluateSelectionNode = function(el, selectedIndex, targetCorrectIndex) {
+            let parent = el.parentNode;
+            let options = parent.querySelectorAll('.quiz-option');
+            options.forEach(o => o.style.pointerEvents = 'none'); 
+            if(selectedIndex === targetCorrectIndex) {
+                el.style.background = '#d1fae5'; el.style.borderColor = 'var(--primary-green)';
+            } else {
+                el.style.background = '#fee2e2'; el.style.borderColor = 'var(--danger)';
+                options[targetCorrectIndex].style.background = '#d1fae5';
+            }
+        }
+
+        // ==========================================
+        // ADMINISTRATIVE ACTIONS
+        // ==========================================
+        
+        // NEW FEATURE: Admin Compose Note to Auto-PDF
+        document.getElementById('btn-compose-note').addEventListener('click', async () => {
+            let t = document.getElementById('admin-note-title').value;
+            let c = document.getElementById('admin-note-content').value;
+            if(!t || !c) return showToast("Title and content required.", "error");
+            
+            showToast("Publishing Smart Note...");
+            await addDoc(collection(db, "materials"), {
+                title: t, content: c, type: 'composed', timestamp: new Date().toISOString()
+            });
+            showToast("Smart Note published for students!", "success");
+            document.getElementById('admin-note-title').value = '';
+            document.getElementById('admin-note-content').value = '';
+            fetchMaterials(); fetchAdminManageContent();
+        });
+
+        document.getElementById('btn-save-gemini').addEventListener('click', async () => {
+            let inputKey = document.getElementById('admin-gemini-input').value;
+            if(!inputKey) return showToast("API Key cannot be blank.", "error");
+            showToast("Deploying Key...");
+            try {
+                await setDoc(doc(db, "settings", "config"), { geminiKey: inputKey.trim(), updatedAt: new Date().toISOString() });
+                GEMINI_API_KEY = inputKey.trim();
+                showToast("Key successfully pushed live!", "success");
+            } catch(e) { showToast(`Failed: ${e.message}`, "error"); }
+        });
+
+        async function fetchAdminManageContent() {
+            const lecSnap = await getDocs(collection(db, "lectures"));
+            let lHtml = '';
+            lecSnap.forEach(d => {
+                lHtml += `<div class="admin-manage-item">
+                    <span style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 70%;">▶️ ${d.data().title}</span>
+                    <button class="btn-delete" onclick="deleteLectureNode('${d.id}')">🗑️ Delete</button>
+                </div>`;
+            });
+            document.getElementById('admin-manage-lectures').innerHTML = lHtml || "<p style='font-size:0.8rem; color:gray;'>No lectures found.</p>";
+
+            const matSnap = await getDocs(collection(db, "materials"));
+            let mHtml = '';
+            matSnap.forEach(d => {
+                mHtml += `<div class="admin-manage-item">
+                    <span style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 70%;">📄 ${d.data().title}</span>
+                    <button class="btn-delete" onclick="deleteMaterialNode('${d.id}')">🗑️ Delete</button>
+                </div>`;
+            });
+            document.getElementById('admin-manage-materials').innerHTML = mHtml || "<p style='font-size:0.8rem; color:gray;'>No materials found.</p>";
+        }
+
+        window.deleteLectureNode = async function(id) {
+            if(confirm("Permanently delete this video lecture?")) {
+                await deleteDoc(doc(db, "lectures", id));
+                fetchLectures(); fetchAdminManageContent();
+            }
+        }
+
+        window.deleteMaterialNode = async function(id) {
+            if(confirm("Permanently delete this material?")) {
+                await deleteDoc(doc(db, "materials", id));
+                fetchMaterials(); fetchAdminManageContent();
+            }
+        }
+        
+        document.getElementById('btn-add-lecture').addEventListener('click', async () => {
+            let t = document.getElementById('admin-lec-title').value;
+            let l = document.getElementById('admin-lec-link').value;
+            if(!t || !l) return showToast("All inputs required.", "error");
+            await addDoc(collection(db, "lectures"), { title: t, link: l, date: new Date().toISOString() });
+            showToast("Video published.");
+            document.getElementById('admin-lec-title').value = '';
+            document.getElementById('admin-lec-link').value = '';
+            fetchLectures(); fetchAdminManageContent();
+        });
+
+        document.getElementById('btn-add-material').addEventListener('click', async () => {
+            let title = document.getElementById('admin-mat-title').value;
+            let fileElement = document.getElementById('admin-mat-file').files[0];
+            let linkInput = document.getElementById('admin-mat-link').value;
+            if(!title) return showToast("Title missing.", "error");
+            if(!fileElement && !linkInput) return showToast("Provide a file OR link.", "error");
+            showToast("Processing file upload...");
+            try {
+                let downloadUrl = "", fName = "";
+                if(fileElement) {
+                    let fileStorageRef = ref(storage, `materials/${Date.now()}_${fileElement.name}`);
+                    let snapshot = await uploadBytes(fileStorageRef, fileElement);
+                    downloadUrl = await getDownloadURL(snapshot.ref);
+                    fName = fileElement.name;
+                } else if(linkInput) {
+                    downloadUrl = linkInput; fName = "External Link";
+                }
+                await addDoc(collection(db, "materials"), { title: title, fileUrl: downloadUrl, fileName: fName, type: 'file', timestamp: new Date().toISOString() });
+                showToast("Material asset synced live.");
+                document.getElementById('admin-mat-title').value = ''; document.getElementById('admin-mat-file').value = ''; document.getElementById('admin-mat-link').value = '';
+                fetchMaterials(); fetchAdminManageContent();
+            } catch (err) { showToast(`Upload aborted: Check Storage Rules.`, "error"); }
+        });
+
+        async function fetchAdminNotifications() {
+            const snap = await getDocs(collection(db, "notifications"));
+            let html = '';
+            snap.forEach(doc => {
+                let n = doc.data();
+                html += `
+                <div class="admin-comment-item" style="border-left-color: var(--warning);">
+                    <div style="font-size:0.75rem; color:var(--warning); font-weight:bold;">🕒 ${new Date(n.date).toLocaleString()}</div>
+                    <div style="font-weight:600; font-size:0.85rem; margin:2px 0;">👤 ${n.studentName} (${n.studentEmail})</div>
+                    <div style="font-size:0.85rem; color:#4a5568; margin-top:5px;">📝 <b>Changed:</b> ${n.message}</div>
+                </div>`;
+            });
+            document.getElementById('admin-notifications-list').innerHTML = html || "<p style='font-size:0.85rem; color:gray;'>No system notifications.</p>";
+        }
+
+        async function fetchAdminComments() {
+            const snap = await getDocs(collection(db, "comments"));
+            let html = '';
+            snap.forEach(doc => {
+                let c = doc.data();
+                html += `
+                <div class="admin-comment-item">
+                    <div style="font-size:0.7rem; color:var(--primary-green); font-weight:bold;">Topic: ${c.lectureTitle}</div>
+                    <div style="font-weight:600; font-size:0.85rem; margin:2px 0;">Student: ${c.studentName}</div>
+                    <div style="font-size:0.85rem; color:#4a5568; margin-bottom: 8px;">Q: "${c.text}"</div>
+                    ${c.adminReply ? `<div style="font-size:0.8rem; color:var(--dark-green);"><b>Replied:</b> ${c.adminReply}</div>` : 
+                    `<div class="comment-box" style="margin-top:5px; padding-top:5px; border-top:none;">
+                        <input type="text" id="admin-reply-${doc.id}" class="comment-input" placeholder="Type your reply here..." style="font-size:0.75rem; padding: 6px 10px;">
+                        <button class="btn-comment" onclick="submitAdminReply('${doc.id}')" style="font-size:0.75rem; padding:0 12px;">Reply</button>
+                    </div>`}
+                </div>`;
+            });
+            document.getElementById('admin-comments-list').innerHTML = html || "<p style='font-size:0.8rem; color:gray;'>Empty queries dashboard.</p>";
+        }
+
+        window.submitAdminReply = async function(commentId) {
+            let text = document.getElementById(`admin-reply-${commentId}`).value;
+            if(!text) return showToast("Reply empty.", "error");
+            await updateDoc(doc(db, "comments", commentId), { adminReply: text });
+            fetchAdminComments(); 
+        }
+
+        async function fetchAdminDirectory() {
+            fetchAdminComments(); fetchAdminNotifications();
+            const snap = await getDocs(collection(db, "users"));
+            adminAllUsers = [];
+            snap.forEach(doc => { adminAllUsers.push({ id: doc.id, ...doc.data() }); });
+            renderAdminUserDirectory(adminAllUsers);
+        }
+
+        function renderAdminUserDirectory(usersArr) {
+            let html = '';
+            usersArr.forEach(u => {
+                let cleanPhone = u.phone ? u.phone.replace(/[^0-9]/g, '') : "";
+                if(cleanPhone.startsWith('0')) cleanPhone = '92' + cleanPhone.substring(1);
+                html += `
+                <div class="user-list-item">
+                    <div class="user-list-info-row">
+                        <div class="user-list-img" style="background-image:url(${u.profilePic || 'https://via.placeholder.com/40'})"></div>
+                        <div>
+                            <div style="font-weight:bold; font-size:0.9rem; color:${u.isBlocked ? 'var(--danger)' : 'var(--text-dark)'};">
+                                ${u.name} ${u.isBlocked ? '⚠️ [BLOCKED]' : ''}</div>
+                            <div style="font-size:0.72rem; color:gray;">${u.college} | ID: ${u.email}</div>
+                        </div>
+                    </div>
+                    <div style="display:flex; gap:8px; width:100%; margin-top:5px;">
+                        <button class="btn-delete" style="flex:1; padding: 6px; background: ${u.isBlocked ? 'var(--primary-green)' : 'var(--danger)'};" onclick="toggleBlockUser('${u.id}', ${u.isBlocked || false})">
+                            ${u.isBlocked ? '✅ Unblock User' : '🚫 Block User'}</button>
+                        <a href="https://wa.me/${cleanPhone}" target="_blank" style="flex:1; background: var(--whatsapp); color: white; text-decoration: none; padding: 6px; border-radius: 6px; font-size: 0.75rem; font-weight: bold; display: flex; justify-content: center; align-items: center;">
+                            💬 WhatsApp Chat</a>
+                    </div>
+                </div>`;
+            });
+            document.getElementById('admin-users-list').innerHTML = html || "<p style='font-size:0.85rem; color:gray;'>No students.</p>";
+        }
+
+        document.getElementById('admin-search-users').addEventListener('input', (e) => {
+            let val = e.target.value.toLowerCase();
+            let matches = adminAllUsers.filter(u => (u.name && u.name.toLowerCase().includes(val)) || (u.college && u.college.toLowerCase().includes(val)) || (u.email && u.email.toLowerCase().includes(val)));
+            renderAdminUserDirectory(matches);
+        });
+
+        window.toggleBlockUser = async function(userId, currentBlockStatus) {
+            if(confirm(currentBlockStatus ? "Unblock this student?" : "Block this student?")) {
+                await updateDoc(doc(db, "users", userId), { isBlocked: !currentBlockStatus });
+                fetchAdminDirectory();
+            }
+        }
+
+        document.getElementById('btn-login').addEventListener('click', async () => {
+            const e = document.getElementById('email').value, p = document.getElementById('password').value;
+            if(!e || !p) return showToast("Credentials blank.", "error");
+            try { await signInWithEmailAndPassword(auth, e, p); } 
+            catch (err) {
+                if(err.code === 'auth/user-not-found' || err.code === 'auth/invalid-credential') {
+                    try { await createUserWithEmailAndPassword(auth, e, p); showToast("Account Created."); } 
+                    catch (er) { showToast(er.message, "error"); }
+                } else { showToast(err.message, "error"); }
+            }
+        });
+
+        document.getElementById('btn-google').addEventListener('click', async () => {
+            try { await signInWithPopup(auth, provider); } 
+            catch (err) { showToast(err.message, "error"); }
+        });
+
+        document.getElementById('btn-save-profile').addEventListener('click', async () => {
+            const name = document.getElementById('prof-name').value;
+            const phone = document.getElementById('prof-phone').value;
+            const college = document.getElementById('prof-college').value;
+            if(!name || !phone || !college) return showToast("Details mandatory.", "error");
+            showToast("Syncing user data...");
+            let picUrl = "";
+            if(selectedFile) {
+                try {
+                    const sRef = ref(storage, `profile_pics/${currentUser.uid}_${Date.now()}`);
+                    await uploadBytes(sRef, selectedFile);
+                    picUrl = await getDownloadURL(sRef);
+                } catch(imgErr) { console.log("Missing storage parameters."); }
+            }
+            try {
+                await setDoc(doc(db, "users", currentUser.uid), {
+                    name, phone, college, email: currentUser.email, profilePic: picUrl, isBlocked: false, createdAt: new Date().toISOString()
+                });
+                document.getElementById('profile-screen').classList.add('hidden');
+                document.getElementById('dashboard-screen').classList.remove('hidden');
+                document.getElementById('wa-widget').style.display = 'block';
+                currentUserData = {name, phone, college, profilePic: picUrl, isBlocked: false};
+                updateProfileUI(currentUserData, currentUser.email);
+                fetchLectures(); fetchMaterials(); fetchStudentQueries();
+            } catch(dbErr) { showToast(`Failed: ${dbErr.message}`, "error"); }
+        });
+
+        const forceTerminationHandler = () => { signOut(auth).then(() => { localStorage.clear(); window.location.reload(); }); };
+        document.getElementById('btn-logout').addEventListener('click', forceTerminationHandler);
+        document.getElementById('btn-admin-logout').addEventListener('click', forceTerminationHandler);
+    </script>
+</body>
+                                                 </html>
+    holder.com/120/069C54/ffffff?text=LP'">
         <h1 class="splash-title">LippinPharma</h1>
         <p style="font-size: 0.95rem; opacity: 0.9; margin-top: 5px;">Pharmacology App</p>
         <div class="spinner"></div>
