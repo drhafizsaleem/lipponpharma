@@ -3,9 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>LippinPharma | UHS Pharmacology</title>
+    <title>LippinPharma | Pharmacology</title>
     <style>
-        /* CSS Variables for Pharmacy Theme */
+        /* Premium Pharmacy Theme */
         :root {
             --primary-green: #069C54;
             --dark-green: #047840;
@@ -14,194 +14,239 @@
             --text-dark: #2d3748;
             --text-muted: #718096;
             --white: #ffffff;
+            --danger: #e53e3e;
         }
 
         body, html { margin: 0; padding: 0; height: 100%; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: var(--bg-color); color: var(--text-dark); overflow-x: hidden; -webkit-font-smoothing: antialiased; }
         .hidden { display: none !important; }
 
-        /* Professional Notification (Toast) */
-        #notification-box { position: fixed; top: -100px; left: 50%; transform: translateX(-50%); background-color: var(--text-dark); color: var(--white); padding: 12px 24px; border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.15); font-size: 0.95rem; font-weight: 500; z-index: 1000; transition: top 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55); display: flex; align-items: center; gap: 10px; text-align: center; max-width: 90%; }
+        /* Notifications */
+        #notification-box { position: fixed; top: -100px; left: 50%; transform: translateX(-50%); background-color: var(--text-dark); color: var(--white); padding: 12px 24px; border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.15); font-size: 0.95rem; font-weight: 500; z-index: 1000; transition: top 0.4s ease; display: flex; align-items: center; gap: 10px; }
         #notification-box.show { top: 20px; }
         .noti-success { border-left: 4px solid var(--primary-green); }
-        .noti-error { border-left: 4px solid #e53e3e; }
+        .noti-error { border-left: 4px solid var(--danger); }
 
         /* Splash Screen */
         #splash-screen { display: flex; flex-direction: column; justify-content: center; align-items: center; height: 100vh; background-color: var(--primary-green); color: var(--white); transition: opacity 0.6s ease; position: absolute; width: 100%; z-index: 100; }
-        
-        /* Circular Logo with White and Green Outline */
         .app-logo-splash { width: 120px; height: 120px; object-fit: cover; border-radius: 50%; border: 4px solid var(--white); box-shadow: 0 0 0 4px var(--dark-green), 0 6px 15px rgba(0,0,0,0.25); margin-bottom: 25px; background-color: var(--white); }
-        
         .splash-title { font-size: 2.2rem; font-weight: 700; margin: 0; letter-spacing: 1px; }
         .spinner { border: 3px solid rgba(255,255,255,0.3); border-top: 3px solid var(--white); border-radius: 50%; width: 35px; height: 35px; animation: spin 1s linear infinite; margin-top: 30px; }
         @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
 
-        /* Centered Forms Container */
+        /* Forms Container */
         .center-wrapper { display: flex; justify-content: center; align-items: center; height: 100vh; background-color: var(--light-green); }
         .card-box { background: var(--white); padding: 35px 30px; border-radius: 16px; width: 85%; max-width: 360px; text-align: center; box-shadow: 0 10px 30px rgba(6, 156, 84, 0.1); border: 1px solid rgba(6, 156, 84, 0.05); }
-        
         .app-logo-form { width: 70px; height: 70px; object-fit: cover; border-radius: 50%; border: 2px solid var(--primary-green); margin-bottom: 15px; background-color: var(--white); }
         
-        /* Modern Inputs */
         .input-group { margin-bottom: 15px; text-align: left; }
         .input-group label { display: block; font-size: 0.85rem; color: var(--text-muted); margin-bottom: 5px; font-weight: 500; }
-        input { width: 100%; padding: 14px 16px; border: 1.5px solid #e2e8f0; border-radius: 10px; box-sizing: border-box; font-size: 0.95rem; background-color: #f8fafc; transition: all 0.3s ease; color: var(--text-dark); }
-        input:focus { outline: none; border-color: var(--primary-green); background-color: var(--white); box-shadow: 0 0 0 4px rgba(6, 156, 84, 0.1); }
+        input, select, textarea { width: 100%; padding: 12px 14px; border: 1.5px solid #e2e8f0; border-radius: 8px; box-sizing: border-box; font-size: 0.95rem; background-color: #f8fafc; transition: 0.3s; color: var(--text-dark); font-family: inherit; }
+        input:focus, textarea:focus { outline: none; border-color: var(--primary-green); background-color: var(--white); }
         
-        /* Premium Profile Pic Container */
-        .profile-pic-container { width: 90px; height: 90px; background-color: #f8fafc; background-size: cover; background-position: center; border-radius: 50%; margin: 0 auto 20px; display: flex; flex-direction: column; align-items: center; justify-content: center; border: 2px dashed var(--primary-green); cursor: pointer; color: var(--primary-green); font-size: 0.8rem; font-weight: 600; transition: 0.3s; position: relative; overflow: hidden; }
-        .profile-pic-container:hover { background-color: var(--light-green); }
-        .profile-pic-container span { font-size: 1.5rem; margin-bottom: 2px; }
-
-        /* Premium Buttons */
-        .btn { border: none; padding: 14px; border-radius: 10px; cursor: pointer; width: 100%; font-weight: 600; font-size: 1rem; transition: all 0.3s ease; display: flex; justify-content: center; align-items: center; gap: 10px; }
-        .btn-primary { background: var(--primary-green); color: var(--white); box-shadow: 0 4px 12px rgba(6, 156, 84, 0.3); }
-        .btn-primary:hover { background: var(--dark-green); transform: translateY(-2px); box-shadow: 0 6px 15px rgba(6, 156, 84, 0.4); }
+        .profile-pic-container { width: 90px; height: 90px; background-color: #f8fafc; background-size: cover; background-position: center; border-radius: 50%; margin: 0 auto 20px; display: flex; flex-direction: column; align-items: center; justify-content: center; border: 2px dashed var(--primary-green); cursor: pointer; color: var(--primary-green); font-size: 0.8rem; font-weight: 600; }
         
-        .btn-google { background: var(--white); color: var(--text-dark); border: 1px solid #e2e8f0; margin-top: 15px; box-shadow: 0 2px 5px rgba(0,0,0,0.05); }
-        .btn-google:hover { background: #f8fafc; border-color: #cbd5e0; }
+        /* Buttons */
+        .btn { border: none; padding: 12px; border-radius: 8px; cursor: pointer; width: 100%; font-weight: 600; font-size: 1rem; transition: 0.3s; display: flex; justify-content: center; align-items: center; gap: 10px; }
+        .btn-primary { background: var(--primary-green); color: var(--white); }
+        .btn-primary:hover { background: var(--dark-green); }
+        .btn-danger { background: var(--danger); color: var(--white); }
+        .btn-danger:hover { background: #c53030; }
+        .btn-google { background: var(--white); color: var(--text-dark); border: 1px solid #e2e8f0; margin-top: 15px; }
 
         .divider { margin: 25px 0; display: flex; align-items: center; text-align: center; color: #a0aec0; font-size: 0.85rem; }
         .divider::before, .divider::after { content: ''; flex: 1; border-bottom: 1px solid #e2e8f0; }
-        .divider::before { margin-right: .25em; }
-        .divider::after { margin-left: .25em; }
 
-        .footer-text { margin-top: 25px; font-size: 0.8rem; color: var(--text-muted); font-weight: 500; }
-
-        /* Dashboard & Adaptive Nav */
-        .main-content { flex-grow: 1; padding: 25px; overflow-y: auto; }
-        .nav-bar { background-color: var(--white); display: flex; justify-content: space-around; padding: 12px 0; box-shadow: 0 -4px 20px rgba(0,0,0,0.05); z-index: 50; }
-        .nav-item { color: var(--text-muted); text-align: center; font-size: 0.75rem; cursor: pointer; transition: 0.3s; display: flex; flex-direction: column; align-items: center; gap: 6px; font-weight: 500; }
+        /* Dashboard Application Area */
+        .main-content { flex-grow: 1; padding: 20px; overflow-y: auto; height: calc(100vh - 70px); box-sizing: border-box; }
+        
+        /* Bottom/Top Navigation */
+        .nav-bar { background-color: var(--white); display: flex; justify-content: space-around; padding: 12px 0; box-shadow: 0 -4px 20px rgba(0,0,0,0.05); z-index: 50; position: fixed; bottom: 0; width: 100%; border-top: 1px solid #edf2f7; }
+        .nav-item { color: var(--text-muted); text-align: center; font-size: 0.75rem; cursor: pointer; transition: 0.3s; display: flex; flex-direction: column; align-items: center; gap: 4px; font-weight: 600; flex: 1; }
         .nav-item.active { color: var(--primary-green); }
-        .nav-icon { font-size: 1.4rem; }
-        .admin-tab { border: 1px dashed var(--primary-green) !important; background-color: #fff5f5; color: #c53030 !important;}
+        .nav-icon { font-size: 1.3rem; }
+        .admin-nav { color: var(--danger) !important; }
 
-        @media (max-width: 768px) {
-            #dashboard-screen { flex-direction: column; height: 100vh; display: flex; }
-            .nav-bar { position: fixed; bottom: 0; width: 100%; padding-bottom: calc(15px + env(safe-area-inset-bottom)); border-top: 1px solid #edf2f7; }
-            .main-content { padding-bottom: 90px; }
+        /* Tabs Setup */
+        .app-tab { display: none; animation: fadeIn 0.3s; }
+        .app-tab.active-tab { display: block; }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+
+        /* UI Cards for content */
+        .content-card { background: var(--white); padding: 20px; border-radius: 12px; margin-bottom: 15px; box-shadow: 0 2px 10px rgba(0,0,0,0.03); border: 1px solid #edf2f7; }
+        
+        /* Admin specific styles */
+        .admin-header { background: #fff5f5; border-left: 4px solid var(--danger); padding: 15px; border-radius: 8px; margin-bottom: 15px; }
+        .user-list-item { display: flex; align-items: center; gap: 15px; padding: 10px; border-bottom: 1px solid #edf2f7; }
+        .user-list-img { width: 40px; height: 40px; border-radius: 50%; background-size: cover; background-color: #eee; }
+        
+        @media (min-width: 769px) {
+            #dashboard-screen { display: flex; flex-direction: column-reverse; height: 100vh; }
+            .nav-bar { position: sticky; top: 0; bottom: auto; box-shadow: 0 4px 20px rgba(0,0,0,0.05); border-bottom: 1px solid #edf2f7; border-top: none; }
+            .main-content { height: auto; padding-bottom: 20px; }
+            .nav-item { flex-direction: row; font-size: 0.9rem; justify-content: center; }
         }
     </style>
 </head>
 <body>
 
-    <div id="notification-box" class="noti-success">
+    <div id="notification-box">
         <span id="noti-icon">✅</span>
-        <span id="noti-msg">Action Successful</span>
+        <span id="noti-msg">Message</span>
     </div>
 
     <div id="splash-screen">
-        <img src="logo.webp" alt="Logo" class="app-logo-splash" onerror="this.src='https://via.placeholder.com/120/069C54/ffffff?text=LippinPharma'">
+        <img src="logo.webp" alt="Logo" class="app-logo-splash" onerror="this.src='https://via.placeholder.com/120/069C54/ffffff?text=LP'">
         <h1 class="splash-title">LippinPharma</h1>
-        <p style="font-size: 0.95rem; opacity: 0.9; margin-top: 5px;">UHS Pharmacology App</p>
+        <p style="font-size: 0.95rem; opacity: 0.9; margin-top: 5px;">Pharmacology App</p>
         <div class="spinner"></div>
-        <p style="position: absolute; bottom: 30px; font-size: 0.85rem; opacity: 0.8; font-weight: 500;">Powered by Arfi</p>
+        <p style="position: absolute; bottom: 30px; font-size: 0.85rem; opacity: 0.8;">Powered by Arfi</p>
     </div>
 
     <div id="login-screen" class="center-wrapper hidden">
         <div class="card-box">
             <img src="logo.webp" alt="Logo" class="app-logo-form" onerror="this.src='https://via.placeholder.com/70/069C54/ffffff?text=LP'">
-            <h2 style="margin: 0 0 5px 0; color: var(--text-dark);">Welcome Back</h2>
-            <p style="color: var(--text-muted); font-size: 0.9rem; margin-bottom: 25px;">Sign in to continue your progress</p>
+            <h2 style="margin: 0 0 5px 0;">Welcome Back</h2>
+            <p style="color: var(--text-muted); font-size: 0.85rem; margin-bottom: 20px;">Sign in to access study materials</p>
             
             <div class="input-group">
-                <label>Email Address</label>
-                <input type="email" id="email" placeholder="student@example.com">
+                <input type="email" id="email" placeholder="Email Address">
             </div>
             <div class="input-group">
-                <label>Password</label>
-                <input type="password" id="password" placeholder="••••••••">
+                <input type="password" id="password" placeholder="Password">
             </div>
             
             <button class="btn btn-primary" id="btn-login">Sign In / Sign Up</button>
-            
-            <div class="divider">OR CONTINUE WITH</div>
-            
-            <button class="btn btn-google" id="btn-google">
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/>
-                    <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/>
-                    <path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" fill="#FBBC05"/>
-                    <path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/>
-                </svg>
-                Google
-            </button>
-            <p class="footer-text" id="footer-login">Powered by Arfi</p>
+            <div class="divider">OR</div>
+            <button class="btn btn-google" id="btn-google">🌐 Continue with Google</button>
+            <p style="margin-top: 25px; font-size: 0.8rem; color: var(--text-muted);">Powered by Arfi</p>
         </div>
     </div>
 
     <div id="profile-screen" class="center-wrapper hidden">
         <div class="card-box">
-            <h2 style="margin: 0 0 5px 0;">Complete Profile</h2>
-            <p style="color: var(--text-muted); font-size: 0.85rem; margin-bottom: 20px;">Please provide details for admin records</p>
+            <h2 style="margin: 0 0 5px 0;">Setup Profile</h2>
+            <p style="color: var(--text-muted); font-size: 0.85rem; margin-bottom: 20px;">Required for Admin Records</p>
             
             <input type="file" id="prof-pic-input" accept="image/*" class="hidden">
-            <div class="profile-pic-container" id="prof-pic-preview">
-                <span>📷</span>
-                Add Photo
-            </div>
+            <div class="profile-pic-container" id="prof-pic-preview"><span>📷</span>Photo</div>
             
             <div class="input-group">
-                <label>Full Name</label>
-                <input type="text" id="prof-name" placeholder="e.g. Ali Raza" required>
+                <input type="text" id="prof-name" placeholder="Full Name" required>
             </div>
             <div class="input-group">
-                <label>Mobile Number</label>
-                <input type="tel" id="prof-phone" placeholder="e.g. 03001234567" required>
+                <input type="tel" id="prof-phone" placeholder="Mobile / WhatsApp" required>
             </div>
             <div class="input-group">
-                <label>College / Institute Name</label>
-                <input type="text" id="prof-college" placeholder="Enter your college" required>
+                <input type="text" id="prof-college" placeholder="College Name" required>
             </div>
             
-            <button class="btn btn-primary" id="btn-save-profile" style="margin-top: 10px;">Save & Enter App</button>
-            <p class="footer-text" id="footer-profile">Powered by Arfi</p>
+            <button class="btn btn-primary" id="btn-save-profile" style="margin-top: 10px;">Save Profile</button>
         </div>
     </div>
 
     <div id="dashboard-screen" class="hidden">
+        
         <div class="main-content">
-            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
-                <h2 style="margin:0; color: var(--dark-green);" id="welcome-title">Daily Pharmacology</h2>
-                <div style="display:flex; align-items:center; gap: 10px;">
-                    <span id="user-display-email" style="font-size:0.8rem; color:var(--text-muted);"></span>
-                    <div id="dashboard-user-pic" style="width: 40px; height: 40px; border-radius: 50%; background-size:cover; border:2px solid var(--primary-green); background-image:url('https://via.placeholder.com/40');"></div>
+            
+            <div id="tab-home" class="app-tab active-tab">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+                    <h2 style="margin:0; color: var(--dark-green);" id="welcome-title">Dashboard</h2>
+                    <div id="dashboard-user-pic" style="width: 45px; height: 45px; border-radius: 50%; background-size:cover; border:2px solid var(--primary-green); background-image:url('https://via.placeholder.com/45');"></div>
+                </div>
+                
+                <div style="background: linear-gradient(135deg, var(--primary-green), var(--dark-green)); color: white; padding: 25px 20px; border-radius: 12px; margin-bottom: 20px; box-shadow: 0 8px 20px rgba(6, 156, 84, 0.25);">
+                    <h3 style="margin: 0 0 5px 0; font-size: 1.3rem;">Today's Target</h3>
+                    <p style="margin: 0; font-size: 0.9rem; opacity: 0.9;">Complete today's pharmacology MCQs based on Lippincott syllabus.</p>
+                    <button onclick="switchTab('tab-tests')" style="background: white; color: var(--primary-green); border: none; padding: 10px 20px; border-radius: 6px; font-weight: bold; margin-top: 15px; cursor: pointer;">Start Test ⏱️</button>
+                </div>
+
+                <h3 style="color: var(--text-dark); margin-bottom: 10px; font-size: 1.1rem;">Recent Lectures</h3>
+                <div id="student-lectures-list">
+                    <p style="font-size:0.9rem; color:var(--text-muted);">Fetching lectures...</p>
                 </div>
             </div>
-            
-            <div style="background: var(--primary-green); color: white; padding: 20px; border-radius: 12px; margin-bottom: 20px; box-shadow: 0 4px 15px rgba(6, 156, 84, 0.2);">
-                <h3 style="margin: 0 0 5px 0;">Today's Target</h3>
-                <p style="margin: 0; font-size: 0.9rem; opacity: 0.9;">50 MCQs updated from Lippincott.</p>
-                <button style="background: white; color: var(--primary-green); border: none; padding: 8px 16px; border-radius: 6px; font-weight: bold; margin-top: 15px; cursor: pointer;">Start Test ⏱️</button>
+
+            <div id="tab-tests" class="app-tab">
+                <h2 style="color: var(--dark-green); margin-bottom: 20px;">MCQ Testing System</h2>
+                <div class="content-card">
+                    <div style="display:flex; justify-content:space-between; margin-bottom:15px; font-weight:bold; color:var(--danger);">
+                        <span>Time Left: <span id="timer">30:00</span></span>
+                        <span>Score: <span id="live-score">0</span></span>
+                    </div>
+                    <div id="mcq-container">
+                        <p style="font-size:0.9rem; color:var(--text-muted);">MCQs will load here from database...</p>
+                    </div>
+                </div>
             </div>
+
+            <div id="tab-downloads" class="app-tab">
+                <h2 style="color: var(--dark-green); margin-bottom: 20px;">Helping Material</h2>
+                <div class="content-card">
+                    <p style="font-size:0.9rem; color:var(--text-muted);">PDF files and lecture notes will appear here.</p>
+                </div>
+            </div>
+
+            <div id="tab-profile" class="app-tab">
+                <h2 style="color: var(--dark-green); margin-bottom: 20px;">My Profile</h2>
+                <div class="content-card" style="text-align: center;">
+                    <div id="profile-page-pic" style="width: 100px; height: 100px; border-radius: 50%; background-size:cover; margin: 0 auto 15px; border:3px solid var(--primary-green);"></div>
+                    <h3 id="profile-page-name" style="margin:0 0 5px 0;">Student Name</h3>
+                    <p id="profile-page-email" style="margin:0 0 15px 0; color:var(--text-muted); font-size:0.9rem;"></p>
+                    
+                    <button class="btn btn-danger" id="btn-logout" style="margin-top: 20px;">🚪 Logout Securely</button>
+                </div>
+            </div>
+
+            <div id="tab-admin" class="app-tab">
+                <div class="admin-header">
+                    <h2 style="margin:0; color:var(--danger);">Admin Control Panel</h2>
+                    <p style="margin:5px 0 0 0; font-size:0.85rem;">Welcome Arfi. You have full access.</p>
+                </div>
+
+                <div class="content-card">
+                    <h3 style="margin-top:0;">Add New Lecture / Material</h3>
+                    <div class="input-group"><input type="text" id="admin-lec-title" placeholder="Lecture Title"></div>
+                    <div class="input-group"><input type="url" id="admin-lec-link" placeholder="Video / PDF Link"></div>
+                    <button class="btn btn-primary" id="btn-add-lecture">Add to App</button>
+                </div>
+
+                <div class="content-card">
+                    <h3 style="margin-top:0;">Registered Students</h3>
+                    <div id="admin-users-list">
+                        <p style="font-size:0.85rem; color:var(--text-muted);">Loading users...</p>
+                    </div>
+                </div>
+
+                <button class="btn btn-danger" id="btn-admin-logout" style="margin-top: 20px;">🚪 Logout Admin</button>
+            </div>
+
         </div>
 
         <div class="nav-bar">
-            <div class="nav-item active">
-                <span class="nav-icon">📊</span>
-                <span>Dashboard</span>
+            <div class="nav-item active" onclick="switchTab('tab-home', this)">
+                <span class="nav-icon">🏠</span><span>Home</span>
             </div>
-            <div class="nav-item">
-                <span class="nav-icon">📝</span>
-                <span>Tests</span>
+            <div class="nav-item" onclick="switchTab('tab-tests', this)">
+                <span class="nav-icon">📝</span><span>Tests</span>
             </div>
-            <div class="nav-item">
-                <span class="nav-icon">📥</span>
-                <span>Downloads</span>
+            <div class="nav-item" onclick="switchTab('tab-downloads', this)">
+                <span class="nav-icon">📥</span><span>Material</span>
             </div>
-            <div class="nav-item hidden" id="admin-nav-item">
-                <span class="nav-icon">⚙️</span>
-                <span>Admin</span>
+            <div class="nav-item" onclick="switchTab('tab-profile', this)">
+                <span class="nav-icon">👤</span><span>Profile</span>
+            </div>
+            <div class="nav-item hidden" id="admin-nav-item" onclick="switchTab('tab-admin', this)">
+                <span class="nav-icon">⚙️</span><span class="admin-nav">Admin</span>
             </div>
         </div>
     </div>
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/12.15.0/firebase-app.js";
-        import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, signInWithPopup, GoogleAuthProvider, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.15.0/firebase-auth.js";
-        import { getFirestore, doc, setDoc, getDoc } from "https://www.gstatic.com/firebasejs/12.15.0/firebase-firestore.js";
+        import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, signInWithPopup, GoogleAuthProvider, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/12.15.0/firebase-auth.js";
+        import { getFirestore, doc, setDoc, getDoc, collection, addDoc, getDocs, query, orderBy } from "https://www.gstatic.com/firebasejs/12.15.0/firebase-firestore.js";
         import { getStorage, ref, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/12.15.0/firebase-storage.js";
 
-        // Firebase Configuration
         const firebaseConfig = {
             apiKey: "AIzaSyDzXX21yLZHWagjZ9G8L6R5OIcJBPPhRcg",
             authDomain: "lippinpharma-e758f.firebaseapp.com",
@@ -211,7 +256,6 @@
             appId: "1:828017458601:web:ae687eea3978a7002198b8"
         };
 
-        // Initialize Core Services
         const app = initializeApp(firebaseConfig);
         const auth = getAuth(app);
         const db = getFirestore(app);
@@ -221,49 +265,75 @@
         let currentUser = null;
         let selectedFile = null;
 
-        // Toast Notification System
+        // UI Helpers
         window.showToast = function(message, type = 'success') {
-            const notiBox = document.getElementById('notification-box');
-            const notiMsg = document.getElementById('noti-msg');
-            const notiIcon = document.getElementById('noti-icon');
-            notiMsg.innerText = message;
-            if(type === 'success') {
-                notiBox.className = 'noti-success';
-                notiIcon.innerText = '✅';
-            } else {
-                notiBox.className = 'noti-error';
-                notiIcon.innerText = '⚠️';
-            }
-            notiBox.classList.add('show');
-            setTimeout(() => { notiBox.classList.remove('show'); }, 4000);
+            const box = document.getElementById('notification-box');
+            document.getElementById('noti-msg').innerText = message;
+            box.className = type === 'success' ? 'noti-success show' : 'noti-error show';
+            document.getElementById('noti-icon').innerText = type === 'success' ? '✅' : '⚠️';
+            setTimeout(() => { box.classList.remove('show'); }, 3000);
         }
 
-        // Profile Pic Selector Trigger & Local Preview Logic
-        const fileInput = document.getElementById('prof-pic-input');
-        const picPreview = document.getElementById('prof-pic-preview');
+        window.switchTab = function(tabId, element = null) {
+            document.querySelectorAll('.app-tab').forEach(t => t.classList.remove('active-tab'));
+            document.getElementById(tabId).classList.add('active-tab');
+            if(element) {
+                document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+                element.classList.add('active');
+            }
+        }
 
-        picPreview.addEventListener('click', () => fileInput.click());
+        // === SESSION TIMEOUT LOGIC (30 Mins) ===
+        const SESSION_TIMEOUT_MS = 30 * 60 * 1000; // 30 mins
+        
+        function updateActivityTime() {
+            localStorage.setItem('lastActiveTime', Date.now());
+        }
+
+        // Reset timer on any click or keypress
+        document.addEventListener('click', updateActivityTime);
+        document.addEventListener('keypress', updateActivityTime);
+
+        function checkSessionTimeout() {
+            const lastActive = localStorage.getItem('lastActiveTime');
+            if (lastActive && (Date.now() - parseInt(lastActive) > SESSION_TIMEOUT_MS)) {
+                // Time is up, logout user
+                if (auth.currentUser) {
+                    signOut(auth).then(() => {
+                        localStorage.removeItem('lastActiveTime');
+                        alert("Session Expired due to inactivity. Please login again.");
+                        window.location.reload();
+                    });
+                }
+            } else {
+                updateActivityTime();
+            }
+        }
+
+        // Profile Pic Selector
+        const fileInput = document.getElementById('prof-pic-input');
+        document.getElementById('prof-pic-preview').addEventListener('click', () => fileInput.click());
         fileInput.addEventListener('change', (e) => {
             const file = e.target.files[0];
             if(file) {
                 selectedFile = file;
                 const reader = new FileReader();
-                reader.onload = function(event) {
-                    picPreview.style.backgroundImage = `url(${event.target.result})`;
-                    picPreview.innerHTML = ''; // Hide the placeholder text/icon
+                reader.onload = e => {
+                    document.getElementById('prof-pic-preview').style.backgroundImage = `url(${e.target.result})`;
+                    document.getElementById('prof-pic-preview').innerHTML = ''; 
                 }
                 reader.readAsDataURL(file);
-                showToast("Photo selected! Ready to upload.", "success");
             }
         });
 
-        // Auto Login Session Observer
+        // Auth Observer
         setTimeout(() => {
             onAuthStateChanged(auth, async (user) => {
                 document.getElementById('splash-screen').style.opacity = '0';
                 setTimeout(() => { document.getElementById('splash-screen').style.display = 'none'; }, 600);
 
                 if (user) {
+                    checkSessionTimeout(); // Check if they are returning after 30 mins
                     currentUser = user;
                     checkUserProfile(user);
                 } else {
@@ -272,108 +342,135 @@
             });
         }, 2000);
 
-        // Check user profile records
         async function checkUserProfile(user) {
             const docRef = doc(db, "users", user.uid);
             const docSnap = await getDoc(docRef);
 
-            // Hidden Admin Door (Unlocks exclusively for your Gmail)
+            // Admin Logic
             if(user.email === "uarajpoot31@gmail.com") {
-                showToast("Welcome Admin Arfi! Master portal active.", "success");
                 document.getElementById('admin-nav-item').classList.remove('hidden');
-                document.getElementById('admin-nav-item').classList.add('admin-tab');
+                loadAdminData(); // Fetch users for admin
             }
 
             if (docSnap.exists()) {
-                const userData = docSnap.data();
-                document.getElementById('welcome-title').innerText = `Hello, ${userData.name}`;
-                document.getElementById('user-display-email').innerText = user.email;
-                if(userData.profilePic) {
-                    document.getElementById('dashboard-user-pic').style.backgroundImage = `url(${userData.profilePic})`;
-                }
+                const data = docSnap.data();
+                document.getElementById('welcome-title').innerText = `Hi, ${data.name}`;
+                document.getElementById('profile-page-name').innerText = data.name;
+                document.getElementById('profile-page-email').innerText = user.email;
+                
+                const picUrl = data.profilePic || "https://via.placeholder.com/150";
+                document.getElementById('dashboard-user-pic').style.backgroundImage = `url(${picUrl})`;
+                document.getElementById('profile-page-pic').style.backgroundImage = `url(${picUrl})`;
+
                 document.getElementById('login-screen').classList.add('hidden');
                 document.getElementById('profile-screen').classList.add('hidden');
                 document.getElementById('dashboard-screen').classList.remove('hidden');
+                
+                loadLectures(); // Fetch content for student
             } else {
                 document.getElementById('login-screen').classList.add('hidden');
                 document.getElementById('profile-screen').classList.remove('hidden');
-                if(user.displayName) document.getElementById('prof-name').value = user.displayName;
             }
         }
 
-        // Email Login / Auto Signup
+        // Login System
         document.getElementById('btn-login').addEventListener('click', async () => {
-            const email = document.getElementById('email').value;
-            const password = document.getElementById('password').value;
-
-            if(!email || !password) { showToast("Please fill all fields", "error"); return; }
-            showToast("Processing credentials...", "success");
-
-            try {
-                await signInWithEmailAndPassword(auth, email, password);
-            } catch (error) {
-                if (error.code === 'auth/user-not-found' || error.code === 'auth/invalid-credential') {
-                    try {
-                        await createUserWithEmailAndPassword(auth, email, password);
-                        showToast("New Account Registered!", "success");
-                    } catch (signUpError) {
-                        showToast(signUpError.message, "error");
-                    }
-                } else {
-                    showToast(error.message, "error");
-                }
+            const e = document.getElementById('email').value, p = document.getElementById('password').value;
+            if(!e || !p) return showToast("Enter details", "error");
+            showToast("Authenticating...");
+            try { await signInWithEmailAndPassword(auth, e, p); } 
+            catch (err) {
+                if(err.code === 'auth/user-not-found' || err.code === 'auth/invalid-credential') {
+                    try { await createUserWithEmailAndPassword(auth, e, p); showToast("Account Created!"); } 
+                    catch (er) { showToast(er.message, "error"); }
+                } else { showToast(err.message, "error"); }
             }
         });
 
-        // Google Secure Login with Detailed Error Debugger
         document.getElementById('btn-google').addEventListener('click', async () => {
-            showToast("Connecting to Google Auth API...", "success");
-            try {
-                await signInWithPopup(auth, provider);
-            } catch (error) {
-                // Displays exact system code to trace domain block/popup block issues
-                showToast(`Google Error [${error.code}]: ${error.message}`, "error");
-                console.error("Google Login Detailed Debug:", error);
-            }
+            try { await signInWithPopup(auth, provider); } 
+            catch (err) { showToast(err.message, "error"); }
         });
 
-        // Save Profile Record (with automatic image upload to Storage)
+        // Save Profile
         document.getElementById('btn-save-profile').addEventListener('click', async () => {
             const name = document.getElementById('prof-name').value;
             const phone = document.getElementById('prof-phone').value;
             const college = document.getElementById('prof-college').value;
-
-            if(!name || !phone || !college) { showToast("Please fill all profile fields", "error"); return; }
+            if(!name || !phone) return showToast("Fill details", "error");
             
-            let uploadedImageUrl = "";
-
-            try {
-                // If student picked an image, upload it first to Firebase Storage
-                if(selectedFile) {
-                    showToast("Uploading and compressing profile picture...", "success");
-                    const storageRef = ref(storage, `profile_pics/${currentUser.uid}_${Date.now()}`);
-                    const uploadResult = await uploadBytes(storageRef, selectedFile);
-                    uploadedImageUrl = await getDownloadURL(uploadResult.ref);
-                }
-
-                showToast("Syncing user profile securely...", "success");
-
-                await setDoc(doc(db, "users", currentUser.uid), {
-                    name: name,
-                    phone: phone,
-                    college: college,
-                    email: currentUser.email,
-                    profilePic: uploadedImageUrl || "https://via.placeholder.com/150",
-                    createdAt: new Date().toISOString(),
-                    role: currentUser.email === "uarajpoot31@gmail.com" ? "admin" : "student"
-                });
-                
-                showToast("Profile successfully finalized!", "success");
-                checkUserProfile(currentUser);
-            } catch (error) {
-                showToast(`Storage/DB Error: ${error.message}`, "error");
+            showToast("Saving...");
+            let picUrl = "";
+            if(selectedFile) {
+                const sRef = ref(storage, `profile_pics/${currentUser.uid}`);
+                await uploadBytes(sRef, selectedFile);
+                picUrl = await getDownloadURL(sRef);
             }
+            await setDoc(doc(db, "users", currentUser.uid), {
+                name, phone, college, email: currentUser.email, profilePic: picUrl, 
+                createdAt: new Date().toISOString()
+            });
+            checkUserProfile(currentUser);
         });
+
+        // SECURE LOGOUT SYSTEM
+        const logoutHandler = () => {
+            signOut(auth).then(() => {
+                localStorage.removeItem('lastActiveTime');
+                window.location.reload();
+            });
+        };
+        document.getElementById('btn-logout').addEventListener('click', logoutHandler);
+        document.getElementById('btn-admin-logout').addEventListener('click', logoutHandler);
+
+        // --- ADMIN FUNCTIONS ---
+        // 1. Add material
+        document.getElementById('btn-add-lecture').addEventListener('click', async () => {
+            const title = document.getElementById('admin-lec-title').value;
+            const link = document.getElementById('admin-lec-link').value;
+            if(!title || !link) return showToast("Fill all fields", "error");
+            
+            showToast("Adding material...", "success");
+            await addDoc(collection(db, "lectures"), { title, link, date: new Date().toISOString() });
+            showToast("Added successfully!", "success");
+            document.getElementById('admin-lec-title').value = '';
+            document.getElementById('admin-lec-link').value = '';
+            loadLectures();
+        });
+
+        // 2. Fetch Users (Admin Only)
+        async function loadAdminData() {
+            const usersSnap = await getDocs(collection(db, "users"));
+            let html = '';
+            usersSnap.forEach(doc => {
+                const u = doc.data();
+                html += `
+                <div class="user-list-item">
+                    <div class="user-list-img" style="background-image:url(${u.profilePic || 'https://via.placeholder.com/40'})"></div>
+                    <div>
+                        <div style="font-weight:bold; font-size:0.95rem;">${u.name}</div>
+                        <div style="font-size:0.75rem; color:gray;">${u.college} | ${u.phone}</div>
+                    </div>
+                </div>`;
+            });
+            document.getElementById('admin-users-list').innerHTML = html || "<p>No users yet.</p>";
+        }
+
+        // --- STUDENT FUNCTIONS ---
+        // Load Lectures to Student Dashboard
+        async function loadLectures() {
+            const lecSnap = await getDocs(collection(db, "lectures"));
+            let html = '';
+            lecSnap.forEach(doc => {
+                const l = doc.data();
+                html += `
+                <div class="content-card" style="display:flex; justify-content:space-between; align-items:center;">
+                    <div style="font-weight:600;">▶️ ${l.title}</div>
+                    <a href="${l.link}" target="_blank" style="color:var(--primary-green); font-size:0.8rem; text-decoration:none; font-weight:bold;">Watch</a>
+                </div>`;
+            });
+            document.getElementById('student-lectures-list').innerHTML = html || "<p>No lectures uploaded yet.</p>";
+        }
     </script>
 </body>
 </html>
