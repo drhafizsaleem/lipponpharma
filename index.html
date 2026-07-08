@@ -66,6 +66,9 @@
         .nav-item.active { color: var(--primary-green); }
         .nav-icon { font-size: 1.4rem; }
 
+        /* Secret Admin Tab CSS */
+        .admin-tab { border: 1px dashed var(--primary-green) !important; background-color: #fff5f5; color: #c53030 !important;}
+
         @media (max-width: 768px) {
             #dashboard-screen { flex-direction: column; height: 100vh; display: flex; }
             .nav-bar { position: fixed; bottom: 0; width: 100%; padding-bottom: calc(15px + env(safe-area-inset-bottom)); border-top: 1px solid #edf2f7; }
@@ -75,15 +78,12 @@
 </head>
 <body>
 
-    <!-- Professional Notification Toast -->
     <div id="notification-box" class="noti-success">
         <span id="noti-icon">✅</span>
         <span id="noti-msg">Action Successful</span>
     </div>
 
-    <!-- 1. Splash Screen -->
     <div id="splash-screen">
-        <!-- WEBP Logo for Splash Screen -->
         <img src="logo.webp" alt="LippinPharma Logo" class="app-logo-splash" onerror="this.src='https://via.placeholder.com/120/ffffff/069C54?text=LOGO'">
         <h1 class="splash-title">LippinPharma</h1>
         <p style="font-size: 0.95rem; opacity: 0.9; margin-top: 5px;">UHS Pharmacology App</p>
@@ -91,10 +91,8 @@
         <p style="position: absolute; bottom: 30px; font-size: 0.85rem; opacity: 0.8; font-weight: 500;">Powered by Arfi</p>
     </div>
 
-    <!-- 2. Premium Login Screen -->
     <div id="login-screen" class="center-wrapper hidden">
         <div class="card-box">
-            <!-- WEBP Logo for Forms -->
             <img src="logo.webp" alt="Logo" class="app-logo-form" onerror="this.src='https://via.placeholder.com/70/069C54/ffffff?text=L'">
             <h2 style="margin: 0 0 5px 0; color: var(--text-dark);">Welcome Back</h2>
             <p style="color: var(--text-muted); font-size: 0.9rem; margin-bottom: 25px;">Sign in to continue your progress</p>
@@ -108,11 +106,11 @@
                 <input type="password" id="password" placeholder="••••••••">
             </div>
             
-            <button class="btn btn-primary" onclick="handleLogin()">Sign In</button>
+            <button class="btn btn-primary" id="btn-login">Sign In / Sign Up</button>
             
             <div class="divider">OR CONTINUE WITH</div>
             
-            <button class="btn btn-google" onclick="handleGoogleLogin()">
+            <button class="btn btn-google" id="btn-google">
                 <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                     <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/>
                     <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/>
@@ -121,39 +119,37 @@
                 </svg>
                 Google
             </button>
-            <p class="footer-text">Powered by Arfi</p>
+            <p class="footer-text" id="footer-login">Powered by Arfi</p>
         </div>
     </div>
 
-    <!-- 3. Profile Setup Form -->
     <div id="profile-screen" class="center-wrapper hidden">
         <div class="card-box">
             <h2 style="margin: 0 0 5px 0;">Complete Profile</h2>
             <p style="color: var(--text-muted); font-size: 0.85rem; margin-bottom: 20px;">Please provide details for admin records</p>
             
-            <div style="width: 85px; height: 85px; background: #f8fafc; border-radius: 50%; margin: 0 auto 20px; display: flex; align-items: center; justify-content: center; border: 2px dashed #cbd5e0; cursor: pointer; color: var(--primary-green); font-size: 1.5rem; transition: 0.3s;">
-                + 📷
-            </div>
-            
             <div class="input-group">
                 <label>Full Name</label>
-                <input type="text" placeholder="e.g. Ali Raza" required>
+                <input type="text" id="prof-name" placeholder="e.g. Ali Raza" required>
+            </div>
+            <div class="input-group">
+                <label>Mobile Number</label>
+                <input type="tel" id="prof-phone" placeholder="e.g. 03001234567" required>
             </div>
             <div class="input-group">
                 <label>College / Institute Name</label>
-                <input type="text" placeholder="Enter your medical/nursing college" required>
+                <input type="text" id="prof-college" placeholder="Enter your college" required>
             </div>
             
-            <button class="btn btn-primary" onclick="saveProfile()" style="margin-top: 10px;">Save & Enter App</button>
-            <p class="footer-text">Powered by Arfi</p>
+            <button class="btn btn-primary" id="btn-save-profile" style="margin-top: 10px;">Save & Enter App</button>
+            <p class="footer-text" id="footer-profile">Powered by Arfi</p>
         </div>
     </div>
 
-    <!-- 4. Dashboard (Adaptive) -->
     <div id="dashboard-screen" class="hidden">
         <div class="main-content">
             <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
-                <h2 style="margin:0; color: var(--dark-green);">Daily Pharmacology</h2>
+                <h2 style="margin:0; color: var(--dark-green);" id="welcome-title">Daily Pharmacology</h2>
                 <img src="logo.webp" alt="Logo" style="width: 40px; height: 40px; border-radius: 8px; object-fit: contain;">
             </div>
             
@@ -164,7 +160,6 @@
             </div>
         </div>
 
-        <!-- Adaptive Bottom Navigation -->
         <div class="nav-bar">
             <div class="nav-item active">
                 <span class="nav-icon">📊</span>
@@ -178,22 +173,42 @@
                 <span class="nav-icon">📥</span>
                 <span>Downloads</span>
             </div>
-            <div class="nav-item">
-                <span class="nav-icon">👤</span>
-                <span>Profile</span>
+            <div class="nav-item hidden" id="admin-nav-item">
+                <span class="nav-icon">⚙️</span>
+                <span>Admin</span>
             </div>
         </div>
     </div>
 
-    <script>
-        // Professional Toast Notification Function
-        function showToast(message, type = 'success') {
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/12.15.0/firebase-app.js";
+        import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, signInWithPopup, GoogleAuthProvider, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.15.0/firebase-auth.js";
+        import { getFirestore, doc, setDoc, getDoc } from "https://www.gstatic.com/firebasejs/12.15.0/firebase-firestore.js";
+
+        // Integrated User Configuration
+        const firebaseConfig = {
+            apiKey: "AIzaSyDzXX21yLZHWagjZ9G8L6R5OIcJBPPhRcg",
+            authDomain: "lippinpharma-e758f.firebaseapp.com",
+            projectId: "lippinpharma-e758f",
+            storageBucket: "lippinpharma-e758f.firebasestorage.app",
+            messagingSenderId: "828017458601",
+            appId: "1:828017458601:web:ae687eea3978a7002198b8"
+        };
+
+        // Initialize Firebase
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getFirestore(app);
+        const provider = new GoogleAuthProvider();
+
+        let currentUser = null;
+
+        // Toast Notification System
+        window.showToast = function(message, type = 'success') {
             const notiBox = document.getElementById('notification-box');
             const notiMsg = document.getElementById('noti-msg');
             const notiIcon = document.getElementById('noti-icon');
-
             notiMsg.innerText = message;
-            
             if(type === 'success') {
                 notiBox.className = 'noti-success';
                 notiIcon.innerText = '✅';
@@ -201,45 +216,108 @@
                 notiBox.className = 'noti-error';
                 notiIcon.innerText = '⚠️';
             }
-
             notiBox.classList.add('show');
-            setTimeout(() => {
-                notiBox.classList.remove('show');
-            }, 3000);
+            setTimeout(() => { notiBox.classList.remove('show'); }, 3000);
         }
 
-        // UX Flow Logic
+        // Auto Login Session Observer
         setTimeout(() => {
-            document.getElementById('splash-screen').style.opacity = '0';
-            setTimeout(() => {
-                document.getElementById('splash-screen').style.display = 'none';
-                document.getElementById('login-screen').classList.remove('hidden');
-            }, 600);
+            onAuthStateChanged(auth, async (user) => {
+                document.getElementById('splash-screen').style.opacity = '0';
+                setTimeout(() => { document.getElementById('splash-screen').style.display = 'none'; }, 600);
+
+                if (user) {
+                    currentUser = user;
+                    checkUserProfile(user);
+                } else {
+                    document.getElementById('login-screen').classList.remove('hidden');
+                }
+            });
         }, 2000);
 
-        function handleLogin() {
-            showToast('Authenticating...', 'success');
-            setTimeout(() => {
-                document.getElementById('login-screen').classList.add('hidden');
-                document.getElementById('profile-screen').classList.remove('hidden');
-            }, 1000);
-        }
+        // Check user profile records
+        async function checkUserProfile(user) {
+            const docRef = doc(db, "users", user.uid);
+            const docSnap = await getDoc(docRef);
 
-        function handleGoogleLogin() {
-            showToast('Connecting to Google...', 'success');
-            setTimeout(() => {
-                document.getElementById('login-screen').classList.add('hidden');
-                document.getElementById('profile-screen').classList.remove('hidden');
-            }, 1000);
-        }
+            // Hidden Admin Door (Activates only for your Gmail)
+            if(user.email === "uarajpoot31@gmail.com") {
+                showToast("Welcome Admin Arfi! System unlocked.", "success");
+                document.getElementById('admin-nav-item').classList.remove('hidden');
+                document.getElementById('admin-nav-item').classList.add('admin-tab');
+            }
 
-        function saveProfile() {
-            showToast('Profile Saved Successfully!', 'success');
-            setTimeout(() => {
+            if (docSnap.exists()) {
+                document.getElementById('welcome-title').innerText = `Hello, ${docSnap.data().name}`;
+                document.getElementById('login-screen').classList.add('hidden');
                 document.getElementById('profile-screen').classList.add('hidden');
                 document.getElementById('dashboard-screen').classList.remove('hidden');
-            }, 1000);
+            } else {
+                document.getElementById('login-screen').classList.add('hidden');
+                document.getElementById('profile-screen').classList.remove('hidden');
+                if(user.displayName) document.getElementById('prof-name').value = user.displayName;
+            }
         }
+
+        // Email Login / Auto Signup
+        document.getElementById('btn-login').addEventListener('click', async () => {
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+
+            if(!email || !password) { showToast("Please fill all fields", "error"); return; }
+            showToast("Processing authentication...", "success");
+
+            try {
+                await signInWithEmailAndPassword(auth, email, password);
+            } catch (error) {
+                if (error.code === 'auth/user-not-found' || error.code === 'auth/invalid-credential') {
+                    try {
+                        await createUserWithEmailAndPassword(auth, email, password);
+                        showToast("Account Registered Successfully!", "success");
+                    } catch (signUpError) {
+                        showToast(signUpError.message, "error");
+                    }
+                } else {
+                    showToast(error.message, "error");
+                }
+            }
+        });
+
+        // Google Secure Login
+        document.getElementById('btn-google').addEventListener('click', async () => {
+            showToast("Opening Google Sign-in...", "success");
+            try {
+                await signInWithPopup(auth, provider);
+            } catch (error) {
+                showToast(error.message, "error");
+            }
+        });
+
+        // Save Profile Record
+        document.getElementById('btn-save-profile').addEventListener('click', async () => {
+            const name = document.getElementById('prof-name').value;
+            const phone = document.getElementById('prof-phone').value;
+            const college = document.getElementById('prof-college').value;
+
+            if(!name || !phone || !college) { showToast("Please fill all profile fields", "error"); return; }
+            showToast("Syncing data with cloud...", "success");
+
+            try {
+                await setDoc(doc(db, "users", currentUser.uid), {
+                    name: name,
+                    phone: phone,
+                    college: college,
+                    email: currentUser.email,
+                    createdAt: new Date().toISOString(),
+                    role: currentUser.email === "uarajpoot31@gmail.com" ? "admin" : "student"
+                });
+                
+                showToast("Profile Synced and Secured!", "success");
+                checkUserProfile(currentUser);
+            } catch (error) {
+                showToast(error.message, "error");
+            }
+        });
     </script>
 </body>
 </html>
