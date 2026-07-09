@@ -63,7 +63,7 @@
         /* Master Application Layout Viewports */
         .main-content { flex-grow: 1; padding: 20px; overflow-y: auto; height: calc(100vh - 75px); box-sizing: border-box; }
         
-        /* Bottom Tab Nav Bar with Professional Dual-Tone Corner Outlines */
+        /* Bottom Tab Nav Bar */
         .nav-bar { background-color: var(--white); display: flex; justify-content: space-around; padding: 12px 10px; box-shadow: 0 -4px 20px rgba(0,0,0,0.05); z-index: 50; position: fixed; bottom: 0; width: 100%; border-top: 1px solid #edf2f7; box-sizing: border-box;}
         .nav-item { color: var(--text-muted); text-align: center; font-size: 0.72rem; cursor: pointer; transition: 0.3s; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 4px; font-weight: 600; flex: 1; padding: 8px 0; border: 2px solid transparent; }
         
@@ -87,8 +87,8 @@
 
         /* Structural Design Units */
         .content-card { background: var(--white); padding: 20px; border-radius: 12px; margin-bottom: 15px; box-shadow: 0 2px 10px rgba(0,0,0,0.03); border: 1px solid #edf2f7; }
-        .video-container { position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden; border-radius: 8px; margin-bottom: 10px; background: #000; box-shadow: 0 4px 10px rgba(0,0,0,0.08); }
-        .video-container iframe { position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: 0; }
+        .video-container { position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden; border-radius: 8px; margin-bottom: 10px; background: #000; box-shadow: 0 4px 10px rgba(0,0,0,0.08); z-index: 10;}
+        .video-container iframe { position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: 0; pointer-events: auto; }
         
         .comment-box { display: flex; gap: 10px; margin-top: 15px; border-top: 1px solid #f1f5f9; padding-top: 12px; }
         .comment-input { flex: 1; padding: 10px 14px; font-size: 0.85rem; border: 1px solid #e2e8f0; border-radius: 20px; background: #f8fafc; }
@@ -118,6 +118,9 @@
 
         .topic-btn { background: #f1f5f9; color: var(--dark-green); border: 1px solid #cbd5e0; padding: 8px 15px; border-radius: 20px; font-size: 0.85rem; cursor: pointer; margin: 5px; font-weight: bold; }
         .topic-btn:hover { background: var(--primary-green); color: white; border-color: var(--primary-green); }
+
+        /* History Result Item */
+        .history-item { background: #f8fafc; border-left: 4px solid var(--primary-green); padding: 12px; margin-bottom: 10px; border-radius: 8px; }
 
         /* In-App PDF View Modal Layout */
         #reader-modal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); z-index: 4500; display: none; justify-content: center; align-items: center; padding: 20px; box-sizing: border-box; }
@@ -201,10 +204,10 @@
                 
                 <div style="background: linear-gradient(135deg, var(--primary-green), var(--dark-green)); color: white; padding: 25px 20px; border-radius: 12px; box-shadow: 0 8px 20px rgba(6, 156, 84, 0.25);">
                     <h3 style="margin: 0 0 5px 0; font-size: 1.3rem;">Pharmacology Evaluation</h3>
-                    <p>Test your concepts parameters using Lippincott pharmacology criteria logs.</p>
+                    <p style="margin: 0; font-size: 0.9rem; opacity: 0.9;">Evaluate your progress parameters via manual structural topic tests.</p>
                     <button onclick="switchTab('tab-tests')" style="background: white; color: var(--primary-green); border: none; padding: 10px 20px; border-radius: 6px; font-weight: bold; cursor: pointer; margin-top: 10px;">Start Test ⏱️</button>
                 </div>
-                <h3>Latest Activity Feed</h3>
+                <h3 style="color: var(--text-dark); margin-bottom: 12px; font-size: 1.1rem;">Latest Uploads</h3>
                 <div id="home-recent-activity"><p style="font-size:0.85rem; color:gray;">System feed live...</p></div>
             </div>
 
@@ -231,7 +234,7 @@
                 </div>
 
                 <div class="content-card" style="border: 1px dashed var(--blue);">
-                    <h3 style="margin-top:0; color: var(--blue); font-size:1.1rem;">⚡ Dynamic Generator Node</h3>
+                    <h3 style="margin-top:0; color: var(--blue); font-size:1.1rem;">⚡ AI Generator Engine</h3>
                     <div style="display: flex; gap:10px;">
                         <input type="text" id="ai-topic" placeholder="Topic Target">
                         <input type="number" id="ai-count" value="5" style="width:70px;">
@@ -240,7 +243,7 @@
                 </div>
 
                 <div class="content-card" id="quiz-block-space">
-                    <h3 id="quiz-title-heading">Quiz Sheet Window</h3>
+                    <h3 id="quiz-title-heading" style="margin-top:0; color:var(--primary-green);">Quiz Sheet Window</h3>
                     <div id="quiz-render-area"><p style="font-size:0.9rem; color:var(--text-muted);">Select a test above to begin.</p></div>
                     <button class="btn btn-primary hidden" id="btn-submit-test" style="margin-top: 20px;">Submit Evaluation Test</button>
                     <div id="quiz-result-area" style="margin-top: 15px; font-weight: bold; font-size: 1.1rem; text-align: center; color: var(--primary-green);"></div>
@@ -260,6 +263,7 @@
                     <button class="btn btn-google" id="btn-edit-profile-trigger" style="max-width: 180px; margin: 0 auto 15px auto;">✏️ Edit Details</button>
                     
                     <div id="edit-profile-form" class="hidden" style="text-align: left; background:#f8fafc; padding:15px; border-radius:12px; border:1px solid #e2e8f0;">
+                        <h4 style="margin-top: 0; color: var(--dark-green);">Modify Registration Parameters</h4>
                         <input type="text" id="edit-prof-name" placeholder="Full Name">
                         <input type="tel" id="edit-prof-phone" placeholder="WhatsApp Phone">
                         <input type="text" id="edit-prof-college" placeholder="College Name">
@@ -269,20 +273,30 @@
 
                     <button class="btn btn-danger" id="btn-logout" style="max-width: 180px; margin: 10px auto 0 auto;">🚪 Logout Session</button>
                 </div>
-                <div class="content-card"><h3>My Queries History Logs</h3><div id="student-queries-list"></div></div>
+
+                <div class="content-card" style="text-align: left; margin-top: 15px;">
+                    <h3 style="color: var(--dark-green); margin-top: 0;">📊 My Test History</h3>
+                    <div id="student-test-history-list"><p style="font-size:0.85rem; color:var(--text-muted);">No tests taken yet.</p></div>
+                </div>
+                
+                <div class="content-card" style="text-align: left; margin-top: 15px;">
+                    <h3 style="color: var(--dark-green); margin-top: 0;">My Queries & Replies</h3>
+                    <div id="student-queries-list"></div>
+                </div>
                 <p style="text-align: center; font-size: 0.85rem; color: var(--text-muted); font-weight: 600;">Powered by Arfi</p>
             </div>
 
             <div id="tab-admin" class="app-tab">
                 <div class="admin-header">
                     <h2 style="margin:0; color:var(--danger);">Admin Control Workspace</h2>
-                    <p style="margin:2px 0 0 0; font-size:0.82rem;">Superuser Portal Enabled.</p>
+                    <p style="margin:2px 0 0 0; font-size:0.82rem;">Superuser Portal Node Enabled.</p>
                 </div>
 
                 <div class="content-card" style="border: 1px solid var(--primary-green);">
                     <h3 style="margin-top:0; font-size:1rem; color:var(--primary-green);">📝 Bulk Upload Questions</h3>
+                    <p style="font-size:0.8rem; margin: -5px 0 10px 0;">Format Example:<br>Question: What is X?<br>A) Option 1<br>B) Option 2<br>C) Option 3<br>D) Option 4<br>Answer: B<br>Reason: Explain here...</p>
                     <input type="text" id="admin-bulk-topic" placeholder="Topic Title (e.g. Autonomic Nervous System)">
-                    <textarea id="admin-bulk-text" rows="6" placeholder="Question: Text?\nA: Option\nB: Option\nC: Option\nD: Option\nAnswer: B"></textarea>
+                    <textarea id="admin-bulk-text" rows="6" placeholder="Paste questions block here..."></textarea>
                     <button class="btn btn-primary" id="btn-add-bulk-mcq">Commit Bulk Save Node</button>
                 </div>
 
@@ -294,8 +308,8 @@
                 </div>
 
                 <div class="content-card" style="border: 1px solid var(--warning);">
-                    <h3 style="margin-top:0; font-size:1rem; color:var(--warning);">🔑 Token Provider Configuration Configuration</h3>
-                    <p style="font-size:0.8rem; margin:-5px 0 10px 0; color:gray;">Paste 'AIzaSy...' API key here.</p>
+                    <h3 style="margin-top:0; font-size:1rem; color:var(--warning);">🔑 AI API Configuration</h3>
+                    <p style="font-size:0.75rem; margin:-5px 0 10px 0; color:gray;">Paste 'AIzaSy...' API key here to activate generator.</p>
                     <input type="text" id="admin-gemini-input" placeholder="Paste Token Key Target">
                     <button class="btn" style="background:var(--warning); color:white;" id="btn-save-gemini">Synchronize Keys Live</button>
                 </div>
@@ -311,27 +325,23 @@
                     <h3 style="margin-top:0; font-size:1rem;">Add Video Lecture Node</h3>
                     <input type="text" id="admin-lec-title" placeholder="Title Header">
                     <input type="url" id="admin-lec-link" placeholder="YouTube Frame URL">
-                    <button class="btn btn-primary" id="btn-add-lecture">Deploy Video Instance</button>
+                    <button class="btn btn-primary" id="btn-add-lecture">Deploy Video Link Node</button>
                 </div>
 
                 <div class="content-card">
-                    <h3 style="margin-top:0; font-size:1rem;">Upload External PDF / PPT</h3>
-                    <input type="text" id="admin-mat-title" placeholder="Package Title">
-                    <div style="background: #f8fafc; padding: 10px; border-radius: 8px; border: 1px dashed var(--primary-green); margin-bottom:10px;">
-                        <input type="file" id="admin-mat-file" accept=".pdf,.ppt,.pptx,.doc,.docx" style="margin-bottom:0;">
-                        <div style="text-align: center; margin: 5px 0; font-size: 0.8rem; font-weight: bold; color: gray;">OR</div>
-                        <input type="url" id="admin-mat-link" placeholder="Direct Package Uniform Link Address" style="margin-bottom:0;">
-                    </div>
-                    <button class="btn btn-primary" id="btn-add-material">Publish File Node</button>
+                    <h3 style="margin-top:0; font-size:1rem;">Upload External Document Link</h3>
+                    <input type="text" id="admin-mat-title" placeholder="Title">
+                    <input type="url" id="admin-mat-link" placeholder="Paste External File URL (Drive/Dropbox/PDF)">
+                    <button class="btn btn-primary" id="btn-add-material">Publish Remote Link</button>
                 </div>
 
-                <div class="content-card"><h3>Student Feedback Feed</h3><div id="admin-comments-list"></div></div>
+                <div class="content-card"><h3>Student Comments Feed</h3><div id="admin-comments-list"></div></div>
                 <div class="content-card">
-                    <h3>Registered Profiles Logs</h3>
-                    <input type="text" id="admin-search-users" placeholder="🔍 Search identity records..." style="border-color:var(--danger);">
+                    <h3>Users Log Directory</h3>
+                    <input type="text" id="admin-search-users" placeholder="🔍 Search identity records..." style="margin-bottom: 15px; border-color:var(--danger);">
                     <div id="admin-users-list"></div>
                 </div>
-                <button class="btn btn-danger" id="btn-admin-logout">🚪 Close Superuser Control Workspace</button>
+                <button class="btn btn-danger" id="btn-admin-logout" style="margin-top: 15px;">🚪 Terminate Control Session</button>
             </div>
         </div>
 
@@ -348,19 +358,16 @@
     <div id="wa-widget">
         <div id="wa-chat-box">
             <h4 style="margin:0 0 5px 0;">Helpdesk Direct</h4>
-            <textarea id="wa-msg-text" rows="3" placeholder="Write query detail parameters..."></textarea>
-            <button class="btn btn-primary" id="btn-send-wa" style="background:var(--whatsapp);">Launch WhatsApp Secure</button>
+            <textarea id="wa-msg-text" rows="2" placeholder="Query details..."></textarea>
+            <button class="btn btn-primary" id="btn-send-wa" style="background:var(--whatsapp);">Launch Chat Line</button>
         </div>
-        <div class="wa-btn" id="wa-toggle-btn">
-            <svg viewBox="0 0 448 512"><path d="M380.9 97.1C339 55.1 283.2 32 223.9 32c-122.4 0-222 99.6-222 222 0 39.1 10.2 77.3 29.6 111L0 480l117.7-30.9c32.4 17.7 68.9 27 106.1 27h.1c122.3 0 224.1-99.6 224.1-222 0-59.3-25.2-115-67.1-157zm-157 341.6c-33.2 0-65.7-8.9-94-25.7l-6.7-4-69.8 18.3L72 359.2l-4.4-7c-18.5-29.4-28.2-63.3-28.2-98.2 0-101.7 82.8-184.5 184.6-184.5 49.3 0 95.6 19.2 130.4 54.1 34.8 34.9 56.2 81.2 56.1 130.5 0 101.8-84.9 184.6-186.6 184.6z"/></svg>
-        </div>
+        <div class="wa-btn" id="wa-toggle-btn"><svg viewBox="0 0 448 512"><path d="M380.9 97.1C339 55.1 283.2 32 223.9 32c-122.4 0-222 99.6-222 222 0 39.1 10.2 77.3 29.6 111L0 480l117.7-30.9c32.4 17.7 68.9 27 106.1 27h.1c122.3 0 224.1-99.6 224.1-222 0-59.3-25.2-115-67.1-157zm-157 341.6c-33.2 0-65.7-8.9-94-25.7l-6.7-4-69.8 18.3L72 359.2l-4.4-7c-18.5-29.4-28.2-63.3-28.2-98.2 0-101.7 82.8-184.5 184.6-184.5 49.3 0 95.6 19.2 130.4 54.1 34.8 34.9 56.2 81.2 56.1 130.5 0 101.8-84.9 184.6-186.6 184.6z"/></svg></div>
     </div>
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/12.15.0/firebase-app.js";
         import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, signInWithPopup, GoogleAuthProvider, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/12.15.0/firebase-auth.js";
         import { getFirestore, doc, setDoc, getDoc, collection, addDoc, getDocs, updateDoc, deleteDoc } from "https://www.gstatic.com/firebasejs/12.15.0/firebase-firestore.js";
-        import { getStorage, ref, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/12.15.0/firebase-storage.js";
 
         // FIREBASE CONNECTIVITY
         const firebaseConfig = {
@@ -375,7 +382,6 @@
         const app = initializeApp(firebaseConfig);
         const auth = getAuth(app);
         const db = getFirestore(app);
-        const storage = getStorage(app);
         const provider = new GoogleAuthProvider();
 
         // GLOBAL VARIABLES
@@ -385,15 +391,12 @@
         let base64ProfilePicString = "";
         
         let localMaterialsArrayCache = [];
-        let allLectures = [];
-        let adminAllUsers = [];
         let manualMCQsData = [];
-        
-        // TEST SYSTEM ARRAYS
         let currentTestQuestions = [];
         let userSelectedAnswers = [];
+        let currentTestTopic = "";
+        let myTestHistory = [];
 
-        // TOAST ENGINE
         window.showToast = function(message, type = 'success') {
             const box = document.getElementById('notification-box');
             document.getElementById('noti-msg').innerText = message;
@@ -402,7 +405,6 @@
             setTimeout(() => { box.classList.remove('show'); }, 4000);
         }
 
-        // NAVIGATION TABS
         window.switchTab = function(tabId, element = null) {
             document.querySelectorAll('.app-tab').forEach(t => t.classList.remove('active-tab'));
             document.getElementById(tabId).classList.add('active-tab');
@@ -412,7 +414,7 @@
             }
         }
 
-        // PDF READER & DOWNLOAD
+        // --- Note Reader Modal System ---
         window.viewComposedNote = function(matId) {
             let node = localMaterialsArrayCache.find(m => m.id === matId);
             if(node) {
@@ -421,24 +423,77 @@
                 document.getElementById('reader-modal').style.display = 'flex';
             }
         }
-        window.closeReaderModal = function() { document.getElementById('reader-modal').style.display = 'none'; }
+        window.closeReaderModal = function() {
+            document.getElementById('reader-modal').style.display = 'none';
+        }
 
+        // --- PDF Generation System ---
         window.downloadComposedPDF = function(matId) {
             let node = localMaterialsArrayCache.find(m => m.id === matId);
-            if(!node) return showToast("File node context dropped.", "error");
-            showToast("Structuring PDF parameters. Please hold...", "success");
+            if(!node) return showToast("Error connecting file.", "error");
+            showToast("Designing PDF. Please wait...", "success");
             
             let htmlTemplate = `
-                <div style="padding: 40px; font-family: sans-serif; color: #2d3748; background: #ffffff;">
+                <div style="padding: 40px; font-family: 'Segoe UI', Arial, sans-serif; color: #2d3748; background: #ffffff;">
                     <div style="text-align: center; border-bottom: 3px solid #069C54; padding-bottom: 15px; margin-bottom: 30px;">
-                        <h1 style="color: #047840; margin: 0; font-size: 26px;">${node.title}</h1>
-                        <p style="color: #718096; margin: 5px 0 0 0; font-size: 13px;">Official Reference Notes Summary</p>
+                        <h1 style="color: #047840; margin: 0; font-size: 28px;">${node.title}</h1>
+                        <p style="color: #718096; margin: 5px 0 0 0; font-size: 14px;">Official Study Material</p>
                     </div>
-                    <div style="font-size: 15px; line-height: 1.8; white-space: pre-wrap; text-align: justify;">
+                    <div style="font-size: 16px; line-height: 1.8; color: #2d3748; white-space: pre-wrap; text-align: justify;">
                         ${node.content}
                     </div>
                     <div style="margin-top: 50px; text-align: center; border-top: 1px solid #e2e8f0; padding-top: 20px;">
-                        <p style="color: #069C54; font-weight: bold; margin: 0; font-size:16px;">Powered by LippinPharma App</p>
+                        <p style="color: #069C54; font-weight: bold; margin: 0; font-size:18px;">Powered by LippinPharma App by Arfi</p>
+                    </div>
+                </div>
+            `;
+            
+            document.getElementById('pdf-export-container').innerHTML = htmlTemplate;
+            const element = document.getElementById('pdf-export-container');
+            element.style.display = 'block';
+
+            const opt = {
+                margin:       0.5,
+                filename:     `${node.title}.pdf`,
+                image:        { type: 'jpeg', quality: 0.98 },
+                html2canvas:  { scale: 2 },
+                jsPDF:        { unit: 'in', format: 'letter', orientation: 'portrait' }
+            };
+            
+            html2pdf().set(opt).from(element).save().then(() => {
+                element.style.display = 'none';
+                showToast("PDF Downloaded successfully!", "success");
+            });
+        }
+
+        // --- RESULT CARD GENERATION ---
+        window.downloadResultCard = function(historyId) {
+            let record = myTestHistory.find(r => r.id === historyId);
+            if(!record) return;
+            showToast("Generating official Result Card...", "success");
+
+            let htmlTemplate = `
+                <div style="padding: 40px; font-family: sans-serif; color: #2d3748; background: #ffffff; border: 10px solid #069C54; border-radius: 10px;">
+                    <div style="text-align: center; border-bottom: 2px solid #e2e8f0; padding-bottom: 20px; margin-bottom: 30px;">
+                        <h1 style="color: #047840; margin: 0; font-size: 32px;">LippinPharma</h1>
+                        <p style="color: #718096; margin: 5px 0 0 0; font-size: 16px;">Official Evaluation Result Card</p>
+                    </div>
+                    
+                    <div style="margin-bottom: 30px; font-size: 16px;">
+                        <p><b>Student Name:</b> ${currentUserData.name}</p>
+                        <p><b>Student ID:</b> ${currentUser.email}</p>
+                        <p><b>College:</b> ${currentUserData.college}</p>
+                        <p><b>Date:</b> ${new Date(record.date).toLocaleString()}</p>
+                    </div>
+
+                    <div style="background: #e6f6ed; padding: 20px; border-radius: 10px; text-align: center; margin-bottom: 30px;">
+                        <h2 style="margin:0; color: #047840;">Test Topic: ${record.topic}</h2>
+                        <h1 style="font-size: 48px; color: #069C54; margin: 10px 0;">${record.score} / ${record.total}</h1>
+                        <p style="margin:0; font-size: 18px; font-weight: bold;">Percentage: ${((record.score/record.total)*100).toFixed(1)}%</p>
+                    </div>
+
+                    <div style="margin-top: 50px; text-align: center; border-top: 1px solid #e2e8f0; padding-top: 20px;">
+                        <p style="color: #069C54; font-weight: bold; margin: 0; font-size:18px;">Powered by LippinPharma by Arfi</p>
                     </div>
                 </div>`;
             
@@ -446,164 +501,151 @@
             targetSandbox.innerHTML = htmlTemplate;
             targetSandbox.style.display = 'block';
 
-            const configurationsPack = {
-                margin: 0.5, filename: `${node.title}.pdf`, image: { type: 'jpeg', quality: 0.98 },
-                html2canvas: { scale: 2 }, jsPDF: { unit: 'in', format: 'letter', orientation: 'portrait' }
-            };
-            
-            html2pdf().set(configurationsPack).from(targetSandbox).save().then(() => {
-                targetSandbox.style.display = 'none'; showToast("PDF File Download Successful!", "success");
-            });
+            const opt = { margin: 0.5, filename: `Result_${record.topic}.pdf`, image: { type: 'jpeg', quality: 0.98 }, html2canvas: { scale: 2 }, jsPDF: { unit: 'in', format: 'letter', orientation: 'portrait' } };
+            html2pdf().set(opt).from(targetSandbox).save().then(() => { targetSandbox.style.display = 'none'; });
         }
 
-        // WHATSAPP HELPDESK
+
+        // WhatsApp Setup
         document.getElementById('wa-toggle-btn').addEventListener('click', () => {
-            const box = document.getElementById('wa-chat-box'); box.style.display = box.style.display === 'flex' ? 'none' : 'flex';
+            const box = document.getElementById('wa-chat-box');
+            box.style.display = box.style.display === 'flex' ? 'none' : 'flex';
         });
+
         document.getElementById('btn-send-wa').addEventListener('click', () => {
-            const query = document.getElementById('wa-msg-text').value;
-            const name = currentUserData ? currentUserData.name : "Student";
-            const messageRow = `Hi This is ${name} here from LippinPharma.`;
-            const uriTarget = `https://wa.me/923156765582?text=${encodeURIComponent(messageRow + (query ? "\nDetails: " + query : ""))}`;
-            window.open(uriTarget, '_blank');
-            document.getElementById('wa-msg-text').value = ''; document.getElementById('wa-chat-box').style.display = 'none';
+            const customQuery = document.getElementById('wa-msg-text').value;
+            const sName = currentUserData ? currentUserData.name : "Student";
+            const textString = `Hi This is ${sName} here from LippinPharma.`;
+            const targetURI = `https://wa.me/923156765582?text=${encodeURIComponent(textString + (customQuery ? "\nQuery: " + customQuery : ""))}`;
+            window.open(targetURI, '_blank');
+            document.getElementById('wa-msg-text').value = '';
+            document.getElementById('wa-chat-box').style.display = 'none';
         });
 
-        // BASE64 IMAGE ENCODER (Registration)
-        const fileChooserInputNode = document.getElementById('prof-pic-input');
-        const triggerBoxFrameNode = document.getElementById('prof-pic-preview');
-        if(triggerBoxFrameNode) triggerBoxFrameNode.addEventListener('click', () => fileChooserInputNode.click());
+        function getYouTubeEmbedUrl(urlStr) {
+            if(!urlStr) return "";
+            let regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=)([^#\&\?]*).*/;
+            let match = urlStr.match(regExp);
+            if (match && match[2].length === 11) {
+                return `https://www.youtube.com/embed/${match[2]}?modestbranding=1&rel=0&showinfo=0&controls=1`;
+            }
+            return urlStr;
+        }
+
+        // PROFILE EDIT PIC SYSTEM
+        const fileInput = document.getElementById('prof-pic-input');
+        const picContainerFrame = document.getElementById('prof-pic-preview');
+
+        if(picContainerFrame) {
+            picContainerFrame.addEventListener('click', () => fileInput.click());
+        }
         
-        fileChooserInputNode.addEventListener('change', (e) => {
-            const targetFile = e.target.files[0];
-            if(targetFile) {
-                const streamReader = new FileReader();
-                streamReader.onload = ev => {
-                    base64ProfilePicString = ev.target.result; 
-                    triggerBoxFrameNode.style.backgroundImage = `url(${base64ProfilePicString})`;
-                    triggerBoxFrameNode.innerHTML = '';
-                };
-                streamReader.readAsDataURL(targetFile);
+        fileInput.addEventListener('change', (e) => {
+            const file = e.target.files[0];
+            if(file) {
+                const reader = new FileReader();
+                reader.onload = event => {
+                    base64ProfilePicString = event.target.result;
+                    picContainerFrame.style.backgroundImage = `url(${base64ProfilePicString})`;
+                    picContainerFrame.innerHTML = ''; 
+                }
+                reader.readAsDataURL(file);
             }
         });
 
-        // BASE64 IMAGE ENCODER (Profile Edit)
-        const profileTabAvatarClickFrame = document.getElementById('profile-page-pic');
-        const hiddenEditProfileFileSelectorNode = document.getElementById('edit-prof-pic-input');
-        if(profileTabAvatarClickFrame) profileTabAvatarClickFrame.addEventListener('click', () => hiddenEditProfileFileSelectorNode.click());
-        
-        hiddenEditProfileFileSelectorNode.addEventListener('change', async (e) => {
-            const fileTarget = e.target.files[0];
-            if(fileTarget && currentUser) {
-                showToast("Converting and uploading new photo...", "success");
-                const readerInstanceNode = new FileReader();
-                readerInstanceNode.onload = async ev => {
-                    let newBase64String = ev.target.result;
-                    try {
-                        await updateDoc(doc(db, "users", currentUser.uid), { profilePic: newBase64String });
-                        currentUserData.profilePic = newBase64String;
-                        updateProfileUI(currentUserData, currentUser.email);
-                        showToast("Profile Picture Updated!", "success");
-                    } catch(err) { showToast("Failed to upload picture.", "error"); }
+        // Edit Profile Photo
+        const editProfileFileField = document.getElementById('edit-prof-pic-input');
+        document.getElementById('profile-page-pic').addEventListener('click', () => editProfileFileField.click());
+        editProfileFileField.addEventListener('change', (e) => {
+            const file = e.target.files[0];
+            if(file) {
+                const r = new FileReader();
+                r.onload = async ev => {
+                    let str = ev.target.result;
+                    showToast("Saving new photo...", "success");
+                    await updateDoc(doc(db, "users", currentUser.uid), { profilePic: str });
+                    currentUserData.profilePic = str;
+                    updateProfileUI(currentUserData, currentUser.email);
+                    showToast("Picture updated!");
                 };
-                readerInstanceNode.readAsDataURL(fileTarget);
+                r.readAsDataURL(file);
             }
         });
 
-        // SESSION AUTHENTICATION & LOGIN LOOP FIX
         async function runCloudGeminiSync() {
             try {
                 const configSnap = await getDoc(doc(db, "settings", "config"));
-                if(configSnap.exists() && configSnap.data().geminiKey) { GEMINI_API_KEY = configSnap.data().geminiKey; }
+                if(configSnap.exists() && configSnap.data().geminiKey) {
+                    GEMINI_API_KEY = configSnap.data().geminiKey;
+                }
             } catch(e) { }
             if(auth.currentUser && auth.currentUser.email === "uarajpoot31@gmail.com") {
                 document.getElementById('admin-gemini-input').value = GEMINI_API_KEY;
             }
         }
 
+        // AUTH SYSTEM (FIXED INFINITE LOOP)
         setTimeout(() => {
             onAuthStateChanged(auth, async (user) => {
                 document.getElementById('splash-screen').style.opacity = '0';
                 setTimeout(() => { document.getElementById('splash-screen').style.display = 'none'; }, 600);
-                
                 if (user) {
-                    // Check Session Tick To prevent Infinite Loop
-                    const tick = localStorage.getItem('sessionTick');
-                    if (tick && (Date.now() - parseInt(tick) > 30 * 60 * 1000)) {
-                        await signOut(auth);
-                        localStorage.clear();
-                        showToast("Session Expired. Please Login Again.", "error");
-                        document.getElementById('login-screen').classList.remove('hidden');
-                        return;
-                    }
-                    localStorage.setItem('sessionTick', Date.now()); // Ping Session Active
-                    
                     currentUser = user;
-                    await runCloudGeminiSync(); 
+                    await runCloudGeminiSync();
                     checkUserProfile(user);
                 } else {
                     document.getElementById('login-screen').classList.remove('hidden');
-                    document.getElementById('dashboard-screen').classList.add('hidden');
-                    document.getElementById('profile-screen').classList.add('hidden');
-                    document.getElementById('wa-widget').style.display = 'none';
                 }
             });
         }, 2000);
 
-        // Keep Session Active on Interaction
-        function pingSession() { if(auth.currentUser) localStorage.setItem('sessionTick', Date.now()); }
-        document.addEventListener('click', pingSession); document.addEventListener('keypress', pingSession);
-
         async function checkUserProfile(user) {
-            try {
-                const snap = await getDoc(doc(db, "users", user.uid));
-                if(snap.exists()) {
-                    currentUserData = snap.data();
-                    if(currentUserData.isBlocked === true) {
-                        showToast("⛔ Authorization Rejected: System Blocked.", "error");
-                        setTimeout(() => { signOut(auth).then(() => { localStorage.clear(); window.location.reload(); }); }, 2000);
-                        return;
-                    }
-                    if(user.email === "uarajpoot31@gmail.com") {
-                        document.getElementById('admin-nav-item').classList.remove('hidden');
-                        fetchAdminDirectory(); fetchAdminManageContent(); 
-                    }
-                    updateProfileUI(currentUserData, user.email);
-                    document.getElementById('login-screen').classList.add('hidden');
-                    document.getElementById('profile-screen').classList.add('hidden');
-                    document.getElementById('dashboard-screen').classList.remove('hidden');
-                    document.getElementById('wa-widget').style.display = 'block';
-                    fetchLectures(); fetchMaterials(); fetchStudentQueries(); fetchManualMCQs();
-                } else {
-                    document.getElementById('login-screen').classList.add('hidden');
-                    document.getElementById('profile-screen').classList.remove('hidden');
+            const snap = await getDoc(doc(db, "users", user.uid));
+            if(snap.exists()) {
+                currentUserData = snap.data();
+                if(currentUserData.isBlocked === true) {
+                    showToast("⛔ Access Denied: Your account has been blocked by Admin.", "error");
+                    setTimeout(() => { signOut(auth).then(() => { window.location.reload(); }); }, 2500);
+                    return;
                 }
-            } catch(e) { showToast("System Network Error.", "error"); }
+                if(user.email === "uarajpoot31@gmail.com") {
+                    document.getElementById('admin-nav-item').classList.remove('hidden');
+                    fetchAdminManageContent(); 
+                }
+                updateProfileUI(currentUserData, user.email);
+                document.getElementById('login-screen').classList.add('hidden');
+                document.getElementById('profile-screen').classList.add('hidden');
+                document.getElementById('dashboard-screen').classList.remove('hidden');
+                document.getElementById('wa-widget').style.display = 'block';
+                
+                fetchLectures(); fetchMaterials(); fetchStudentQueries(); fetchManualMCQs(); fetchTestHistory();
+            } else {
+                document.getElementById('login-screen').classList.add('hidden');
+                document.getElementById('profile-screen').classList.remove('hidden');
+            }
         }
 
         function updateProfileUI(data, email) {
             document.getElementById('welcome-title').innerText = `Hi, ${data.name}`;
             document.getElementById('profile-page-name').innerText = data.name;
             document.getElementById('profile-page-email').innerText = email;
-            const pic = data.profilePic || "https://via.placeholder.com/150";
-            document.getElementById('dashboard-user-pic').style.backgroundImage = `url(${pic})`;
-            document.getElementById('profile-page-pic').style.backgroundImage = `url(${pic})`;
+            const srcPic = data.profilePic || "https://via.placeholder.com/150";
+            document.getElementById('dashboard-user-pic').style.backgroundImage = `url(${srcPic})`;
+            document.getElementById('profile-page-pic').style.backgroundImage = `url(${srcPic})`;
         }
 
-        // LOGIN / LOGOUT EXECUTION
+        // LOGIN / LOGOUT EXECUTION (FIXED)
         document.getElementById('btn-login').addEventListener('click', async () => {
             const e = document.getElementById('email').value, p = document.getElementById('password').value; 
             if(!e || !p) return showToast("Enter credentials.", "error"); 
             showToast("Authenticating...");
             try { 
                 await signInWithEmailAndPassword(auth, e, p); 
-                localStorage.setItem('sessionTick', Date.now()); // Lock Active Session
             } 
             catch (err) {
                 if(err.code === 'auth/user-not-found' || err.code === 'auth/invalid-credential') {
                     try { 
                         await createUserWithEmailAndPassword(auth, e, p); 
-                        localStorage.setItem('sessionTick', Date.now());
                     } catch (er) { showToast(er.message, "error"); }
                 } else { showToast(err.message, "error"); }
             }
@@ -613,44 +655,34 @@
             try { 
                 showToast("Opening Google Auth...");
                 await signInWithPopup(auth, provider); 
-                localStorage.setItem('sessionTick', Date.now());
             } catch (err) { showToast("Google Login Cancelled", "error"); } 
         });
 
         const performSafeLogout = () => {
             showToast("Closing secure connection...", "success");
-            signOut(auth).then(() => { localStorage.clear(); window.location.reload(); });
+            signOut(auth).then(() => { window.location.reload(); });
         };
         document.getElementById('btn-logout').addEventListener('click', performSafeLogout);
         document.getElementById('btn-admin-logout').addEventListener('click', performSafeLogout);
 
-        document.getElementById('btn-save-profile').addEventListener('click', async () => {
-            const name = document.getElementById('prof-name').value; const phone = document.getElementById('prof-phone').value; const college = document.getElementById('prof-college').value;
-            if(!name || !phone || !college) return showToast("Identity elements required.", "error");
-            showToast("Writing synchronized profile elements...");
-            try {
-                await setDoc(doc(db, "users", currentUser.uid), { name, phone, college, email: currentUser.email, profilePic: base64ProfilePicString || "", isBlocked: false, createdAt: new Date().toISOString() });
-                window.location.reload(); 
-            } catch(dbErr) { showToast("Database rules intercept.", "error"); }
-        });
 
-        // ------------------------------------------------------------------
-        // EVALUATION TEST SYSTEM (MANUAL & AI) WITH SUBMIT BUTTON
-        // ------------------------------------------------------------------
+        // --- FETCH MANUAL MCQs (Student Test System) ---
         async function fetchManualMCQs() {
             const snap = await getDocs(collection(db, "manual_tests"));
-            manualMCQsData = []; let html = '';
+            manualMCQsData = [];
+            let html = '';
             snap.forEach(doc => { 
                 let d = doc.data(); manualMCQsData.push({ id: doc.id, ...d }); 
-                html += `<button class="topic-btn" onclick="startTestMode('${doc.id}', false)">${d.topic}</button>`;
+                html += `<button class="topic-btn" onclick="startTestMode('${doc.id}', '${d.topic}', false)">${d.topic}</button>`;
             });
-            document.getElementById('manual-topics-container').innerHTML = html || "<p style='font-size:0.8rem; color:gray;'>No unit tests uploaded.</p>";
+            document.getElementById('manual-topics-container').innerHTML = html || "<p style='font-size:0.8rem; color:gray;'>No manual tests uploaded yet.</p>";
         }
 
-        window.startTestMode = function(identifier, isAI = false) {
+        window.startTestMode = function(identifier, topicName, isAI = false) {
             currentTestQuestions = [];
             userSelectedAnswers = [];
-            document.getElementById('quiz-result-area').innerText = ''; // clear old results
+            currentTestTopic = topicName;
+            document.getElementById('quiz-result-area').innerText = ''; 
             
             if(!isAI) {
                 let node = manualMCQsData.find(q => q.id === identifier);
@@ -662,7 +694,8 @@
                     showToast(`Test loaded successfully.`, "success");
                 }
             } else {
-                currentTestQuestions = identifier; 
+                currentTestQuestions = identifier; // AI passes array
+                document.getElementById('quiz-title-heading').innerText = `AI Custom Test: ${topicName}`;
                 renderEvaluationBlock(currentTestQuestions);
                 document.getElementById('btn-submit-test').classList.remove('hidden');
             }
@@ -671,7 +704,7 @@
         function renderEvaluationBlock(questionsArray) {
             let container = document.getElementById('quiz-render-area'); let html = '';
             questionsArray.forEach((q, idx) => {
-                userSelectedAnswers[idx] = null; // Initialize null tracking
+                userSelectedAnswers[idx] = null;
                 html += `
                 <div style="margin-bottom:15px; border-bottom:1px solid #f1f5f9; padding-bottom:12px;">
                     <div style="font-weight:600; font-size:0.95rem;">Q${idx+1}: ${q.question}</div>
@@ -679,6 +712,12 @@
                 q.options.forEach((opt, oIdx) => {
                     html += `<div class="quiz-option" id="opt-${idx}-${oIdx}" onclick="selectTestOption(${idx}, ${oIdx})">${opt}</div>`;
                 });
+                
+                // Reason Block (Hidden initially)
+                if(q.reason) {
+                    html += `<div id="reason-${idx}" class="hidden" style="margin-top: 10px; padding: 10px; background: #e6f6ed; border-left: 3px solid var(--primary-green); font-size: 0.85rem; color: var(--dark-green);"><b>Explanation:</b> ${q.reason}</div>`;
+                }
+
                 html += `</div></div>`;
             });
             container.innerHTML = html;
@@ -688,13 +727,19 @@
             userSelectedAnswers[qIndex] = oIndex;
             let parent = document.getElementById(`opts-group-${qIndex}`);
             let allOpts = parent.querySelectorAll('.quiz-option');
-            allOpts.forEach(el => { el.style.background = '#f8fafc'; el.style.borderColor = '#e2e8f0'; el.style.fontWeight = '500'; });
+            allOpts.forEach(el => {
+                el.style.background = '#f8fafc'; el.style.borderColor = '#e2e8f0'; el.style.fontWeight = '500';
+            });
             let selectedEl = document.getElementById(`opt-${qIndex}-${oIndex}`);
-            selectedEl.style.background = '#d1fae5'; selectedEl.style.borderColor = 'var(--primary-green)'; selectedEl.style.fontWeight = 'bold';
+            selectedEl.style.background = '#d1fae5';
+            selectedEl.style.borderColor = 'var(--primary-green)';
+            selectedEl.style.fontWeight = 'bold';
         }
 
-        document.getElementById('btn-submit-test').addEventListener('click', () => {
-            if(userSelectedAnswers.includes(null)) return showToast("Please answer all questions before submitting.", "error");
+        document.getElementById('btn-submit-test').addEventListener('click', async () => {
+            if(userSelectedAnswers.includes(null)) {
+                return showToast("Please answer all questions before submitting.", "error");
+            }
             
             let score = 0;
             currentTestQuestions.forEach((q, idx) => {
@@ -702,26 +747,63 @@
                 let correctAns = q.correctIndex;
                 let parent = document.getElementById(`opts-group-${idx}`);
                 let allOpts = parent.querySelectorAll('.quiz-option');
-                allOpts.forEach(el => el.style.pointerEvents = 'none'); // Lock answers
+                allOpts.forEach(el => el.style.pointerEvents = 'none'); 
                 
                 if(userAns === correctAns) {
                     score++;
-                    document.getElementById(`opt-${idx}-${userAns}`).style.background = '#d1fae5';
-                    document.getElementById(`opt-${idx}-${userAns}`).style.borderColor = 'var(--primary-green)';
                 } else {
                     document.getElementById(`opt-${idx}-${userAns}`).style.background = '#fee2e2';
                     document.getElementById(`opt-${idx}-${userAns}`).style.borderColor = 'var(--danger)';
                     document.getElementById(`opt-${idx}-${correctAns}`).style.background = '#d1fae5';
                     document.getElementById(`opt-${idx}-${correctAns}`).style.borderColor = 'var(--primary-green)';
                 }
+                
+                let reasonDiv = document.getElementById(`reason-${idx}`);
+                if(reasonDiv) reasonDiv.classList.remove('hidden');
             });
 
             document.getElementById('btn-submit-test').classList.add('hidden');
             document.getElementById('quiz-result-area').innerText = `Evaluation Completed! Your Score: ${score} / ${currentTestQuestions.length}`;
             showToast(`Test Submitted! Score: ${score}`, "success");
+
+            // Save History to Firebase
+            try {
+                await addDoc(collection(db, "users", currentUser.uid, "testHistory"), {
+                    topic: currentTestTopic,
+                    score: score,
+                    total: currentTestQuestions.length,
+                    date: new Date().toISOString()
+                });
+                fetchTestHistory(); // Refresh profile history
+            } catch(e) {}
         });
 
-        // AI Engine Request
+        // FETCH TEST HISTORY
+        async function fetchTestHistory() {
+            if(!currentUser) return;
+            try {
+                const snap = await getDocs(collection(db, "users", currentUser.uid, "testHistory"));
+                myTestHistory = []; let html = '';
+                snap.forEach(doc => { myTestHistory.push({id: doc.id, ...doc.data()}); });
+                
+                myTestHistory.sort((a,b) => new Date(b.date) - new Date(a.date)); // latest first
+                
+                myTestHistory.forEach(record => {
+                    let d = new Date(record.date).toLocaleDateString();
+                    html += `
+                    <div style="background: #f8fafc; border-left: 4px solid var(--primary-green); padding: 12px; margin-bottom: 10px; border-radius: 8px;">
+                        <div style="font-weight: bold; color: var(--dark-green);">${record.topic}</div>
+                        <div style="font-size: 0.85rem; color: gray;">Score: ${record.score} / ${record.total} | Date: ${d}</div>
+                        <div style="margin-top: 5px;">
+                            <button onclick="downloadResultCard('${record.id}')" style="background:var(--primary-green); color:white; border:none; padding:4px 8px; border-radius:4px; font-size:0.75rem; font-weight:bold; cursor:pointer;">⬇️ Download Result Card</button>
+                        </div>
+                    </div>`;
+                });
+                document.getElementById('student-test-history-list').innerHTML = html || "<p style='font-size:0.85rem; color:var(--text-muted);'>No tests taken yet.</p>";
+            } catch(e) {}
+        }
+
+        // --- GEMINI AI SYSTEM (FIXED URL & PARSER) ---
         document.getElementById('btn-generate-ai-test').addEventListener('click', async () => {
             let topic = document.getElementById('ai-topic').value; 
             let count = document.getElementById('ai-count').value || 5;
@@ -730,7 +812,7 @@
             
             showToast("Calling AI Engine... Please hold.", "success");
 
-            let prompt = `Create exactly ${count} multiple choice questions about "${topic}" strictly related to Pharmacology. Return ONLY a valid JSON array in this format: [{"question":"Text","options":["A","B","C","D"],"correctIndex":0}]. Do not include any other markdown or text.`;
+            let prompt = `Create exactly ${count} multiple choice questions about "${topic}" strictly related to Pharmacology. Return ONLY a valid JSON array in this format: [{"question":"Text","options":["A","B","C","D"],"correctIndex":0, "reason": "Explanation of correct answer"}]. Do not include any other markdown or text.`;
 
             try {
                 let response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${GEMINI_API_KEY}`, {
@@ -739,7 +821,10 @@
                 });
 
                 let data = await response.json();
-                if(data.error) return showToast(`AI Error: ${data.error.message}`, "error");
+                
+                if(data.error) {
+                    return showToast(`AI Error. Update Key`, "error");
+                }
 
                 let textResponse = data.candidates[0].content.parts[0].text;
                 let cleanedText = textResponse.replace(/```json/g, "").replace(/```/g, "").trim();
@@ -747,17 +832,18 @@
                 
                 if(s !== -1 && e !== -1) {
                     let quizArray = JSON.parse(cleanedText.substring(s, e + 1));
-                    document.getElementById('quiz-title-heading').innerText = `AI Custom Quiz: ${topic}`; 
-                    startTestMode(quizArray, true);
+                    startTestMode(quizArray, topic, true); 
                     showToast("AI Test Generated!", "success");
-                } else { showToast("Failed to extract structural JSON.", "error"); }
-            } catch (err) { showToast("Network error or invalid API token format.", "error"); }
+                } else {
+                    showToast("Failed to extract structural JSON.", "error");
+                }
+
+            } catch (err) {
+                showToast("Network error or invalid API token format.", "error");
+            }
         });
 
-
-        // ----------------------------------------------------
-        // PDF VIEW & DOWNLOAD MECHANICS
-        // ----------------------------------------------------
+        // --- FETCH MATERIALS (FIXED VIEW & DOWNLOAD) ---
         async function fetchMaterials() {
             const snap = await getDocs(collection(db, "materials"));
             localMaterialsArrayCache = []; let html = '';
@@ -767,15 +853,67 @@
                 let isComposed = item.type === 'composed';
                 let actionBtn = isComposed ? 
                     `<div style="display:flex; gap:5px;">
-                        <button onclick="viewComposedNote('${doc.id}')" style="background:var(--blue); color:white; border:none; padding:8px 12px; border-radius:6px; cursor:pointer;">👁️ View</button>
-                        <button onclick="downloadComposedPDF('${doc.id}')" style="background:var(--primary-green); color:white; border:none; padding:8px 12px; border-radius:6px; cursor:pointer;">⬇️ PDF</button>
+                        <button onclick="viewComposedNote('${doc.id}')" style="background:var(--blue); color:white; border:none; padding:8px 12px; border-radius:6px; font-size:0.8rem; font-weight:bold; cursor:pointer;">👁️ View</button>
+                        <button onclick="downloadComposedPDF('${doc.id}')" style="background:var(--primary-green); color:white; border:none; padding:8px 12px; border-radius:6px; font-size:0.8rem; font-weight:bold; cursor:pointer;">⬇️ PDF</button>
                     </div>` :
-                    `<a href="${item.fileUrl}" target="_blank" style="background:var(--primary-green); color:white; text-decoration:none; padding:8px 14px; border-radius:6px; display:inline-block;">Launch Link</a>`;
+                    `<a href="${item.fileUrl}" target="_blank" style="background:var(--primary-green); color:white; text-decoration:none; padding:8px 14px; border-radius:6px; font-size:0.82rem; font-weight:bold; display:inline-block;">Launch Link</a>`;
                 
-                html += `<div class="content-card" style="display:flex; justify-content:space-between; align-items:center;"><div><div style="font-weight:600;">${isComposed ? '📝' : '📄'} ${item.title}</div></div>${actionBtn}</div>`;
+                html += `
+                <div class="content-card" style="display:flex; justify-content:space-between; align-items:center;">
+                    <div>
+                        <div style="font-weight:600; color:var(--text-dark);">${isComposed ? '📝' : '📄'} ${item.title}</div>
+                        <div style="font-size:0.75rem; color:var(--text-muted);">${isComposed ? 'Smart Format Topic Note' : 'Admin File Link'}</div>
+                    </div>
+                    ${actionBtn}
+                </div>`;
             });
-            document.getElementById('materials-container').innerHTML = html || "<p style='font-size:0.9rem; color:gray;'>Empty references catalog.</p>";
+            document.getElementById('materials-container').innerHTML = html || "<p style='font-size:0.9rem; color:gray;'>No learning file packages cataloged.</p>";
         }
+
+        document.getElementById('btn-update-profile').addEventListener('click', async () => {
+            const newName = document.getElementById('edit-prof-name').value;
+            const newPhone = document.getElementById('edit-prof-phone').value;
+            const newCollege = document.getElementById('edit-prof-college').value;
+            if(!newName || !newPhone || !newCollege) return showToast("All fields are required.", "error");
+
+            showToast("Updating profile...", "success");
+            try {
+                await updateDoc(doc(db, "users", currentUser.uid), { name: newName, phone: newPhone, college: newCollege });
+                currentUserData.name = newName; currentUserData.phone = newPhone; currentUserData.college = newCollege;
+                updateProfileUI(currentUserData, currentUser.email);
+                document.getElementById('edit-profile-form').classList.add('hidden');
+                document.getElementById('btn-edit-profile-trigger').classList.remove('hidden');
+            } catch (error) { showToast(`Update failed: ${error.message}`, "error"); }
+        });
+
+        async function fetchLectures() {
+            const snap = await getDocs(collection(db, "lectures"));
+            let html = '';
+            snap.forEach(doc => {
+                let data = doc.data();
+                let secureEmbed = getYouTubeEmbedUrl(data.link);
+                html += `
+                <div class="content-card">
+                    <div class="video-container"><iframe src="${secureEmbed}" allowfullscreen style="pointer-events: auto;"></iframe></div>
+                    <h4 style="margin:5px 0; font-size:1.05rem;">${data.title}</h4>
+                </div>`;
+            });
+            document.getElementById('lectures-container').innerHTML = html || "<p style='font-size:0.9rem; color:gray;'>No video files live.</p>";
+        }
+
+        document.getElementById('search-lectures').addEventListener('input', async (e) => {
+            const snap = await getDocs(collection(db, "lectures"));
+            let key = e.target.value.toLowerCase();
+            let html = '';
+            snap.forEach(doc => {
+                let data = doc.data();
+                if(data.title.toLowerCase().includes(key)) {
+                    let secureEmbed = getYouTubeEmbedUrl(data.link);
+                    html += `<div class="content-card"><div class="video-container"><iframe src="${secureEmbed}" allowfullscreen style="pointer-events: auto;"></iframe></div><h4 style="margin:5px 0;">${data.title}</h4></div>`;
+                }
+            });
+            document.getElementById('lectures-container').innerHTML = html;
+        });
 
         // ----------------------------------------------------
         // ADMIN CONTROLS (BULK MCQs & NOTES)
@@ -787,28 +925,41 @@
             btn.disabled = true; showToast("Running bulk parser...", "success");
             
             try {
-                let parsedQs = []; let blocks = textData.split(/Question:/i);
+                let parsedQs = []; 
+                let blocks = textData.split(/\n\s*\n/); 
+                
+                if(blocks.length === 1 && textData.toLowerCase().includes('question:')) {
+                    blocks = textData.split(/Question:/i);
+                }
+
                 blocks.forEach(block => {
                     if(!block.trim()) return;
                     let lines = block.split('\n').map(l => l.trim()).filter(l => l.length > 0);
-                    let qText = lines[0]; let o1='', o2='', o3='', o4='', ans='';
+                    
+                    let qText = "", o1='', o2='', o3='', o4='', ans='', reason='';
                     
                     lines.forEach(line => {
                         let lUpper = line.toUpperCase();
-                        if (lUpper.startsWith('A:')) o1 = line.substring(2).trim();
-                        else if (lUpper.startsWith('B:')) o2 = line.substring(2).trim();
-                        else if (lUpper.startsWith('C:')) o3 = line.substring(2).trim();
-                        else if (lUpper.startsWith('D:')) o4 = line.substring(2).trim();
+                        if (lUpper.startsWith('QUESTION:') || (!qText && line.length > 5 && !line.match(/^[A-D][\)\:]/i))) {
+                            qText = line.replace(/Question:/i, '').trim();
+                        }
+                        else if (lUpper.startsWith('A)') || lUpper.startsWith('A:')) o1 = line.substring(2).trim();
+                        else if (lUpper.startsWith('B)') || lUpper.startsWith('B:')) o2 = line.substring(2).trim();
+                        else if (lUpper.startsWith('C)') || lUpper.startsWith('C:')) o3 = line.substring(2).trim();
+                        else if (lUpper.startsWith('D)') || lUpper.startsWith('D:')) o4 = line.substring(2).trim();
                         else if (lUpper.startsWith('ANSWER:')) ans = line.substring(7).trim().toUpperCase();
+                        else if (lUpper.startsWith('REASON:')) reason = line.substring(7).trim();
                     });
 
                     let correctIndex = 0;
                     if(ans.includes('A')) correctIndex = 0; else if(ans.includes('B')) correctIndex = 1; else if(ans.includes('C')) correctIndex = 2; else if(ans.includes('D')) correctIndex = 3;
 
-                    if(qText && o1 && o2) { parsedQs.push({ question: qText, options: [o1, o2, o3, o4], correctIndex: correctIndex }); }
+                    if(qText && o1 && o2) { 
+                        parsedQs.push({ question: qText, options: [o1, o2, o3, o4], correctIndex: correctIndex, reason: reason }); 
+                    }
                 });
 
-                if(parsedQs.length === 0) { btn.disabled = false; return showToast("Format broke. Must follow exact structure.", "error"); }
+                if(parsedQs.length === 0) { btn.disabled = false; return showToast("Format broke. Check structure.", "error"); }
 
                 let docRef = doc(db, "manual_tests", topic.trim()); let existingDoc = await getDoc(docRef);
                 let currentQs = existingDoc.exists() ? existingDoc.data().questions : [];
@@ -847,25 +998,12 @@
         });
 
         document.getElementById('btn-add-material').addEventListener('click', async (e) => {
-            let btn = e.target; let title = document.getElementById('admin-mat-title').value; let linkInput = document.getElementById('admin-mat-link').value; let fileElement = document.getElementById('admin-mat-file').files[0];
-            if(!title) return showToast("Title missing.", "error");
-            if(!fileElement && !linkInput) return showToast("Provide a file OR link.", "error");
-            
-            btn.disabled = true; showToast("Processing file upload...");
-            try {
-                let downloadUrl = "", fName = "";
-                if(fileElement) {
-                    let fileStorageRef = ref(storage, `materials/${Date.now()}_${fileElement.name}`);
-                    let snapshot = await uploadBytes(fileStorageRef, fileElement);
-                    downloadUrl = await getDownloadURL(snapshot.ref); fName = fileElement.name;
-                } else if(linkInput) { downloadUrl = linkInput; fName = "External Link"; }
-                
-                await addDoc(collection(db, "materials"), { title: title, fileUrl: downloadUrl, fileName: fName, type: 'file', timestamp: new Date().toISOString() });
-                showToast("Material asset synced live.");
-                document.getElementById('admin-mat-title').value = ''; document.getElementById('admin-mat-file').value = ''; document.getElementById('admin-mat-link').value = '';
-                fetchMaterials(); fetchAdminManageContent();
-            } catch (err) { showToast(`Upload aborted.`, "error"); }
-            btn.disabled = false;
+            let btn = e.target; let title = document.getElementById('admin-mat-title').value; let linkInput = document.getElementById('admin-mat-link').value;
+            if(!title || !linkInput) return showToast("Provide title and link.", "error");
+            btn.disabled = true;
+            await addDoc(collection(db, "materials"), { title: title, fileUrl: linkInput, fileName: "External Link", type: 'file', timestamp: new Date().toISOString() });
+            showToast("Material synced live.");
+            document.getElementById('admin-mat-title').value = ''; document.getElementById('admin-mat-link').value = ''; fetchMaterials(); fetchAdminManageContent(); btn.disabled = false;
         });
 
         async function fetchAdminManageContent() {
@@ -885,25 +1023,6 @@
         window.deleteLectureNode = async function(id) { if(confirm("Permanently delete this video lecture?")) { await deleteDoc(doc(db, "lectures", id)); fetchLectures(); fetchAdminManageContent(); } }
         window.deleteMaterialNode = async function(id) { if(confirm("Permanently delete this material?")) { await deleteDoc(doc(db, "materials", id)); fetchMaterials(); fetchAdminManageContent(); } }
         window.deleteTopicNode = async function(id) { if(confirm("Delete this entire MCQ Topic Test?")) { await deleteDoc(doc(db, "manual_tests", id)); fetchManualMCQs(); fetchAdminManageContent(); } }
-        
-        async function fetchLectures() {
-            const snap = await getDocs(collection(db, "lectures")); allLectures = []; let html = '';
-            snap.forEach(doc => {
-                let data = doc.data(); allLectures.push({ id: doc.id, ...data }); let secureEmbed = getYouTubeEmbedUrl(data.link);
-                html += `
-                <div class="content-card">
-                    <div class="video-container"><iframe src="${secureEmbed}" allowfullscreen></iframe></div>
-                    <h4 style="margin:5px 0; font-size:1.05rem;">${data.title}</h4>
-                    <div class="comment-box"><input type="text" id="cmt-${doc.id}" class="comment-input" placeholder="Ask a question about this topic..."><button class="btn-comment" onclick="postCommentNode('${doc.id}', '${data.title}')">Post</button></div>
-                </div>`;
-            }); document.getElementById('lectures-container').innerHTML = html || "<p style='font-size:0.9rem; color:gray;'>No video files live.</p>";
-        }
-
-        document.getElementById('search-lectures').addEventListener('input', (e) => {
-            let key = e.target.value.toLowerCase(); let matches = allLectures.filter(l => l.title.toLowerCase().includes(key)); let html = '';
-            matches.forEach(data => { let secureEmbed = getYouTubeEmbedUrl(data.link); html += `<div class="content-card"><div class="video-container"><iframe src="${secureEmbed}" allowfullscreen></iframe></div><h4 style="margin:5px 0;">${data.title}</h4></div>`; });
-            document.getElementById('lectures-container').innerHTML = html;
-        });
 
         window.postCommentNode = async function(lecId, lecTitle) {
             let val = document.getElementById(`cmt-${lecId}`).value; if(!val) return;
@@ -927,62 +1046,7 @@
                 }
             }); document.getElementById('student-queries-list').innerHTML = html || "<p style='font-size:0.8rem; color:gray;'>You haven't asked any questions yet.</p>";
         }
-
-        async function fetchAdminComments() {
-            const snap = await getDocs(collection(db, "comments")); let html = '';
-            snap.forEach(doc => {
-                let c = doc.data();
-                html += `
-                <div class="admin-comment-item">
-                    <div style="font-size:0.7rem; color:var(--primary-green); font-weight:bold;">Topic: ${c.lectureTitle}</div>
-                    <div style="font-weight:600; font-size:0.85rem; margin:2px 0;">Student: ${c.studentName}</div>
-                    <div style="font-size:0.85rem; color:#4a5568; margin-bottom: 8px;">Q: "${c.text}"</div>
-                    ${c.adminReply ? `<div style="font-size:0.8rem; color:var(--dark-green);"><b>Replied:</b> ${c.adminReply}</div>` : 
-                    `<div class="comment-box" style="margin-top:5px; padding-top:5px; border-top:none;"><input type="text" id="admin-reply-${doc.id}" class="comment-input" placeholder="Type your reply here..." style="font-size:0.75rem; padding: 6px 10px;"><button class="btn-comment" onclick="submitAdminReply('${doc.id}')" style="font-size:0.75rem; padding:0 12px;">Reply</button></div>`}
-                </div>`;
-            }); document.getElementById('admin-comments-list').innerHTML = html || "<p style='font-size:0.8rem; color:gray;'>Empty queries dashboard.</p>";
-        }
-
-        window.submitAdminReply = async function(commentId) {
-            let text = document.getElementById(`admin-reply-${commentId}`).value; if(!text) return;
-            await updateDoc(doc(db, "comments", commentId), { adminReply: text }); fetchAdminComments(); 
-        }
-
-        async function fetchAdminDirectory() {
-            fetchAdminComments(); const snap = await getDocs(collection(db, "users")); adminAllUsers = [];
-            snap.forEach(doc => { adminAllUsers.push({ id: doc.id, ...doc.data() }); }); renderAdminUserDirectory(adminAllUsers);
-        }
-
-        function renderAdminUserDirectory(usersArr) {
-            let html = '';
-            usersArr.forEach(u => {
-                let cleanPhone = u.phone ? u.phone.replace(/[^0-9]/g, '') : ""; if(cleanPhone.startsWith('0')) cleanPhone = '92' + cleanPhone.substring(1);
-                html += `
-                <div class="user-list-item">
-                    <div class="user-list-info-row">
-                        <div class="user-list-img" style="background-image:url(${u.profilePic || 'https://via.placeholder.com/40'})"></div>
-                        <div>
-                            <div style="font-weight:bold; font-size:0.9rem; color:${u.isBlocked ? 'var(--danger)' : 'var(--text-dark)'};">${u.name} ${u.isBlocked ? '⚠️ [BLOCKED]' : ''}</div>
-                            <div style="font-size:0.72rem; color:gray;">${u.college} | ID: ${u.email}</div>
-                        </div>
-                    </div>
-                    <div style="display:flex; gap:8px; width:100%; margin-top:5px;">
-                        <button class="btn-delete" style="flex:1; padding: 6px; background: ${u.isBlocked ? 'var(--primary-green)' : 'var(--danger)'};" onclick="toggleBlockUser('${u.id}', ${u.isBlocked || false})">${u.isBlocked ? '✅ Unblock User' : '🚫 Block User'}</button>
-                        <a href="https://wa.me/${cleanPhone}" target="_blank" style="flex:1; background: var(--whatsapp); color: white; text-decoration: none; padding: 6px; border-radius: 6px; font-size: 0.75rem; font-weight: bold; display: flex; justify-content: center; align-items: center;">💬 WhatsApp Chat</a>
-                    </div>
-                </div>`;
-            }); document.getElementById('admin-users-list').innerHTML = html || "<p style='font-size:0.85rem; color:gray;'>No students.</p>";
-        }
-
-        document.getElementById('admin-search-users').addEventListener('input', (e) => {
-            let val = e.target.value.toLowerCase(); let matches = adminAllUsers.filter(u => (u.name && u.name.toLowerCase().includes(val)) || (u.college && u.college.toLowerCase().includes(val)) || (u.email && u.email.toLowerCase().includes(val)));
-            renderAdminUserDirectory(matches);
-        });
-
-        window.toggleBlockUser = async function(userId, currentBlockStatus) {
-            if(confirm(currentBlockStatus ? "Unblock this student?" : "Block this student?")) { await updateDoc(doc(db, "users", userId), { isBlocked: !currentBlockStatus }); fetchAdminDirectory(); }
-        }
-
+        
     </script>
 </body>
 </html>
