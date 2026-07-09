@@ -6,6 +6,7 @@
     <title>LippinPharma | Pharmacology</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
     <style>
+        /* Premium Pharmacy Theme Base Config */
         :root {
             --primary-green: #069C54;
             --dark-green: #047840;
@@ -16,71 +17,119 @@
             --white: #ffffff;
             --danger: #e53e3e;
             --whatsapp: #25D366;
+            --warning: #ed8936;
             --blue: #3182ce;
             --accent-brown: #8B4513;
         }
 
-        body, html { margin: 0; padding: 0; height: 100%; font-family: 'Segoe UI', sans-serif; background-color: var(--bg-color); color: var(--text-dark); overflow-x: hidden; }
+        body, html { margin: 0; padding: 0; height: 100%; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: var(--bg-color); color: var(--text-dark); overflow-x: hidden; -webkit-font-smoothing: antialiased; }
         .hidden { display: none !important; }
 
-        /* Toast Notifications */
-        #notification-box { position: fixed; top: -100px; left: 50%; transform: translateX(-50%); background-color: var(--text-dark); color: var(--white); padding: 14px 28px; border-radius: 8px; box-shadow: 0 4px 15px rgba(0,0,0,0.15); font-size: 0.95rem; font-weight: 500; z-index: 4000; transition: top 0.4s ease; display: flex; align-items: center; gap: 10px; max-width: 90%; text-align: center; }
+        /* Toast Notifications UI */
+        #notification-box { position: fixed; top: -100px; left: 50%; transform: translateX(-50%); background-color: var(--text-dark); color: var(--white); padding: 14px 28px; border-radius: 8px; box-shadow: 0 4px 15px rgba(0,0,0,0.15); font-size: 0.95rem; font-weight: 500; z-index: 5000; transition: top 0.4s ease; display: flex; align-items: center; gap: 10px; max-width: 90%; text-align: center; }
         #notification-box.show { top: 20px; }
         .noti-success { border-left: 4px solid var(--primary-green); }
         .noti-error { border-left: 4px solid var(--danger); }
 
-        /* Splash Screen */
-        #splash-screen { display: flex; flex-direction: column; justify-content: center; align-items: center; height: 100vh; background-color: var(--primary-green); color: var(--white); position: absolute; width: 100%; z-index: 100; transition: opacity 0.4s ease; }
-        .app-logo-splash { width: 120px; height: 120px; object-fit: cover; border-radius: 50%; border: 4px solid var(--white); margin-bottom: 25px; }
+        /* Splash Loader Layout */
+        #splash-screen { display: flex; flex-direction: column; justify-content: center; align-items: center; height: 100vh; background-color: var(--primary-green); color: var(--white); position: absolute; width: 100%; z-index: 1000; transition: opacity 0.4s ease; }
+        .app-logo-splash { width: 120px; height: 120px; object-fit: cover; border-radius: 50%; border: 4px solid var(--white); box-shadow: 0 0 0 4px var(--dark-green), 0 6px 15px rgba(0,0,0,0.25); margin-bottom: 25px; background-color: var(--white); }
+        .splash-title { font-size: 2.2rem; font-weight: 700; margin: 0; letter-spacing: 1px; }
         .spinner { border: 3px solid rgba(255,255,255,0.3); border-top: 3px solid var(--white); border-radius: 50%; width: 35px; height: 35px; animation: spin 1s linear infinite; margin-top: 30px; }
         @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
 
-        /* Auth Forms */
+        /* Forms Auth Wrapper */
         .center-wrapper { display: flex; justify-content: center; align-items: center; min-height: 100vh; background-color: var(--light-green); padding: 15px; box-sizing: border-box; flex-direction: column; }
         .card-box { background: var(--white); padding: 35px 30px; border-radius: 16px; width: 100%; max-width: 360px; text-align: center; box-shadow: 0 10px 30px rgba(6, 156, 84, 0.1); border: 1px solid rgba(6, 156, 84, 0.05); }
-        .app-logo-form { width: 70px; height: 70px; object-fit: cover; border-radius: 50%; border: 2px solid var(--primary-green); margin-bottom: 15px; }
+        .app-logo-form { width: 70px; height: 70px; object-fit: cover; border-radius: 50%; border: 2px solid var(--primary-green); margin-bottom: 15px; background-color: var(--white); }
         
-        input, select, textarea { width: 100%; padding: 12px 14px; border: 1.5px solid #e2e8f0; border-radius: 8px; box-sizing: border-box; font-size: 0.95rem; margin-bottom: 12px; }
-        input:focus, textarea:focus, select:focus { outline: none; border-color: var(--primary-green); }
+        .input-group { margin-bottom: 15px; text-align: left; }
+        input, select, textarea { width: 100%; padding: 12px 14px; border: 1.5px solid #e2e8f0; border-radius: 8px; box-sizing: border-box; font-size: 0.95rem; background-color: #f8fafc; transition: 0.3s; color: var(--text-dark); font-family: inherit; margin-bottom:12px; }
+        input:focus, textarea:focus, select:focus { outline: none; border-color: var(--primary-green); background-color: var(--white); box-shadow: 0 0 0 3px rgba(6, 156, 84, 0.1); }
         
-        .profile-pic-container { width: 100px; height: 100px; background-color: #f8fafc; background-size: cover; background-position: center; border-radius: 50%; margin: 15px auto 20px auto; display: flex; flex-direction: column; align-items: center; justify-content: center; border: 3px dashed var(--primary-green); cursor: pointer; color: var(--primary-green); font-size: 0.85rem; font-weight: 600; overflow: hidden; }
+        .profile-pic-container { width: 100px; height: 100px; background-color: #f8fafc; background-size: cover; background-position: center; border-radius: 50%; margin: 15px auto 20px auto; display: flex; flex-direction: column; align-items: center; justify-content: center; border: 3px dashed var(--primary-green); cursor: pointer; color: var(--primary-green); font-size: 0.85rem; font-weight: 600; box-shadow: 0 4px 10px rgba(0,0,0,0.05); overflow: hidden; position: relative; }
+        .profile-pic-container span { font-size: 1.6rem; margin-bottom: 2px; }
 
+        /* Action Buttons */
         .btn { border: none; padding: 12px; border-radius: 8px; cursor: pointer; width: 100%; font-weight: 600; font-size: 1rem; transition: 0.3s; display: flex; justify-content: center; align-items: center; gap: 10px; }
         .btn-primary { background: var(--primary-green); color: var(--white); }
+        .btn-primary:hover:not(:disabled) { background: var(--dark-green); }
         .btn-danger { background: var(--danger); color: var(--white); }
         .btn-blue { background: var(--blue); color: var(--white); }
-        .btn-google { background: var(--white); color: var(--text-dark); border: 1px solid #e2e8f0; }
+        .btn-google { background: var(--white); color: var(--text-dark); border: 1px solid #e2e8f0; margin-top: 15px; }
+        .btn:disabled { opacity: 0.5; cursor: not-allowed !important; }
 
-        .main-content { padding: 20px; overflow-y: auto; height: calc(100vh - 75px); box-sizing: border-box; }
+        /* Master Application Layout Viewports */
+        .main-content { flex-grow: 1; padding: 20px; overflow-y: auto; height: calc(100vh - 75px); box-sizing: border-box; }
         
-        /* Navigation Bar */
-        .nav-bar { background-color: var(--white); display: flex; justify-content: space-around; padding: 12px 10px; box-shadow: 0 -4px 20px rgba(0,0,0,0.05); z-index: 50; position: fixed; bottom: 0; width: 100%; border-top: 1px solid #edf2f7; box-sizing: border-box; }
-        .nav-item { color: var(--text-muted); text-align: center; font-size: 0.72rem; cursor: pointer; display: flex; flex-direction: column; align-items: center; gap: 4px; font-weight: 600; flex: 1; border: 2px solid transparent; }
-        .nav-item.active { color: var(--primary-green); background-color: var(--light-green); border-radius: 12px; border-top-color: var(--primary-green); border-left-color: var(--primary-green); border-bottom-color: var(--accent-brown); border-right-color: var(--accent-brown); }
+        /* Bottom Tab Nav Bar with Professional Dual-Tone Corner Outlines */
+        .nav-bar { background-color: var(--white); display: flex; justify-content: space-around; padding: 12px 10px; box-shadow: 0 -4px 20px rgba(0,0,0,0.05); z-index: 50; position: fixed; bottom: 0; width: 100%; border-top: 1px solid #edf2f7; box-sizing: border-box;}
+        .nav-item { color: var(--text-muted); text-align: center; font-size: 0.72rem; cursor: pointer; transition: 0.3s; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 4px; font-weight: 600; flex: 1; padding: 8px 0; border: 2px solid transparent; }
         
-        .app-tab { display: none; }
+        .nav-item.active { 
+            color: var(--primary-green);
+            background-color: var(--light-green);
+            border-radius: 12px;
+            border-top-color: var(--primary-green);
+            border-left-color: var(--primary-green);
+            border-bottom-color: var(--accent-brown);
+            border-right-color: var(--accent-brown);
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+        }
+        
+        .nav-icon { font-size: 1.3rem; }
+        .admin-nav { color: var(--danger) !important; }
+
+        .app-tab { display: none; animation: fadeIn 0.3s ease; }
         .app-tab.active-tab { display: block; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
+
+        /* Structural Design Units */
         .content-card { background: var(--white); padding: 20px; border-radius: 12px; margin-bottom: 15px; box-shadow: 0 2px 10px rgba(0,0,0,0.03); border: 1px solid #edf2f7; }
-        
-        /* MCQ Test System */
-        .quiz-option { display: block; background: #f8fafc; padding: 12px 15px; border: 1.5px solid #e2e8f0; border-radius: 8px; margin-top: 8px; cursor: pointer; transition: 0.2s; font-weight: 500; font-size: 0.92rem; }
-        .quiz-option.selected { background: #d1fae5; border-color: var(--primary-green); font-weight: bold; }
-        .quiz-option.correct { background: #d1fae5; border-color: var(--primary-green); }
-        .quiz-option.wrong { background: #fee2e2; border-color: var(--danger); }
-        
-        .topic-btn { background: #f1f5f9; color: var(--dark-green); border: 1px solid #cbd5e0; padding: 8px 15px; border-radius: 20px; font-size: 0.85rem; cursor: pointer; margin: 5px; font-weight: bold; }
-        .video-container { position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden; border-radius: 8px; background: #000; }
+        .video-container { position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden; border-radius: 8px; margin-bottom: 10px; background: #000; box-shadow: 0 4px 10px rgba(0,0,0,0.08); }
         .video-container iframe { position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: 0; }
         
-        #reader-modal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); z-index: 2500; display: none; justify-content: center; align-items: center; padding: 20px; }
-        .reader-content { background: white; width: 100%; max-width: 600px; height: 80vh; border-radius: 12px; display: flex; flex-direction: column; overflow: hidden; }
-        .reader-header { background: var(--primary-green); color: white; padding: 15px; display: flex; justify-content: space-between; }
-        .reader-body { padding: 20px; overflow-y: auto; flex-grow: 1; white-space: pre-wrap; text-align: justify; }
+        .comment-box { display: flex; gap: 10px; margin-top: 15px; border-top: 1px solid #f1f5f9; padding-top: 12px; }
+        .comment-input { flex: 1; padding: 10px 14px; font-size: 0.85rem; border: 1px solid #e2e8f0; border-radius: 20px; background: #f8fafc; }
+        .btn-comment { background: var(--primary-green); color: white; border: none; padding: 0 16px; border-radius: 20px; font-size: 0.85rem; cursor: pointer; font-weight: bold; }
+
+        /* Admin Dashboard UI Nodes */
+        .admin-header { background: #fff5f5; border-left: 4px solid var(--danger); padding: 15px; border-radius: 8px; margin-bottom: 15px; }
+        .user-list-item { display: flex; flex-direction: column; gap: 8px; padding: 12px; border-bottom: 1px solid #edf2f7; }
+        .user-list-info-row { display: flex; align-items: center; gap: 15px; }
+        .user-list-img { width: 42px; height: 42px; border-radius: 50%; background-size: cover; background-color: #f1f5f9; border: 1px solid #e2e8f0; flex-shrink: 0; }
+        .admin-comment-item { background: #f8fafc; padding: 12px; border-radius: 8px; margin-bottom: 10px; border-left: 3px solid var(--primary-green); box-shadow: 0 1px 3px rgba(0,0,0,0.02); }
+        .admin-manage-item { display: flex; justify-content: space-between; align-items: center; padding: 10px; border-bottom: 1px solid #edf2f7; font-size: 0.85rem; }
+        .btn-delete { background: var(--danger); color: white; border: none; border-radius: 6px; padding: 6px 12px; font-size: 0.75rem; cursor: pointer; font-weight: bold; }
+
+        /* WhatsApp Overlay Framework */
+        #wa-widget { position: fixed; bottom: 85px; right: 20px; z-index: 1000; display: none; }
+        .wa-btn { width: 56px; height: 56px; background-color: var(--whatsapp); color: white; border-radius: 50%; display: flex; justify-content: center; align-items: center; box-shadow: 0 4px 16px rgba(37, 211, 102, 0.4); cursor: pointer; transition: 0.3s; }
+        .wa-btn svg { width: 30px; height: 30px; fill: white; }
+        .wa-btn:hover { transform: scale(1.08); }
+        #wa-chat-box { position: absolute; bottom: 68px; right: 0; background: white; width: 280px; border-radius: 12px; box-shadow: 0 8px 30px rgba(0,0,0,0.15); padding: 15px; display: none; flex-direction: column; gap: 10px; border: 1px solid #edf2f7; }
+
+        /* Quiz Component Frame */
+        .quiz-option { display: block; background: #f8fafc; padding: 12px 15px; border: 1.5px solid #e2e8f0; border-radius: 8px; margin-top: 8px; cursor: pointer; transition: 0.2s; font-weight: 500; font-size: 0.92rem; }
+        .quiz-option.selected { background: #d1fae5; border-color: var(--primary-green); font-weight: bold; }
+        .quiz-option.correct { background: #d1fae5; border-color: var(--primary-green); font-weight: bold; }
+        .quiz-option.wrong { background: #fee2e2; border-color: var(--danger); font-weight: bold; }
+
+        .topic-btn { background: #f1f5f9; color: var(--dark-green); border: 1px solid #cbd5e0; padding: 8px 15px; border-radius: 20px; font-size: 0.85rem; cursor: pointer; margin: 5px; font-weight: bold; }
+        .topic-btn:hover { background: var(--primary-green); color: white; border-color: var(--primary-green); }
+
+        /* In-App PDF View Modal Layout */
+        #reader-modal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); z-index: 4500; display: none; justify-content: center; align-items: center; padding: 20px; box-sizing: border-box; }
+        .reader-content { background: white; width: 100%; max-width: 600px; height: 90vh; border-radius: 12px; display: flex; flex-direction: column; overflow: hidden; }
+        .reader-header { background: var(--primary-green); color: white; padding: 15px; display: flex; justify-content: space-between; align-items: center; }
+        .reader-body { padding: 20px; overflow-y: auto; flex-grow: 1; font-size: 1rem; line-height: 1.6; color: #333; white-space: pre-wrap; text-align: justify; }
 
         @media (min-width: 769px) {
             #dashboard-screen { display: flex; flex-direction: column-reverse; height: 100vh; }
-            .nav-bar { position: sticky; top: 0; bottom: auto; padding: 14px 0; }
+            .nav-bar { position: sticky; top: 0; bottom: auto; box-shadow: 0 4px 20px rgba(0,0,0,0.05); border-bottom: 1px solid #edf2f7; border-top: none; padding: 14px 0; }
             .main-content { height: auto; padding: 30px; }
+            .nav-item { flex-direction: row; font-size: 0.9rem; justify-content: center; gap: 8px; }
+            #wa-widget { bottom: 30px; }
         }
     </style>
 </head>
@@ -91,7 +140,7 @@
     <div id="reader-modal">
         <div class="reader-content">
             <div class="reader-header">
-                <h3 id="reader-title" style="margin: 0;">Note Viewer</h3>
+                <h3 id="reader-title" style="margin: 0; font-size: 1.1rem;">Topic Title</h3>
                 <button onclick="closeReaderModal()" style="background: none; border: none; color: white; font-size: 1.5rem; cursor: pointer;">&times;</button>
             </div>
             <div class="reader-body" id="reader-text"></div>
@@ -102,35 +151,42 @@
 
     <div id="splash-screen">
         <img src="logo.webp" alt="Logo" class="app-logo-splash" onerror="this.src='https://via.placeholder.com/120/069C54/ffffff?text=LP'">
-        <h1 class="splash-title" style="margin: 0;">LippinPharma</h1>
+        <h1 class="splash-title">LippinPharma</h1>
         <p style="font-size: 0.95rem; opacity: 0.9; margin-top: 5px;">Pharmacology App</p>
         <div class="spinner"></div>
-        <p style="position: absolute; bottom: 30px; font-size: 0.85rem; color: #e2e8f0;">Powered by Arfi</p>
+        <p style="position: absolute; bottom: 30px; font-size: 0.85rem; opacity: 0.8; font-weight: 500;">Powered by Arfi</p>
     </div>
 
     <div id="login-screen" class="center-wrapper hidden">
         <div class="card-box">
-            <h2>Welcome Back</h2>
+            <img src="logo.webp" alt="Logo" class="app-logo-form" onerror="this.src='https://via.placeholder.com/70/069C54/ffffff?text=LP'">
+            <h2 style="margin: 0 0 5px 0;">Welcome Back</h2>
+            <p style="color: var(--text-muted); font-size: 0.85rem; margin-bottom: 20px;">Sign in to access your dashboard</p>
             <input type="email" id="email" placeholder="Email Address">
             <input type="password" id="password" placeholder="Password">
             <button class="btn btn-primary" id="btn-login">Sign In / Sign Up</button>
-            <div style="margin: 15px 0; color: gray; font-size: 0.8rem;">OR</div>
+            <div style="margin: 15px 0; color: gray; font-size: 0.8rem; font-weight: bold;">OR</div>
             <button class="btn btn-google" id="btn-google">🌐 Continue with Google</button>
         </div>
-        <p style="margin-top: 30px; font-size: 0.85rem; color: var(--text-muted); font-weight: 600;">Powered by Arfi</p>
+        <p style="margin-top: 25px; font-size: 0.85rem; color: var(--text-muted); font-weight: 600;">Powered by Arfi</p>
     </div>
 
     <div id="profile-screen" class="center-wrapper hidden">
         <div class="card-box">
-            <h2>Setup Profile</h2>
+            <h2 style="margin: 0 0 5px 0;">Setup Profile</h2>
+            <p style="color: var(--text-muted); font-size: 0.85rem; margin-bottom: 10px;">Complete registration for admin records</p>
+            
             <input type="file" id="prof-pic-input" accept="image/*" style="display:none !important;">
-            <div class="profile-pic-container" id="prof-pic-preview"><span>📷</span><div>Add Photo</div></div>
-            <input type="text" id="prof-name" placeholder="Full Name">
-            <input type="tel" id="prof-phone" placeholder="WhatsApp Number">
-            <input type="text" id="prof-college" placeholder="College Name">
-            <button class="btn btn-primary" id="btn-save-profile">Save Profile</button>
+            <div class="profile-pic-container" id="prof-pic-preview">
+                <span>📷</span><div>Add Photo</div>
+            </div>
+            
+            <input type="text" id="prof-name" placeholder="Full Name" required>
+            <input type="tel" id="prof-phone" placeholder="Mobile / WhatsApp" required>
+            <input type="text" id="prof-college" placeholder="College Name" required>
+            <button class="btn btn-primary" id="btn-save-profile" style="margin-top: 10px;">Save Profile</button>
         </div>
-        <p style="margin-top: 30px; font-size: 0.85rem; color: var(--text-muted); font-weight: 600;">Powered by Arfi</p>
+        <p style="margin-top: 25px; font-size: 0.85rem; color: var(--text-muted); font-weight: 600;">Powered by Arfi</p>
     </div>
 
     <div id="dashboard-screen" class="hidden">
@@ -139,140 +195,193 @@
             <div id="tab-home" class="app-tab active-tab">
                 <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
                     <h2 style="margin:0; color: var(--dark-green);" id="welcome-title">Dashboard</h2>
-                    <div id="dashboard-user-pic" style="width: 45px; height: 45px; border-radius: 50%; background-size:cover; border:2px solid var(--primary-green);"></div>
+                    <div id="dashboard-user-pic" style="width: 45px; height: 45px; border-radius: 50%; background-size:cover; border:2px solid var(--primary-green); background-image:url('https://via.placeholder.com/45')"></div>
                 </div>
-                <div style="background: linear-gradient(135deg, var(--primary-green), var(--dark-green)); color: white; padding: 25px 20px; border-radius: 12px; box-shadow: 0 8px 20px rgba(6, 156, 84, 0.25);">
-                    <h3>Pharmacology Evaluation</h3>
-                    <p>Test your concepts parameters using Lippincott pharmacology criteria logs.</p>
-                    <button onclick="switchTab('tab-tests')" style="background: white; color: var(--primary-green); border: none; padding: 10px 20px; border-radius: 6px; font-weight: bold; cursor: pointer; margin-top: 10px;">Start Test ⏱️</button>
+                
+                <div style="background: linear-gradient(135deg, var(--primary-green), var(--dark-green)); color: white; padding: 25px 20px; border-radius: 12px; margin-bottom: 20px; box-shadow: 0 8px 20px rgba(6, 156, 84, 0.25);">
+                    <h3 style="margin: 0 0 5px 0; font-size: 1.3rem;">Pharmacology Evaluation</h3>
+                    <p style="margin: 0; font-size: 0.9rem; opacity: 0.9;">Evaluate your progress parameters via manual structural topic tests.</p>
+                    <button onclick="switchTab('tab-tests')" style="background: white; color: var(--primary-green); border: none; padding: 10px 20px; border-radius: 6px; font-weight: bold; margin-top: 15px; cursor: pointer;">Launch Test Matrix ⏱️</button>
                 </div>
-                <h3>Latest Activity Feed</h3>
-                <div id="home-recent-activity"><p style="font-size:0.85rem; color:gray;">System feed live...</p></div>
+                <h3 style="color: var(--text-dark); margin-bottom: 12px; font-size: 1.1rem;">Latest Uploads</h3>
+                <div id="home-recent-activity"><p style="font-size:0.85rem; color:var(--text-muted);">Syncing platform activity feed...</p></div>
             </div>
 
             <div id="tab-lectures" class="app-tab">
-                <h2>Smart Video Lectures</h2>
-                <input type="text" id="search-lectures" placeholder="🔍 Filter topics index...">
+                <h2 style="color: var(--dark-green); margin-bottom: 15px;">Smart Lectures</h2>
+                <div style="margin-bottom: 20px;">
+                    <input type="text" id="search-lectures" placeholder="🔍 Search video entries..." style="border-radius: 25px; padding-left: 20px; border: 2px solid var(--primary-green);">
+                </div>
                 <div id="lectures-container"></div>
             </div>
 
             <div id="tab-material" class="app-tab">
-                <h2>Course Reference Materials</h2>
+                <h2 style="color: var(--dark-green); margin-bottom: 15px;">Study Material</h2>
+                <p style="color: var(--text-muted); font-size: 0.9rem; margin-bottom: 20px;">Download direct reference packs, textbook notes and dynamic cloud files.</p>
                 <div id="materials-container"></div>
             </div>
 
             <div id="tab-tests" class="app-tab">
-                <h2>Student Evaluation Test</h2>
+                <h2 style="color: var(--dark-green); margin-bottom: 10px;">Topic Tests</h2>
                 
                 <div class="content-card" style="background: var(--light-green); border: 1px solid var(--primary-green);">
-                    <h3>📚 Available Manual Tests</h3>
+                    <h3 style="margin-top:0; color: var(--dark-green); font-size:1.1rem;">📚 Uploaded Manual Evaluation Tests</h3>
                     <div id="manual-topics-container" style="display: flex; flex-wrap: wrap;"></div>
                 </div>
 
                 <div class="content-card" style="border: 1px dashed var(--blue);">
-                    <h3>⚡ Custom Generator Engine</h3>
-                    <div style="display: flex; gap:10px;">
-                        <input type="text" id="ai-topic" placeholder="Topic Target">
-                        <input type="number" id="ai-count" value="5" style="width:70px;">
+                    <h3 style="margin-top:0; color: var(--blue); font-size:1.1rem;">⚡ Custom Generator Engine</h3>
+                    <div style="display: flex; gap:10px; margin-bottom:10px;">
+                        <input type="text" id="ai-topic" placeholder="Topic Name (e.g. Beta-Blockers)" style="flex:2;">
+                        <input type="number" id="ai-count" placeholder="Count" min="1" max="20" value="5" style="flex:1;">
                     </div>
-                    <button class="btn btn-blue" id="btn-generate-ai-test">Generate Evaluation Test</button>
+                    <button class="btn btn-blue" id="btn-generate-ai-test">Run Generator Script</button>
                 </div>
 
                 <div class="content-card" id="quiz-block-space">
-                    <h3 id="quiz-title-heading">Test Framework</h3>
-                    <div id="quiz-render-area"><p style="font-size:0.9rem; color:var(--text-muted);">Select a test above to begin.</p></div>
+                    <h3 id="quiz-title-heading" style="margin-top:0; color:var(--primary-green);">Evaluation Arena</h3>
+                    <div id="quiz-render-area"><p style="font-size:0.9rem; color:var(--text-muted);">Pick an available structural unit test to start execution.</p></div>
                     <button class="btn btn-primary hidden" id="btn-submit-test" style="margin-top: 20px;">Submit Evaluation Test</button>
                     <div id="quiz-result-area" style="margin-top: 15px; font-weight: bold; font-size: 1.1rem; text-align: center; color: var(--primary-green);"></div>
                 </div>
             </div>
 
             <div id="tab-profile" class="app-tab">
-                <h2>My Registration Profile</h2>
+                <h2 style="color: var(--dark-green); margin-bottom: 20px;">Profile Settings</h2>
                 <div class="content-card" style="text-align: center;">
+                    
                     <input type="file" id="edit-prof-pic-input" accept="image/*" style="display:none !important;">
-                    <div id="profile-page-pic" style="width: 100px; height: 100px; border-radius: 50%; background-size:cover; margin: 0 auto 15px auto; border:3px solid var(--primary-green); cursor:pointer;"></div>
-                    <h3 id="profile-page-name">Student Account</h3>
-                    <p id="profile-page-email" style="color: gray; font-size: 0.9rem;"></p>
+                    <div id="profile-page-pic" style="width: 100px; height: 100px; border-radius: 50%; background-size:cover; margin: 0 auto 15px auto; border:3px solid var(--primary-green); cursor:pointer;" title="Click to update image"></div>
                     
-                    <button class="btn btn-google" id="btn-edit-profile-trigger" style="max-width: 180px; margin: 0 auto 15px auto;">✏️ Edit Details</button>
+                    <h3 id="profile-page-name" style="margin:0 0 5px 0;">Loading Account</h3>
+                    <p id="profile-page-email" style="margin:0 0 15px 0; color:var(--text-muted); font-size:0.9rem;"></p>
                     
-                    <div id="edit-profile-form" class="hidden" style="text-align: left; background:#f8fafc; padding:15px; border-radius:12px; border:1px solid #e2e8f0;">
+                    <button class="btn btn-google" id="btn-edit-profile-trigger" style="max-width: 200px; margin: 0 auto 15px auto;">✏️ Edit Profile</button>
+                    
+                    <div id="edit-profile-form" class="hidden" style="text-align: left; background: #f8fafc; padding: 15px; border-radius: 12px; margin-bottom: 15px; border: 1px solid #e2e8f0;">
+                        <h4 style="margin-top: 0; color: var(--dark-green);">Modify Registration Parameters</h4>
                         <input type="text" id="edit-prof-name" placeholder="Full Name">
                         <input type="tel" id="edit-prof-phone" placeholder="WhatsApp Phone">
                         <input type="text" id="edit-prof-college" placeholder="College Name">
-                        <button class="btn btn-primary" id="btn-update-profile">Save System Updates</button>
-                        <button class="btn btn-google" id="btn-cancel-edit" style="margin-top:5px;">Cancel</button>
+                        <button class="btn btn-primary" id="btn-update-profile">Commit Database Save</button>
+                        <button class="btn btn-google" id="btn-cancel-edit" style="margin-top: 10px;">Cancel</button>
                     </div>
-                    <button class="btn btn-danger" id="btn-logout" style="max-width: 180px; margin: 10px auto 0 auto;">🚪 Logout Session</button>
+
+                    <button class="btn btn-danger" id="btn-logout" style="max-width:200px; margin:10px auto 0 auto;">🚪 Logout Securely</button>
+                    <p style="margin-top: 25px; font-size: 0.85rem; color: var(--text-muted); font-weight: 600;">Powered by Arfi</p>
                 </div>
-                <p style="text-align: center; font-size: 0.85rem; color: var(--text-muted); font-weight: 600;">Powered by Arfi</p>
+                
+                <div class="content-card" style="text-align: left; margin-top: 15px;">
+                    <h3 style="color: var(--dark-green); margin-top: 0;">My Queries & Replies</h3>
+                    <div id="student-queries-list"></div>
+                </div>
             </div>
 
             <div id="tab-admin" class="app-tab">
-                <div class="admin-header"><h2>Admin Control Panel Workspace</h2></div>
-                
+                <div class="admin-header">
+                    <h2 style="margin:0; color:var(--danger);">Admin Control Workspace</h2>
+                    <p style="margin:2px 0 0 0; font-size:0.82rem;">Superuser Portal Node Enabled.</p>
+                </div>
+
                 <div class="content-card" style="border: 1px solid var(--primary-green);">
-                    <h3>📝 Bulk Upload Manual MCQs</h3>
-                    <input type="text" id="admin-bulk-topic" placeholder="Topic Key Name">
-                    <textarea id="admin-bulk-text" rows="6" placeholder="Question: Text?\nA: Option\nB: Option\nC: Option\nD: Option\nAnswer: B"></textarea>
-                    <button class="btn btn-primary" id="btn-add-bulk-mcq">Upload Bulk Dataset Node</button>
+                    <h3 style="margin-top:0; font-size:1rem; color:var(--primary-green);">📝 Bulk Upload Questions</h3>
+                    <p style="font-size:0.8rem; margin: -5px 0 10px 0;">Paste multiple entries securely separating blocks via standard format rows.</p>
+                    <input type="text" id="admin-bulk-topic" placeholder="Topic Title (e.g. Autonomic Nervous System)">
+                    <textarea id="admin-bulk-text" rows="6" placeholder="Question: What is X?\nA: Option 1\nB: Option 2\nC: Option 3\nD: Option 4\nAnswer: B"></textarea>
+                    <button class="btn btn-primary" id="btn-add-bulk-mcq">Commit Bulk Save Node</button>
                 </div>
 
                 <div class="content-card">
-                    <h3>📝 Compose Note Pack Node</h3>
-                    <input type="text" id="admin-note-title" placeholder="Topic Title Target">
-                    <textarea id="admin-note-content" rows="4" placeholder="Plain system study note strings text..."></textarea>
-                    <button class="btn btn-primary" id="btn-compose-note">Publish Material Pack</button>
+                    <h3 style="margin-top:0; font-size:1rem;">📝 Compose Smart Topic Note</h3>
+                    <input type="text" id="admin-note-title" placeholder="Topic Name Header">
+                    <textarea id="admin-note-content" rows="4" placeholder="Type plain learning text content nodes here..."></textarea>
+                    <button class="btn btn-primary" id="btn-compose-note">Publish Cloud Pack Note</button>
                 </div>
 
                 <div class="content-card" style="border: 1px solid var(--warning);">
-                    <h3>🔑 AI API Configuration</h3>
-                    <p style="font-size:0.8rem; margin:-5px 0 10px 0;">Paste your 'AIzaSy...' API key here to activate the test generator.</p>
+                    <h3 style="margin-top:0; font-size:1rem; color:var(--warning);">🔑 AI API Key Configuration</h3>
+                    <p style="font-size:0.75rem; margin:-5px 0 10px 0; color:gray;">Paste 'AIzaSy...' key to activate generator.</p>
                     <input type="text" id="admin-gemini-input" placeholder="Paste Token Key Target">
                     <button class="btn" style="background:var(--warning); color:white;" id="btn-save-gemini">Synchronize Keys Live</button>
                 </div>
 
                 <div class="content-card">
-                    <h3>🛠️ Data Cluster Control Matrix Managers</h3>
+                    <h3 style="margin-top:0; font-size:1rem;">🛠️ Content Control Managers</h3>
+                    <h4 style="margin:5px 0; color:var(--primary-green);">Lectures View Network</h4>
                     <div id="admin-manage-lectures"></div>
+                    <h4 style="margin:15px 0 5px 0; color:var(--primary-green);">Materials Registry Storage</h4>
                     <div id="admin-manage-materials"></div>
+                    <h4 style="margin:15px 0 5px 0; color:var(--primary-green);">Manual Evaluation Unit Tests</h4>
                     <div id="admin-manage-mcqs"></div>
                 </div>
 
                 <div class="content-card">
-                    <h3>Add Video Lecture Link</h3>
-                    <input type="text" id="admin-lec-title" placeholder="Title">
-                    <input type="url" id="admin-lec-link" placeholder="YouTube Link Address">
-                    <button class="btn btn-primary" id="btn-add-lecture">Deploy Video Link Node</button>
+                    <h3 style="margin-top:0; font-size:1rem;">Add Video Lecture Node</h3>
+                    <input type="text" id="admin-lec-title" placeholder="Title Header">
+                    <input type="url" id="admin-lec-link" placeholder="YouTube Frame URL">
+                    <button class="btn btn-primary" id="btn-add-lecture">Deploy Video Instance</button>
                 </div>
 
                 <div class="content-card">
-                    <h3>Upload External Document Link</h3>
-                    <input type="text" id="admin-mat-title" placeholder="Title">
+                    <h3 style="margin-top:0; font-size:1rem;">Upload External PDF / PPT / Link</h3>
+                    <input type="text" id="admin-mat-title" placeholder="Package Title">
                     <input type="url" id="admin-mat-link" placeholder="Paste External File URL (Drive/Dropbox/PDF)">
-                    <button class="btn btn-primary" id="btn-add-material">Publish Remote Link</button>
+                    <button class="btn btn-primary" id="btn-add-material">Publish File Node</button>
                 </div>
 
-                <div class="content-card"><h3>Registered Profiles Logs</h3><div id="admin-users-list"></div></div>
-                <button class="btn btn-danger" id="btn-admin-logout">🚪 Close Superuser Control Workspace</button>
+                <div class="content-card">
+                    <h3 style="margin-top:0; font-size:1rem;">Student Comments Feed</h3>
+                    <div id="admin-comments-list"></div>
+                </div>
+
+                <div class="content-card">
+                    <h3 style="margin-top:0; font-size:1rem;">Users Log Directory</h3>
+                    <input type="text" id="admin-search-users" placeholder="🔍 Search identity records..." style="margin-bottom: 15px; border-color:var(--danger);">
+                    <div id="admin-users-list"></div>
+                </div>
+                <button class="btn btn-danger" id="btn-admin-logout" style="margin-top: 15px;">🚪 Terminate Control Session</button>
             </div>
         </div>
 
         <div class="nav-bar">
-            <div class="nav-item active" onclick="switchTab('tab-home', this)"><span class="nav-icon">🏠</span><span>Home</span></div>
-            <div class="nav-item" onclick="switchTab('tab-lectures', this)"><span class="nav-icon">📺</span><span>Lectures</span></div>
-            <div class="nav-item" onclick="switchTab('tab-material', this)"><span class="nav-icon">📥</span><span>Material</span></div>
-            <div class="nav-item" onclick="switchTab('tab-tests', this)"><span class="nav-icon">📝</span><span>Tests</span></div>
-            <div class="nav-item" onclick="switchTab('tab-profile', this)"><span class="nav-icon">👤</span><span>Profile</span></div>
-            <div class="nav-item hidden" id="admin-nav-item" onclick="switchTab('tab-admin', this)"><span class="nav-icon">⚙️</span><span class="admin-nav">Admin</span></div>
+            <div class="nav-item active" onclick="switchTab('tab-home', this)">
+                <span class="nav-icon">🏠</span><span>Home</span>
+            </div>
+            <div class="nav-item" onclick="switchTab('tab-lectures', this)">
+                <span class="nav-icon">📺</span><span>Lectures</span>
+            </div>
+            <div class="nav-item" onclick="switchTab('tab-material', this)">
+                <span class="nav-icon">📥</span><span>Material</span>
+            </div>
+            <div class="nav-item" onclick="switchTab('tab-tests', this)">
+                <span class="nav-icon">📝</span><span>Tests</span>
+            </div>
+            <div class="nav-item" onclick="switchTab('tab-profile', this)">
+                <span class="nav-icon">👤</span><span>Profile</span>
+            </div>
+            <div class="nav-item hidden" id="admin-nav-item" onclick="switchTab('tab-admin', this)">
+                <span class="nav-icon">⚙️</span><span class="admin-nav">Admin</span>
+            </div>
+        </div>
+    </div>
+
+    <div id="wa-widget">
+        <div id="wa-chat-box">
+            <h4 style="margin:0 0 5px 0; color:var(--dark-green);">Direct Line Helpdesk</h4>
+            <textarea id="wa-msg-text" rows="3" placeholder="Write query detail parameters..."></textarea>
+            <button class="btn btn-primary" id="btn-send-wa" style="background:var(--whatsapp);">Launch WhatsApp Secure</button>
+        </div>
+        <div class="wa-btn" id="wa-toggle-btn">
+            <svg viewBox="0 0 448 512"><path d="M380.9 97.1C339 55.1 283.2 32 223.9 32c-122.4 0-222 99.6-222 222 0 39.1 10.2 77.3 29.6 111L0 480l117.7-30.9c32.4 17.7 68.9 27 106.1 27h.1c122.3 0 224.1-99.6 224.1-222 0-59.3-25.2-115-67.1-157zm-157 341.6c-33.2 0-65.7-8.9-94-25.7l-6.7-4-69.8 18.3L72 359.2l-4.4-7c-18.5-29.4-28.2-63.3-28.2-98.2 0-101.7 82.8-184.5 184.6-184.5 49.3 0 95.6 19.2 130.4 54.1 34.8 34.9 56.2 81.2 56.1 130.5 0 101.8-84.9 184.6-186.6 184.6z"/></svg>
         </div>
     </div>
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/12.15.0/firebase-app.js";
-        import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/12.15.0/firebase-auth.js";
+        import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, signInWithPopup, GoogleAuthProvider, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/12.15.0/firebase-auth.js";
         import { getFirestore, doc, setDoc, getDoc, collection, addDoc, getDocs, updateDoc, deleteDoc } from "https://www.gstatic.com/firebasejs/12.15.0/firebase-firestore.js";
 
+        // FIREBASE CONNECTIVITY
         const firebaseConfig = {
             apiKey: "AIzaSyDzXX21yLZHWagjZ9G8L6R5OIcJBPPhRcg",
             authDomain: "lippinpharma-e758f.firebaseapp.com",
@@ -282,21 +391,27 @@
             appId: "1:828017458601:web:ae687eea3978a7002198b8"
         };
 
-        let GEMINI_API_KEY = "";
-
         const app = initializeApp(firebaseConfig);
         const auth = getAuth(app);
         const db = getFirestore(app);
+        const provider = new GoogleAuthProvider();
 
+        // GLOBAL VARIABLES
+        let GEMINI_API_KEY = "";
         let currentUser = null;
         let currentUserData = null;
         let base64ProfilePicString = "";
         
         let localMaterialsArrayCache = [];
+        let allLectures = [];
+        let adminAllUsers = [];
         let manualMCQsData = [];
+        
+        // TEST SYSTEM ARRAYS
         let currentTestQuestions = [];
         let userSelectedAnswers = [];
 
+        // TOAST ENGINE
         window.showToast = function(message, type = 'success') {
             const box = document.getElementById('notification-box');
             document.getElementById('noti-msg').innerText = message;
@@ -305,6 +420,7 @@
             setTimeout(() => { box.classList.remove('show'); }, 4000);
         }
 
+        // NAVIGATION TABS
         window.switchTab = function(tabId, element = null) {
             document.querySelectorAll('.app-tab').forEach(t => t.classList.remove('active-tab'));
             document.getElementById(tabId).classList.add('active-tab');
@@ -314,323 +430,7 @@
             }
         }
 
-        // Authentication State Logic
-        setTimeout(() => {
-            onAuthStateChanged(auth, async (user) => {
-                document.getElementById('splash-screen').style.opacity = '0';
-                setTimeout(() => { document.getElementById('splash-screen').style.display = 'none'; }, 600);
-                
-                if (user) {
-                    currentUser = user;
-                    await syncAPIKey();
-                    checkUserProfile(user);
-                } else {
-                    document.getElementById('login-screen').classList.remove('hidden');
-                    document.getElementById('dashboard-screen').classList.add('hidden');
-                }
-            });
-        }, 2000);
-
-        async function syncAPIKey() {
-            try {
-                const configSnap = await getDoc(doc(db, "settings", "config"));
-                if(configSnap.exists() && configSnap.data().geminiKey) {
-                    GEMINI_API_KEY = configSnap.data().geminiKey;
-                }
-            } catch(e) {}
-            if(auth.currentUser && auth.currentUser.email === "uarajpoot31@gmail.com") {
-                document.getElementById('admin-gemini-input').value = GEMINI_API_KEY;
-            }
-        }
-
-        async function checkUserProfile(user) {
-            const snap = await getDoc(doc(db, "users", user.uid));
-            if(snap.exists()) {
-                currentUserData = snap.data();
-                if(user.email === "uarajpoot31@gmail.com") {
-                    document.getElementById('admin-nav-item').classList.remove('hidden');
-                    fetchAdminManageContent(); 
-                }
-                updateProfileUI(currentUserData, user.email);
-                document.getElementById('login-screen').classList.add('hidden');
-                document.getElementById('profile-screen').classList.add('hidden');
-                document.getElementById('dashboard-screen').classList.remove('hidden');
-                
-                fetchLectures(); fetchMaterials(); fetchManualMCQs();
-            } else {
-                document.getElementById('login-screen').classList.add('hidden');
-                document.getElementById('profile-screen').classList.remove('hidden');
-            }
-        }
-
-        function updateProfileUI(data, email) {
-            document.getElementById('welcome-title').innerText = `Hi, ${data.name}`;
-            document.getElementById('profile-page-name').innerText = data.name;
-            document.getElementById('profile-page-email').innerText = email;
-            const pic = data.profilePic || "https://via.placeholder.com/150";
-            document.getElementById('dashboard-user-pic').style.backgroundImage = `url(${pic})`;
-            document.getElementById('profile-page-pic').style.backgroundImage = `url(${pic})`;
-        }
-
-        // Login & Registration Hooks
-        document.getElementById('btn-login').addEventListener('click', async () => {
-            const e = document.getElementById('email').value, p = document.getElementById('password').value; 
-            if(!e || !p) return showToast("Please enter email and password.", "error");
-            showToast("Authenticating...");
-            try { await signInWithEmailAndPassword(auth, e, p); } 
-            catch (err) {
-                if(err.code === 'auth/user-not-found' || err.code === 'auth/invalid-credential') {
-                    try { await createUserWithEmailAndPassword(auth, e, p); showToast("Account Created successfully!"); } 
-                    catch (er) { showToast(er.message, "error"); }
-                } else { showToast(err.message, "error"); }
-            }
-        });
-
-        // Safe Logout Hook Function
-        const performLogout = () => {
-            signOut(auth).then(() => {
-                showToast("Logging out...", "success");
-                setTimeout(() => { window.location.reload(); }, 1000);
-            }).catch(error => {
-                showToast("Logout failed.", "error");
-            });
-        };
-        
-        document.getElementById('btn-logout').addEventListener('click', performLogout);
-        document.getElementById('btn-admin-logout').addEventListener('click', performLogout);
-
-        // Profile Image Encoder
-        const fileChooserInputNode = document.getElementById('prof-pic-input');
-        const triggerBoxFrameNode = document.getElementById('prof-pic-preview');
-        if(triggerBoxFrameNode) triggerBoxFrameNode.addEventListener('click', () => fileChooserInputNode.click());
-        fileChooserInputNode.addEventListener('change', (e) => {
-            const file = e.target.files[0];
-            if(file) {
-                const streamReader = new FileReader();
-                streamReader.onload = ev => {
-                    base64ProfilePicString = ev.target.result;
-                    triggerBoxFrameNode.style.backgroundImage = `url(${base64ProfilePicString})`;
-                    triggerBoxFrameNode.innerHTML = '';
-                };
-                streamReader.readAsDataURL(file);
-            }
-        });
-
-        document.getElementById('btn-save-profile').addEventListener('click', async () => {
-            const name = document.getElementById('prof-name').value; 
-            const phone = document.getElementById('prof-phone').value; 
-            const college = document.getElementById('prof-college').value;
-            if(!name || !phone || !college) return showToast("Fill all details.", "error");
-            showToast("Saving profile...");
-            try {
-                await setDoc(doc(db, "users", currentUser.uid), { name, phone, college, email: currentUser.email, profilePic: base64ProfilePicString || "", isBlocked: false });
-                window.location.reload();
-            } catch(e) { showToast("Error saving profile.", "error"); }
-        });
-
-        // Edit Profile Updates
-        const editProfileFileField = document.getElementById('edit-prof-pic-input');
-        document.getElementById('profile-page-pic').addEventListener('click', () => editProfileFileField.click());
-        editProfileFileField.addEventListener('change', (e) => {
-            const file = e.target.files[0];
-            if(file) {
-                const r = new FileReader();
-                r.onload = async ev => {
-                    let str = ev.target.result;
-                    await updateDoc(doc(db, "users", currentUser.uid), { profilePic: str });
-                    currentUserData.profilePic = str;
-                    updateProfileUI(currentUserData, currentUser.email);
-                    showToast("Picture updated!");
-                };
-                r.readAsDataURL(file);
-            }
-        });
-
-        document.getElementById('btn-edit-profile-trigger').addEventListener('click', () => {
-            document.getElementById('edit-profile-form').classList.remove('hidden'); 
-            document.getElementById('edit-prof-name').value = currentUserData.name || ''; 
-            document.getElementById('edit-prof-phone').value = currentUserData.phone || ''; 
-            document.getElementById('edit-prof-college').value = currentUserData.college || '';
-        });
-        document.getElementById('btn-cancel-edit').addEventListener('click', () => document.getElementById('edit-profile-form').classList.add('hidden') );
-        
-        document.getElementById('btn-update-profile').addEventListener('click', async () => {
-            const n = document.getElementById('edit-prof-name').value; const p = document.getElementById('edit-prof-phone').value; const c = document.getElementById('edit-prof-college').value;
-            if(!n || !p || !c) return showToast("Empty values.", "error");
-            showToast("Updating profile...");
-            try {
-                await updateDoc(doc(db, "users", currentUser.uid), { name: n, phone: p, college: c });
-                currentUserData.name = n; currentUserData.phone = p; currentUserData.college = c; 
-                updateProfileUI(currentUserData, currentUser.email);
-                document.getElementById('edit-profile-form').classList.add('hidden');
-                showToast("Profile Updated!", "success");
-            } catch (error) { showToast("Error updating.", "error"); }
-        });
-
-        // ----------------------------------------------------
-        // STUDENT EVALUATION TEST SYSTEM (FIXED SUBMIT SYSTEM)
-        // ----------------------------------------------------
-        async function fetchManualMCQs() {
-            const snap = await getDocs(collection(db, "manual_tests"));
-            manualMCQsData = []; let html = '';
-            snap.forEach(doc => { 
-                let d = doc.data(); manualMCQsData.push({ id: doc.id, ...d }); 
-                html += `<button class="topic-btn" onclick="startTestMode('${doc.id}', false)">${d.topic}</button>`;
-            });
-            document.getElementById('manual-topics-container').innerHTML = html || "<p style='font-size:0.8rem; color:gray;'>No manual tests uploaded yet.</p>";
-        }
-
-        window.startTestMode = function(identifier, isAI = false) {
-            currentTestQuestions = [];
-            userSelectedAnswers = [];
-            document.getElementById('quiz-result-area').innerText = '';
-            
-            if(!isAI) {
-                let node = manualMCQsData.find(q => q.id === identifier);
-                if(node && node.questions) {
-                    currentTestQuestions = node.questions;
-                    document.getElementById('quiz-title-heading').innerText = `Test: ${node.topic}`;
-                    renderEvaluationBlock(currentTestQuestions);
-                    document.getElementById('btn-submit-test').classList.remove('hidden');
-                }
-            } else {
-                currentTestQuestions = identifier; // For AI it passes the array directly
-                renderEvaluationBlock(currentTestQuestions);
-                document.getElementById('btn-submit-test').classList.remove('hidden');
-            }
-        }
-
-        function renderEvaluationBlock(questionsArray) {
-            let container = document.getElementById('quiz-render-area'); let html = '';
-            questionsArray.forEach((q, idx) => {
-                userSelectedAnswers[idx] = null; // Reset answers
-                html += `
-                <div style="margin-bottom:15px; border-bottom:1px solid #f1f5f9; padding-bottom:12px;">
-                    <div style="font-weight:600; font-size:0.95rem;">Q${idx+1}: ${q.question}</div>
-                    <div id="opts-group-${idx}">`;
-                q.options.forEach((opt, oIdx) => {
-                    html += `<div class="quiz-option" id="opt-${idx}-${oIdx}" onclick="selectTestOption(${idx}, ${oIdx})">${opt}</div>`;
-                });
-                html += `</div></div>`;
-            });
-            container.innerHTML = html;
-        }
-
-        window.selectTestOption = function(qIndex, oIndex) {
-            userSelectedAnswers[qIndex] = oIndex;
-            // Clear highlighting for this question group
-            let parent = document.getElementById(`opts-group-${qIndex}`);
-            let allOpts = parent.querySelectorAll('.quiz-option');
-            allOpts.forEach(el => el.classList.remove('selected'));
-            // Highlight current selection
-            document.getElementById(`opt-${qIndex}-${oIndex}`).classList.add('selected');
-        }
-
-        document.getElementById('btn-submit-test').addEventListener('click', () => {
-            // Ensure all questions are answered
-            if(userSelectedAnswers.includes(null)) {
-                return showToast("Please answer all questions before submitting.", "error");
-            }
-            
-            let score = 0;
-            currentTestQuestions.forEach((q, idx) => {
-                let parent = document.getElementById(`opts-group-${idx}`);
-                let allOpts = parent.querySelectorAll('.quiz-option');
-                let userAns = userSelectedAnswers[idx];
-                let correctAns = q.correctIndex;
-                
-                // Disable clicks
-                allOpts.forEach(el => el.style.pointerEvents = 'none');
-                
-                // Color mapping
-                if(userAns === correctAns) {
-                    score++;
-                    document.getElementById(`opt-${idx}-${userAns}`).classList.add('correct');
-                } else {
-                    document.getElementById(`opt-${idx}-${userAns}`).classList.add('wrong');
-                    document.getElementById(`opt-${idx}-${correctAns}`).classList.add('correct');
-                }
-            });
-
-            document.getElementById('btn-submit-test').classList.add('hidden');
-            let resultBox = document.getElementById('quiz-result-area');
-            resultBox.innerText = `Evaluation Completed! Your Score: ${score} / ${currentTestQuestions.length}`;
-            showToast(`Test Submitted! Score: ${score}`, "success");
-        });
-
-
-        // ----------------------------------------------------
-        // RE-WRITTEN GEMINI AI FETCH LOGIC
-        // ----------------------------------------------------
-        document.getElementById('btn-generate-ai-test').addEventListener('click', async () => {
-            let topic = document.getElementById('ai-topic').value;
-            let count = document.getElementById('ai-count').value || 5;
-            if(!topic) return showToast("Topic name is blank.", "error");
-            if(!GEMINI_API_KEY) return showToast("API Key missing. Ask admin to configure AI.", "error");
-            
-            showToast("Calling AI Engine... Please hold.", "success");
-
-            // Strict JSON constraint prompt
-            let prompt = `Create exactly ${count} multiple choice questions about "${topic}" strictly related to Pharmacology. Return ONLY a valid JSON array in this format: [{"question":"Text","options":["A","B","C","D"],"correctIndex":0}]. Do not include any other markdown or text.`;
-
-            try {
-                let response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${GEMINI_API_KEY}`, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ contents: [{ parts: [{ text: prompt }] }] })
-                });
-
-                let data = await response.json();
-                
-                if(data.error) {
-                    return showToast(`AI Error: ${data.error.message}`, "error");
-                }
-
-                let textResponse = data.candidates[0].content.parts[0].text;
-                
-                // Clean markdown format if Gemini still appends it
-                let cleanedText = textResponse.replace(/```json/g, "").replace(/```/g, "").trim();
-                
-                let s = cleanedText.indexOf('[');
-                let e = cleanedText.lastIndexOf(']');
-                
-                if(s !== -1 && e !== -1) {
-                    let quizArray = JSON.parse(cleanedText.substring(s, e + 1));
-                    document.getElementById('quiz-title-heading').innerText = `AI Custom Quiz: ${topic}`;
-                    startTestMode(quizArray, true); // Send directly to evaluation engine
-                    showToast("AI Test Generated!", "success");
-                } else {
-                    showToast("Failed to extract structural JSON.", "error");
-                }
-
-            } catch (err) {
-                showToast("Network error or invalid API token format.", "error");
-            }
-        });
-
-
-        // ----------------------------------------------------
-        // PDF VIEW & DOWNLOAD MECHANICS (FIXED BASE64 ENCODING)
-        // ----------------------------------------------------
-        async function fetchMaterials() {
-            const snap = await getDocs(collection(db, "materials"));
-            localMaterialsArrayCache = []; let html = '';
-            snap.forEach(doc => {
-                let item = doc.data(); 
-                localMaterialsArrayCache.push({ id: doc.id, ...item });
-                let isComposed = item.type === 'composed';
-                let actionBtn = isComposed ? 
-                    `<div style="display:flex; gap:5px;">
-                        <button onclick="viewComposedNote('${doc.id}')" style="background:var(--blue); color:white; border:none; padding:8px 12px; border-radius:6px; cursor:pointer;">👁️ View</button>
-                        <button onclick="downloadComposedPDF('${doc.id}')" style="background:var(--primary-green); color:white; border:none; padding:8px 12px; border-radius:6px; cursor:pointer;">⬇️ PDF</button>
-                    </div>` :
-                    `<a href="${item.fileUrl}" target="_blank" style="background:var(--primary-green); color:white; text-decoration:none; padding:8px 14px; border-radius:6px; display:inline-block;">Launch URL Resource</a>`;
-                
-                html += `<div class="content-card" style="display:flex; justify-content:space-between; align-items:center;"><div><div style="font-weight:600;">${isComposed ? '📝' : '📄'} ${item.title}</div></div>${actionBtn}</div>`;
-            });
-            document.getElementById('materials-container').innerHTML = html || "<p style='font-size:0.9rem; color:gray;'>Empty references catalog.</p>";
-        }
-
+        // PDF READER & DOWNLOAD
         window.viewComposedNote = function(matId) {
             let node = localMaterialsArrayCache.find(m => m.id === matId);
             if(node) {
@@ -650,7 +450,7 @@
                 <div style="padding: 40px; font-family: sans-serif; color: #2d3748; background: #ffffff;">
                     <div style="text-align: center; border-bottom: 3px solid #069C54; padding-bottom: 15px; margin-bottom: 30px;">
                         <h1 style="color: #047840; margin: 0; font-size: 26px;">${node.title}</h1>
-                        <p style="color: #718096; margin: 5px 0 0 0; font-size: 13px;">Official Reference Notes Summary</p>
+                        <p style="color: #718096; margin: 5px 0 0 0; font-size: 13px;">Official Reference Notes Summary Node</p>
                     </div>
                     <div style="font-size: 15px; line-height: 1.8; white-space: pre-wrap; text-align: justify;">
                         ${node.content}
@@ -664,23 +464,446 @@
             targetSandbox.innerHTML = htmlTemplate;
             targetSandbox.style.display = 'block';
 
-            const opt = { margin: 0.5, filename: `${node.title}.pdf`, image: { type: 'jpeg', quality: 0.98 }, html2canvas: { scale: 2 }, jsPDF: { unit: 'in', format: 'letter', orientation: 'portrait' } };
+            const configurationsPack = {
+                margin: 0.5, filename: `${node.title}.pdf`, image: { type: 'jpeg', quality: 0.98 },
+                html2canvas: { scale: 2 }, jsPDF: { unit: 'in', format: 'letter', orientation: 'portrait' }
+            };
             
-            html2pdf().set(opt).from(targetSandbox).save().then(() => {
+            html2pdf().set(configurationsPack).from(targetSandbox).save().then(() => {
                 targetSandbox.style.display = 'none'; showToast("PDF File Download Successful!", "success");
             });
         }
 
+        // WHATSAPP HELPDESK
+        document.getElementById('wa-toggle-btn').addEventListener('click', () => {
+            const box = document.getElementById('wa-chat-box'); box.style.display = box.style.display === 'flex' ? 'none' : 'flex';
+        });
+        document.getElementById('btn-send-wa').addEventListener('click', () => {
+            const query = document.getElementById('wa-msg-text').value;
+            const name = currentUserData ? currentUserData.name : "Student";
+            const messageRow = `Hi This is ${name} here from LippinPharma.`;
+            const uriTarget = `https://wa.me/923156765582?text=${encodeURIComponent(messageRow + (query ? "\nDetails: " + query : ""))}`;
+            window.open(uriTarget, '_blank');
+            document.getElementById('wa-msg-text').value = ''; document.getElementById('wa-chat-box').style.display = 'none';
+        });
 
-        // ----------------------------------------------------
-        // ADMIN CONTROLS (BULK MCQs & NOTES)
-        // ----------------------------------------------------
+        // BASE64 IMAGE ENCODER (Registration)
+        const fileChooserInputNode = document.getElementById('prof-pic-input');
+        const triggerBoxFrameNode = document.getElementById('prof-pic-preview');
+        if(triggerBoxFrameNode) triggerBoxFrameNode.addEventListener('click', () => fileChooserInputNode.click());
+        
+        fileChooserInputNode.addEventListener('change', (e) => {
+            const targetFile = e.target.files[0];
+            if(targetFile) {
+                const streamReader = new FileReader();
+                streamReader.onload = ev => {
+                    base64ProfilePicString = ev.target.result;
+                    triggerBoxFrameNode.style.backgroundImage = `url(${base64ProfilePicString})`;
+                    triggerBoxFrameNode.innerHTML = '';
+                };
+                streamReader.readAsDataURL(targetFile);
+            }
+        });
+
+        // BASE64 IMAGE ENCODER (Profile Edit)
+        const profileTabAvatarClickFrame = document.getElementById('profile-page-pic');
+        const hiddenEditProfileFileSelectorNode = document.getElementById('edit-prof-pic-input');
+        if(profileTabAvatarClickFrame) profileTabAvatarClickFrame.addEventListener('click', () => hiddenEditProfileFileSelectorNode.click());
+        
+        hiddenEditProfileFileSelectorNode.addEventListener('change', async (e) => {
+            const fileTarget = e.target.files[0];
+            if(fileTarget && currentUser) {
+                showToast("Converting and uploading new photo...", "success");
+                const readerInstanceNode = new FileReader();
+                readerInstanceNode.onload = async ev => {
+                    let newBase64String = ev.target.result;
+                    try {
+                        await updateDoc(doc(db, "users", currentUser.uid), { profilePic: newBase64String });
+                        currentUserData.profilePic = newBase64String;
+                        updateProfileUI(currentUserData, currentUser.email);
+                        showToast("Profile Picture Updated!", "success");
+                    } catch(err) { showToast("Failed to upload picture.", "error"); }
+                };
+                readerInstanceNode.readAsDataURL(fileTarget);
+            }
+        });
+
+        // SESSION AUTHENTICATION & LOGIN LOOP FIX
+        async function runCloudGeminiSync() {
+            try {
+                const configSnap = await getDoc(doc(db, "settings", "config"));
+                if(configSnap.exists() && configSnap.data().geminiKey) { GEMINI_API_KEY = configSnap.data().geminiKey; }
+            } catch(e) { }
+            if(auth.currentUser && auth.currentUser.email === "uarajpoot31@gmail.com") {
+                document.getElementById('admin-gemini-input').value = GEMINI_API_KEY;
+            }
+        }
+
+        setTimeout(() => {
+            onAuthStateChanged(auth, async (user) => {
+                document.getElementById('splash-screen').style.opacity = '0';
+                setTimeout(() => { document.getElementById('splash-screen').style.display = 'none'; }, 600);
+                
+                if (user) {
+                    // Check Session Tick To prevent Infinite Loop
+                    const tick = localStorage.getItem('sessionTick');
+                    if (tick && (Date.now() - parseInt(tick) > 30 * 60 * 1000)) {
+                        await signOut(auth);
+                        localStorage.clear();
+                        showToast("Session Expired. Please Login Again.", "error");
+                        document.getElementById('login-screen').classList.remove('hidden');
+                        return;
+                    }
+                    localStorage.setItem('sessionTick', Date.now()); // Ping Session Active
+                    
+                    currentUser = user;
+                    await runCloudGeminiSync(); 
+                    checkUserProfile(user);
+                } else {
+                    document.getElementById('login-screen').classList.remove('hidden');
+                    document.getElementById('dashboard-screen').classList.add('hidden');
+                    document.getElementById('profile-screen').classList.add('hidden');
+                    document.getElementById('wa-widget').style.display = 'none';
+                }
+            });
+        }, 2000);
+
+        // Keep Session Active on Interaction
+        function pingSession() { if(auth.currentUser) localStorage.setItem('sessionTick', Date.now()); }
+        document.addEventListener('click', pingSession); document.addEventListener('keypress', pingSession);
+
+        async function checkUserProfile(user) {
+            try {
+                const snap = await getDoc(doc(db, "users", user.uid));
+                if(snap.exists()) {
+                    currentUserData = snap.data();
+                    if(currentUserData.isBlocked === true) {
+                        showToast("⛔ Authorization Rejected: System Blocked.", "error");
+                        setTimeout(() => { signOut(auth).then(() => { localStorage.clear(); window.location.reload(); }); }, 2000);
+                        return;
+                    }
+                    if(user.email === "uarajpoot31@gmail.com") {
+                        document.getElementById('admin-nav-item').classList.remove('hidden');
+                        fetchAdminDirectory(); fetchAdminManageContent(); 
+                    }
+                    updateProfileUI(currentUserData, user.email);
+                    document.getElementById('login-screen').classList.add('hidden');
+                    document.getElementById('profile-screen').classList.add('hidden');
+                    document.getElementById('dashboard-screen').classList.remove('hidden');
+                    document.getElementById('wa-widget').style.display = 'block';
+                    fetchLectures(); fetchMaterials(); fetchStudentQueries(); fetchManualMCQs();
+                } else {
+                    document.getElementById('login-screen').classList.add('hidden');
+                    document.getElementById('profile-screen').classList.remove('hidden');
+                }
+            } catch(e) {
+                // If read fails completely
+                showToast("System Network Error.", "error");
+            }
+        }
+
+        function updateProfileUI(data, email) {
+            document.getElementById('welcome-title').innerText = `Hi, ${data.name}`;
+            document.getElementById('profile-page-name').innerText = data.name;
+            document.getElementById('profile-page-email').innerText = email;
+            const pic = data.profilePic || "https://via.placeholder.com/150";
+            document.getElementById('dashboard-user-pic').style.backgroundImage = `url(${pic})`;
+            document.getElementById('profile-page-pic').style.backgroundImage = `url(${pic})`;
+        }
+
+        // LOGIN / LOGOUT EXECUTION
+        document.getElementById('btn-login').addEventListener('click', async () => {
+            const e = document.getElementById('email').value, p = document.getElementById('password').value; 
+            if(!e || !p) return showToast("Enter credentials.", "error"); 
+            showToast("Authenticating...");
+            try { 
+                await signInWithEmailAndPassword(auth, e, p); 
+                localStorage.setItem('sessionTick', Date.now()); // Lock Active Session
+            } 
+            catch (err) {
+                if(err.code === 'auth/user-not-found' || err.code === 'auth/invalid-credential') {
+                    try { 
+                        await createUserWithEmailAndPassword(auth, e, p); 
+                        localStorage.setItem('sessionTick', Date.now());
+                    } catch (er) { showToast(er.message, "error"); }
+                } else { showToast(err.message, "error"); }
+            }
+        });
+
+        document.getElementById('btn-google').addEventListener('click', async () => { 
+            try { 
+                await signInWithPopup(auth, provider); 
+                localStorage.setItem('sessionTick', Date.now());
+            } catch (err) { showToast("Google Login Cancelled", "error"); } 
+        });
+
+        const performSafeLogout = () => {
+            showToast("Closing secure connection...", "success");
+            signOut(auth).then(() => { 
+                localStorage.clear(); 
+                window.location.reload(); 
+            });
+        };
+        document.getElementById('btn-logout').addEventListener('click', performSafeLogout);
+        document.getElementById('btn-admin-logout').addEventListener('click', performSafeLogout);
+
+        document.getElementById('btn-save-profile').addEventListener('click', async () => {
+            const name = document.getElementById('prof-name').value; const phone = document.getElementById('prof-phone').value; const college = document.getElementById('prof-college').value;
+            if(!name || !phone || !college) return showToast("Identity elements required.", "error");
+            showToast("Writing synchronized profile elements...");
+            try {
+                await setDoc(doc(db, "users", currentUser.uid), { name, phone, college, email: currentUser.email, profilePic: base64ProfilePicString || "", isBlocked: false, createdAt: new Date().toISOString() });
+                window.location.reload(); // Reload to fetch fresh data
+            } catch(dbErr) { showToast("Database rules intercept.", "error"); }
+        });
+
+        // ------------------------------------------------------------------
+        // EVALUATION TEST SYSTEM (MANUAL & AI) WITH SUBMIT BUTTON
+        // ------------------------------------------------------------------
+        async function fetchManualMCQs() {
+            const snap = await getDocs(collection(db, "manual_tests"));
+            manualMCQsData = []; let html = '';
+            snap.forEach(doc => { 
+                let d = doc.data(); manualMCQsData.push({ id: doc.id, ...d }); 
+                html += `<button class="topic-btn" onclick="startTestMode('${doc.id}', false)">${d.topic}</button>`;
+            });
+            document.getElementById('manual-topics-container').innerHTML = html || "<p style='font-size:0.8rem; color:gray;'>No unit tests uploaded.</p>";
+        }
+
+        window.startTestMode = function(identifier, isAI = false) {
+            currentTestQuestions = [];
+            userSelectedAnswers = [];
+            document.getElementById('quiz-result-area').innerText = ''; // clear old results
+            
+            if(!isAI) {
+                let node = manualMCQsData.find(q => q.id === identifier);
+                if(node && node.questions) {
+                    currentTestQuestions = node.questions;
+                    document.getElementById('quiz-title-heading').innerText = `Test: ${node.topic}`;
+                    renderEvaluationBlock(currentTestQuestions);
+                    document.getElementById('btn-submit-test').classList.remove('hidden');
+                    showToast(`Test loaded successfully.`, "success");
+                }
+            } else {
+                currentTestQuestions = identifier; // AI passes the array directly
+                renderEvaluationBlock(currentTestQuestions);
+                document.getElementById('btn-submit-test').classList.remove('hidden');
+            }
+        }
+
+        function renderEvaluationBlock(questionsArray) {
+            let container = document.getElementById('quiz-render-area'); let html = '';
+            questionsArray.forEach((q, idx) => {
+                userSelectedAnswers[idx] = null; // Initialize null tracking
+                html += `
+                <div style="margin-bottom:15px; border-bottom:1px solid #f1f5f9; padding-bottom:12px;">
+                    <div style="font-weight:600; font-size:0.95rem;">Q${idx+1}: ${q.question}</div>
+                    <div id="opts-group-${idx}">`;
+                q.options.forEach((opt, oIdx) => {
+                    html += `<div class="quiz-option" id="opt-${idx}-${oIdx}" onclick="selectTestOption(${idx}, ${oIdx})">${opt}</div>`;
+                });
+                html += `</div></div>`;
+            });
+            container.innerHTML = html;
+        }
+
+        window.selectTestOption = function(qIndex, oIndex) {
+            userSelectedAnswers[qIndex] = oIndex;
+            let parent = document.getElementById(`opts-group-${qIndex}`);
+            let allOpts = parent.querySelectorAll('.quiz-option');
+            allOpts.forEach(el => {
+                el.style.background = '#f8fafc';
+                el.style.borderColor = '#e2e8f0';
+                el.style.fontWeight = '500';
+            });
+            let selectedEl = document.getElementById(`opt-${qIndex}-${oIndex}`);
+            selectedEl.style.background = '#d1fae5';
+            selectedEl.style.borderColor = 'var(--primary-green)';
+            selectedEl.style.fontWeight = 'bold';
+        }
+
+        document.getElementById('btn-submit-test').addEventListener('click', () => {
+            if(userSelectedAnswers.includes(null)) {
+                return showToast("Please answer all questions before submitting.", "error");
+            }
+            
+            let score = 0;
+            currentTestQuestions.forEach((q, idx) => {
+                let userAns = userSelectedAnswers[idx];
+                let correctAns = q.correctIndex;
+                let parent = document.getElementById(`opts-group-${idx}`);
+                let allOpts = parent.querySelectorAll('.quiz-option');
+                allOpts.forEach(el => el.style.pointerEvents = 'none'); // Lock answers
+                
+                if(userAns === correctAns) {
+                    score++;
+                } else {
+                    document.getElementById(`opt-${idx}-${userAns}`).style.background = '#fee2e2';
+                    document.getElementById(`opt-${idx}-${userAns}`).style.borderColor = 'var(--danger)';
+                    document.getElementById(`opt-${idx}-${correctAns}`).style.background = '#d1fae5';
+                    document.getElementById(`opt-${idx}-${correctAns}`).style.borderColor = 'var(--primary-green)';
+                }
+            });
+
+            document.getElementById('btn-submit-test').classList.add('hidden');
+            document.getElementById('quiz-result-area').innerText = `Evaluation Completed! Your Score: ${score} / ${currentTestQuestions.length}`;
+            showToast(`Test Submitted!`, "success");
+        });
+
+        // AI Engine Request
+        document.getElementById('btn-generate-ai-test').addEventListener('click', async () => {
+            let topic = document.getElementById('ai-topic').value; 
+            let count = document.getElementById('ai-count').value || 5;
+            if(!topic) return showToast("Target matrix key blank.", "error");
+            if(!GEMINI_API_KEY) return showToast("API Key Missing! Ask Admin to Sync.", "error");
+            
+            showToast("Parsing topic parameters via remote system...");
+
+            let strictRulePrompt = `You are a validator for Lippincott Pharmacology. The user wants ${count} multiple choice questions about "${topic}". CRITICAL SECURITY CHECK: If "${topic}" is completely unrelated to pharmacology, medicine, or drugs, you must reply exactly with the single word ERROR. If valid, generate questions as a clean JSON array structure: [{"question": "Query", "options": ["1","2","3","4"], "correctIndex": 0}]. Do NOT add markdown blocks like \`\`\`json. Return pure array text only.`;
+            
+            try {
+                let response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${GEMINI_API_KEY}`, {
+                    method: 'POST', headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ contents: [{ parts: [{ text: strictRulePrompt }] }] })
+                });
+                let data = await response.json(); 
+                let resultPayload = data.candidates[0].content.parts[0].text;
+                
+                if(resultPayload.includes("ERROR") || resultPayload === "ERROR") {
+                    return showToast("⚠️ Topic rejected or Key Expired.", "error");
+                }
+                
+                let cleaned = resultPayload.replace(/```json/g, "").replace(/```/g, "").trim();
+                let s = cleaned.indexOf('['); let e = cleaned.lastIndexOf(']');
+                
+                if(s !== -1 && e !== -1) {
+                    let quizData = JSON.parse(cleaned.substring(s, e + 1));
+                    document.getElementById('quiz-title-heading').innerText = `Dynamic AI Quiz: ${topic}`; 
+                    startTestMode(quizData, true);
+                    showToast("Test parameters locked and loaded.", "success");
+                } else { showToast("⚠️ Format generation structural issue.", "error"); }
+            } catch(e) {
+                showToast("⚠️ Network issue or invalid AI Key.", "error");
+            }
+        });
+
+        // FETCH MATERIALS AND LECTURES
+        async function fetchMaterials() {
+            const snap = await getDocs(collection(db, "materials"));
+            localMaterialsArrayCache = []; let html = '';
+            snap.forEach(doc => {
+                let item = doc.data(); localMaterialsArrayCache.push({ id: doc.id, ...item });
+                let isComposed = item.type === 'composed';
+                let actionBtn = isComposed ? 
+                    `<div style="display:flex; gap:5px;">
+                        <button onclick="viewComposedNote('${doc.id}')" style="background:var(--blue); color:white; border:none; padding:8px 12px; border-radius:6px; font-size:0.8rem; font-weight:bold; cursor:pointer;">👁️ View</button>
+                        <button onclick="downloadComposedPDF('${doc.id}')" style="background:var(--primary-green); color:white; border:none; padding:8px 12px; border-radius:6px; font-size:0.8rem; font-weight:bold; cursor:pointer;">⬇️ PDF</button>
+                    </div>` :
+                    `<a href="${item.fileUrl}" target="_blank" style="background:var(--primary-green); color:white; text-decoration:none; padding:8px 14px; border-radius:6px; font-size:0.82rem; font-weight:bold; display:inline-block;">Launch Link</a>`;
+                
+                html += `
+                <div class="content-card" style="display:flex; justify-content:space-between; align-items:center;">
+                    <div>
+                        <div style="font-weight:600; color:var(--text-dark);">${isComposed ? '📝' : '📄'} ${item.title}</div>
+                        <div style="font-size:0.75rem; color:var(--text-muted);">${isComposed ? 'Smart Format Note' : 'External Resource'}</div>
+                    </div>
+                    ${actionBtn}
+                </div>`;
+            });
+            document.getElementById('materials-container').innerHTML = html || "<p style='font-size:0.9rem; color:gray;'>Empty references catalog.</p>";
+        }
+
+        function getYouTubeEmbedUrl(urlStr) {
+            if(!urlStr) return "";
+            let regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=)([^#\&\?]*).*/;
+            let match = urlStr.match(regExp);
+            if (match && match[2].length === 11) { return `https://www.youtube.com/embed/${match[2]}?modestbranding=1&rel=0&showinfo=0&controls=1`; }
+            return urlStr;
+        }
+
+        async function fetchLectures() {
+            const snap = await getDocs(collection(db, "lectures"));
+            allLectures = []; let html = '';
+            snap.forEach(doc => {
+                let data = doc.data(); allLectures.push({ id: doc.id, ...data });
+                let secureEmbed = getYouTubeEmbedUrl(data.link);
+                html += `
+                <div class="content-card">
+                    <div class="video-container"><iframe src="${secureEmbed}" allowfullscreen></iframe></div>
+                    <h4 style="margin:5px 0; font-size:1.05rem;">${data.title}</h4>
+                    <div class="comment-box">
+                        <input type="text" id="cmt-${doc.id}" class="comment-input" placeholder="Ask a question about this topic...">
+                        <button class="btn-comment" onclick="postCommentNode('${doc.id}', '${data.title}')">Post</button>
+                    </div>
+                </div>`;
+            });
+            document.getElementById('lectures-container').innerHTML = html || "<p style='font-size:0.9rem; color:gray;'>No streaming links cataloged.</p>";
+        }
+
+        document.getElementById('search-lectures').addEventListener('input', (e) => {
+            let key = e.target.value.toLowerCase(); let matches = allLectures.filter(l => l.title.toLowerCase().includes(key)); let html = '';
+            matches.forEach(data => {
+                let secureEmbed = getYouTubeEmbedUrl(data.link);
+                html += `<div class="content-card"><div class="video-container"><iframe src="${secureEmbed}" allowfullscreen></iframe></div><h4 style="margin:5px 0;">${data.title}</h4></div>`;
+            }); document.getElementById('lectures-container').innerHTML = html;
+        });
+
+        // QUERIES SYSTEM
+        window.postCommentNode = async function(lecId, lecTitle) {
+            let val = document.getElementById(`cmt-${lecId}`).value; if(!val) return;
+            showToast("Publishing comment record...");
+            await addDoc(collection(db, "comments"), {
+                lectureId: lecId, lectureTitle: lecTitle, studentEmail: currentUser.email,
+                studentName: currentUserData.name, text: val, date: new Date().toISOString(), adminReply: ""
+            });
+            document.getElementById(`cmt-${lecId}`).value = ''; fetchStudentQueries();
+        }
+
+        async function fetchStudentQueries() {
+            const snap = await getDocs(collection(db, "comments")); let html = '';
+            snap.forEach(doc => {
+                let c = doc.data();
+                if(c.studentEmail === currentUser.email) {
+                    html += `
+                    <div style="background: #f8fafc; padding: 12px; border-radius: 8px; margin-bottom: 10px; border-left: 3px solid var(--primary-green);">
+                        <div style="font-size:0.75rem; color:gray; margin-bottom:5px;">Topic: ${c.lectureTitle}</div>
+                        <div style="font-size:0.9rem; font-weight:600; margin: 4px 0; color:var(--text-dark);">Q: ${c.text}</div>
+                        <div style="font-size:0.85rem; color: ${c.adminReply ? 'var(--dark-green)' : '#e53e3e'}; margin-top:8px; padding-top:8px; border-top:1px dashed #e2e8f0;">
+                            <b>Admin Reply:</b> ${c.adminReply ? c.adminReply : '<i>Pending response...</i>'}
+                        </div>
+                    </div>`;
+                }
+            });
+            document.getElementById('student-queries-list').innerHTML = html || "<p style='font-size:0.8rem; color:gray;'>No questions tracked inside account.</p>";
+        }
+
+        // Profile Update
+        document.getElementById('btn-edit-profile-trigger').addEventListener('click', () => {
+            document.getElementById('edit-profile-form').classList.remove('hidden'); document.getElementById('btn-edit-profile-trigger').classList.add('hidden');
+            document.getElementById('edit-prof-name').value = currentUserData.name || ''; document.getElementById('edit-prof-phone').value = currentUserData.phone || ''; document.getElementById('edit-prof-college').value = currentUserData.college || '';
+        });
+        document.getElementById('btn-cancel-edit').addEventListener('click', () => {
+            document.getElementById('edit-profile-form').classList.add('hidden'); document.getElementById('btn-edit-profile-trigger').classList.remove('hidden');
+        });
+        document.getElementById('btn-update-profile').addEventListener('click', async () => {
+            const n = document.getElementById('edit-prof-name').value; const p = document.getElementById('edit-prof-phone').value; const c = document.getElementById('edit-prof-college').value;
+            if(!n || !p || !c) return showToast("Empty values.", "error"); showToast("Updating identity nodes...", "success");
+            try {
+                await updateDoc(doc(db, "users", currentUser.uid), { name: n, phone: p, college: c });
+                currentUserData.name = n; currentUserData.phone = p; currentUserData.college = c; updateProfileUI(currentUserData, currentUser.email);
+                document.getElementById('edit-profile-form').classList.add('hidden'); document.getElementById('btn-edit-profile-trigger').classList.remove('hidden');
+                showToast("Identity synchronized.");
+            } catch (error) { showToast("Identity registry write block error.", "error"); }
+        });
+
+        // ==========================================
+        // DYNAMIC ADMINISTRATIVE SUITE HANDLERS (FIRESTORE TOTAL CONTROL)
+        // ==========================================
+        
         document.getElementById('btn-add-bulk-mcq').addEventListener('click', async (e) => {
             let btn = e.target; let topic = document.getElementById('admin-bulk-topic').value; let textData = document.getElementById('admin-bulk-text').value;
-            if(!topic || !textData) return showToast("All parameters required.", "error");
-            
-            btn.disabled = true; showToast("Running bulk parser...", "success");
-            
+            if(!topic || !textData) return showToast("All configuration strings needed.", "error");
+            btn.disabled = true; showToast("Executing air-tight parser pipeline...", "success");
             try {
                 let parsedQs = []; let blocks = textData.split(/Question:/i);
                 blocks.forEach(block => {
@@ -703,75 +926,141 @@
                     if(qText && o1 && o2) { parsedQs.push({ question: qText, options: [o1, o2, o3, o4], correctIndex: correctIndex }); }
                 });
 
-                if(parsedQs.length === 0) { btn.disabled = false; return showToast("Format broke during parsing.", "error"); }
+                if(parsedQs.length === 0) { btn.disabled = false; return showToast("Format broke. Must follow exact structure.", "error"); }
 
-                let docRef = doc(db, "manual_tests", topic.trim()); let existingDoc = await getDoc(docRef);
-                let currentQs = existingDoc.exists() ? existingDoc.data().questions : [];
+                let docRef = doc(db, "manual_tests", topic.trim()); let checkDoc = await getDoc(docRef);
+                let baseQs = checkDoc.exists() ? checkDoc.data().questions : [];
                 
-                await setDoc(docRef, { topic: topic.trim(), questions: [...currentQs, ...parsedQs] });
-                showToast(`Pushed ${parsedQs.length} MCQs!`, "success");
+                await setDoc(docRef, { topic: topic.trim(), questions: [...baseQs, ...parsedQs], updatedAt: new Date().toISOString() });
+                showToast(`Pushed ${parsedQs.length} permanent MCQ items!`, "success");
                 document.getElementById('admin-bulk-text').value = ''; fetchManualMCQs(); fetchAdminManageContent();
-            } catch(error) { showToast("Error setting database blocks.", "error"); }
+            } catch(err) { showToast("Cloud nodes write aborted.", "error"); }
+            btn.disabled = false;
+        });
+        
+        document.getElementById('btn-compose-note').addEventListener('click', async (e) => {
+            let btn = e.target; let t = document.getElementById('admin-note-title').value; let c = document.getElementById('admin-note-content').value;
+            if(!t || !c) return showToast("All inputs required.", "error");
+            btn.disabled = true; showToast("Uploading node package...");
+            try {
+                await addDoc(collection(db, "materials"), { title: t, content: c, type: 'composed', timestamp: new Date().toISOString() });
+                showToast("Smart note active on student end panels.", "success");
+                document.getElementById('admin-note-title').value = ''; document.getElementById('admin-note-content').value = '';
+                fetchMaterials(); fetchAdminManageContent();
+            } catch(err) { showToast("Write error encountered.", "error"); }
             btn.disabled = false;
         });
 
-        document.getElementById('btn-compose-note').addEventListener('click', async (e) => {
-            let btn = e.target; let t = document.getElementById('admin-note-title').value; let c = document.getElementById('admin-note-content').value;
-            if(!t || !c) return showToast("Missing content.", "error");
-            btn.disabled = true; showToast("Publishing Note...");
-            try {
-                await addDoc(collection(db, "materials"), { title: t, content: c, type: 'composed', timestamp: new Date().toISOString() });
-                showToast("Note published.", "success");
-                document.getElementById('admin-note-title').value = ''; document.getElementById('admin-note-content').value = '';
-                fetchMaterials(); fetchAdminManageContent();
-            } catch(err) { } btn.disabled = false;
-        });
-
         document.getElementById('btn-save-gemini').addEventListener('click', async () => {
-            let key = document.getElementById('admin-gemini-input').value; if(!key) return;
+            let key = document.getElementById('admin-gemini-input').value; if(!key) return showToast("Blank field.", "error");
+            showToast("Deploying cloud configuration keys...");
             try {
                 await setDoc(doc(db, "settings", "config"), { geminiKey: key.trim(), updatedAt: new Date().toISOString() });
-                GEMINI_API_KEY = key.trim(); showToast("Token active globally.", "success");
-            } catch(e) { }
+                GEMINI_API_KEY = key.trim(); showToast("Token active across all nodes globally.", "success");
+            } catch(e) { showToast("Cloud block rules intercept.", "error"); }
         });
 
+        async function fetchAdminManageContent() {
+            const lecSnap = await getDocs(collection(db, "lectures")); let lHtml = '';
+            lecSnap.forEach(d => { lHtml += `<div class="admin-manage-item"><span>▶️ ${d.data().title}</span><button class="btn-delete" onclick="deleteLectureNode('${d.id}')">🗑️</button></div>`; });
+            document.getElementById('admin-manage-lectures').innerHTML = lHtml || "<p style='font-size:0.8rem; color:gray;'>No components logged.</p>";
+
+            const matSnap = await getDocs(collection(db, "materials")); let mHtml = '';
+            matSnap.forEach(d => { mHtml += `<div class="admin-manage-item"><span>📄 ${d.data().title}</span><button class="btn-delete" onclick="deleteMaterialNode('${d.id}')">🗑️</button></div>`; });
+            document.getElementById('admin-manage-materials').innerHTML = mHtml || "<p style='font-size:0.8rem; color:gray;'>No file reference components logged.</p>";
+
+            const mcqSnap = await getDocs(collection(db, "manual_tests")); let qHtml = '';
+            mcqSnap.forEach(d => { qHtml += `<div class="admin-manage-item"><span>📚 Unit: ${d.data().topic} (${d.data().questions.length} Items)</span><button class="btn-delete" onclick="deleteTopicNode('${d.id}')">🗑️</button></div>`; });
+            document.getElementById('admin-manage-mcqs').innerHTML = qHtml || "<p style='font-size:0.8rem; color:gray;'>No units available.</p>";
+        }
+
+        window.deleteLectureNode = async function(id) { if(confirm("Confirm deletion process?")) { await deleteDoc(doc(db, "lectures", id)); fetchLectures(); fetchAdminManageContent(); } }
+        window.deleteMaterialNode = async function(id) { if(confirm("Confirm deletion process?")) { await deleteDoc(doc(db, "materials", id)); fetchMaterials(); fetchAdminManageContent(); } }
+        window.deleteTopicNode = async function(id) { if(confirm("Confirm deletion process?")) { await deleteDoc(doc(db, "manual_tests", id)); fetchManualMCQs(); fetchAdminManageContent(); } }
+        
         document.getElementById('btn-add-lecture').addEventListener('click', async (e) => {
-            let btn = e.target; let t = document.getElementById('admin-lec-title').value; let l = document.getElementById('admin-lec-link').value; if(!t || !l) return;
-            btn.disabled = true; await addDoc(collection(db, "lectures"), { title: t, link: l, date: new Date().toISOString() });
-            document.getElementById('admin-lec-title').value = ''; document.getElementById('admin-lec-link').value = ''; fetchLectures(); fetchAdminManageContent(); btn.disabled = false;
+            let btn = e.target; let t = document.getElementById('admin-lec-title').value; let l = document.getElementById('admin-lec-link').value;
+            if(!t || !l) return showToast("Inputs blank.", "error"); btn.disabled = true;
+            await addDoc(collection(db, "lectures"), { title: t, link: l, date: new Date().toISOString() });
+            document.getElementById('admin-lec-title').value = ''; document.getElementById('admin-lec-link').value = '';
+            fetchLectures(); fetchAdminManageContent(); btn.disabled = false;
         });
 
         document.getElementById('btn-add-material').addEventListener('click', async (e) => {
             let btn = e.target; let title = document.getElementById('admin-mat-title').value; let linkInput = document.getElementById('admin-mat-link').value;
-            if(!title || !linkInput) return showToast("Inputs empty.", "error");
-            btn.disabled = true;
-            await addDoc(collection(db, "materials"), { title: title, fileUrl: linkInput, fileName: "External Uniform Resource Target", type: 'file', timestamp: new Date().toISOString() });
-            showToast("External Reference cataloged successfully.");
-            document.getElementById('admin-mat-title').value = ''; document.getElementById('admin-mat-link').value = ''; fetchMaterials(); fetchAdminManageContent(); btn.disabled = false;
+            if(!title || !linkInput) return showToast("Missing link Target.", "error");
+            btn.disabled = true; showToast("Uploading document link...");
+            try {
+                await addDoc(collection(db, "materials"), { title: title, fileUrl: linkInput, fileName: "External Uniform Resource Target", type: 'file', timestamp: new Date().toISOString() });
+                showToast("File instance ready.");
+                document.getElementById('admin-mat-title').value = ''; document.getElementById('admin-mat-link').value = '';
+                fetchMaterials(); fetchAdminManageContent();
+            } catch (err) { showToast("Check Firestore rule sets.", "error"); }
+            btn.disabled = false;
         });
 
-        async function fetchLectures() {
-            const snap = await getDocs(collection(db, "lectures")); let html = '';
+        async function fetchAdminComments() {
+            const snap = await getDocs(collection(db, "comments")); let html = '';
             snap.forEach(doc => {
-                let data = doc.data(); 
-                html += `<div class="content-card"><h4 style="margin:5px 0;">▶️ ${data.title}</h4></div>`;
+                let c = doc.data();
+                html += `
+                <div class="admin-comment-item">
+                    <div style="font-size:0.7rem; color:var(--primary-green); font-weight:bold;">Topic Target: ${c.lectureTitle}</div>
+                    <div style="font-weight:600; font-size:0.85rem; margin:2px 0;">Student Record Name: ${c.studentName}</div>
+                    <div style="font-size:0.85rem; color:#4a5568; margin-bottom: 8px;">Question string: "${c.text}"</div>
+                    ${c.adminReply ? `<div style="font-size:0.8rem; color:var(--dark-green);"><b>Replied:</b> ${c.adminReply}</div>` : 
+                    `<div class="comment-box" style="margin-top:5px; padding-top:5px; border-top:none;">
+                        <input type="text" id="admin-reply-${doc.id}" class="comment-input" placeholder="Type your reply here..." style="font-size:0.75rem; padding: 6px 10px;">
+                        <button class="btn-comment" onclick="submitAdminReply('${doc.id}')" style="font-size:0.75rem; padding:0 12px;">Reply</button>
+                    </div>`}
+                </div>`;
             });
-            document.getElementById('lectures-container').innerHTML = html || "<p style='font-size:0.9rem; color:gray;'>No nodes loaded.</p>";
+            document.getElementById('admin-comments-list').innerHTML = html || "<p style='font-size:0.8rem; color:gray;'>No student commentsLogged inside feeds.</p>";
         }
 
-        async function fetchAdminManageContent() {
-            const mcqSnap = await getDocs(collection(db, "manual_tests")); let qHtml = '';
-            mcqSnap.forEach(d => { qHtml += `<div class="admin-manage-item"><span>📚 Unit: ${d.data().topic} (${d.data().questions.length} Items)</span><button class="btn-delete" onclick="deleteTopicNode('${d.id}')">🗑️</button></div>`; });
-            document.getElementById('admin-manage-mcqs').innerHTML = qHtml || "<p style='font-size:0.8rem; color:gray;'>No unit sheets map cataloged.</p>";
-            
-            const matSnap = await getDocs(collection(db, "materials")); let mHtml = '';
-            matSnap.forEach(d => { mHtml += `<div class="admin-manage-item"><span>📄 ${d.data().title}</span><button class="btn-delete" onclick="deleteMaterialNode('${d.id}')">🗑️</button></div>`; });
-            document.getElementById('admin-manage-materials').innerHTML = mHtml || "<p style='font-size:0.8rem; color:gray;'>No files.</p>";
+        window.submitAdminReply = async function(commentId) {
+            let text = document.getElementById(`admin-reply-${commentId}`).value; if(!text) return;
+            await updateDoc(doc(db, "comments", commentId), { adminReply: text }); fetchAdminComments(); 
         }
-        
-        window.deleteTopicNode = async function(id) { if(confirm("Delete item?")) { await deleteDoc(doc(db, "manual_tests", id)); fetchManualMCQs(); fetchAdminManageContent(); } }
-        window.deleteMaterialNode = async function(id) { if(confirm("Delete item?")) { await deleteDoc(doc(db, "materials", id)); fetchMaterials(); fetchAdminManageContent(); } }
 
+        async function fetchAdminDirectory() {
+            fetchAdminComments(); const snap = await getDocs(collection(db, "users")); adminAllUsers = [];
+            snap.forEach(doc => { adminAllUsers.push({ id: doc.id, ...doc.data() }); }); renderAdminUserDirectory(adminAllUsers);
+        }
+
+        function renderAdminUserDirectory(usersArr) {
+            let html = '';
+            usersArr.forEach(u => {
+                let cleanPhone = u.phone ? u.phone.replace(/[^0-9]/g, '') : ""; if(cleanPhone.startsWith('0')) cleanPhone = '92' + cleanPhone.substring(1);
+                html += `
+                <div class="user-list-item">
+                    <div class="user-list-info-row">
+                        <div class="user-list-img" style="background-image:url(${u.profilePic || 'https://via.placeholder.com/40'})"></div>
+                        <div>
+                            <div style="font-weight:bold; font-size:0.9rem; color:${u.isBlocked ? 'var(--danger)' : 'var(--text-dark)'};">${u.name} ${u.isBlocked ? '⚠️ [BLOCKED]' : ''}</div>
+                            <div style="font-size:0.72rem; color:gray;">${u.college} | Log Contact: ${u.email}</div>
+                        </div>
+                    </div>
+                    <div style="display:flex; gap:8px; width:100%; margin-top:5px;">
+                        <button class="btn-delete" style="flex:1; padding: 6px; background: ${u.isBlocked ? 'var(--primary-green)' : 'var(--danger)'};" onclick="toggleBlockUser('${u.id}', ${u.isBlocked || false})">${u.isBlocked ? '✅ Unblock User' : '🚫 Block User'}</button>
+                        <a href="https://wa.me/${cleanPhone}" target="_blank" style="flex:1; background: var(--whatsapp); color: white; text-decoration: none; padding: 6px; border-radius: 6px; font-size: 0.75rem; font-weight: bold; display: flex; justify-content: center; align-items: center;">💬 WhatsApp Chat</a>
+                    </div>
+                </div>`;
+            });
+            document.getElementById('admin-users-list').innerHTML = html || "<p style='font-size:0.85rem; color:gray;'>No log records tracked.</p>";
+        }
+
+        document.getElementById('admin-search-users').addEventListener('input', (e) => {
+            let val = e.target.value.toLowerCase();
+            let matches = adminAllUsers.filter(u => (u.name && u.name.toLowerCase().includes(val)) || (u.college && u.college.toLowerCase().includes(val)) || (u.email && u.email.toLowerCase().includes(val)));
+            renderAdminUserDirectory(matches);
+        });
+
+        window.toggleBlockUser = async function(userId, currentBlockStatus) {
+            if(confirm("Confirm action context registry block rule parameter alteration?")) {
+                await updateDoc(doc(db, "users", userId), { isBlocked: !currentBlockStatus }); fetchAdminDirectory();
+            }
+        }
     </script>
 </body>
 </html>
