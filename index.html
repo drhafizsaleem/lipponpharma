@@ -1433,12 +1433,31 @@
             document.getElementById('admin-mat-title').value = ''; document.getElementById('admin-mat-link').value = ''; fetchMaterials(); fetchAdminManageContent(); fetchRecentActivityFeed(); btn.disabled = false;
         });
 
-        async function fetchAdminManageContent() {
-                        lecSnap.forEach(d => { lHtml += `<div class="admin-manage-item"><span>▶️ ${d.data().title}</span><div style="display:flex; gap:8px;"><button onclick="openLectureEdit('${d.id}')" style="background:var(--blue); color:white; border:none; padding:4px 8px; border-radius:6px; cursor:pointer;">✏️</button><button class="btn-delete" onclick="deleteLectureNode('${d.id}')">🗑️</button></div></div>`; });
+                async function fetchAdminManageContent() {
+            try {
+                // 1. LECTURES LOAD KAREGA
+                const lecSnap = await getDocs(collection(db, "lectures")); let lHtml = '';
+                lecSnap.forEach(d => { 
+                    lHtml += `<div class="admin-manage-item"><span>▶️ ${d.data().title}</span><div style="display:flex; gap:8px;"><button onclick="openLectureEdit('${d.id}')" style="background:var(--blue); color:white; border:none; padding:4px 8px; border-radius:6px; cursor:pointer;">✏️</button><button class="btn-delete" onclick="deleteLectureNode('${d.id}')">🗑️</button></div></div>`; 
+                });
+                document.getElementById('admin-manage-lectures').innerHTML = lHtml || "<p style='font-size:0.8rem; color:gray;'>No lectures found.</p>";
 
-                        matSnap.forEach(d => { mHtml += `<div class="admin-manage-item"><span>📄 ${d.data().title}</span><div style="display:flex; gap:8px;"><button onclick="openMaterialEdit('${d.id}')" style="background:var(--blue); color:white; border:none; padding:4px 8px; border-radius:6px; cursor:pointer;">✏️</button><button class="btn-delete" onclick="deleteMaterialNode('${d.id}')">🗑️</button></div></div>`; });
+                // 2. MATERIALS LOAD KAREGA
+                const matSnap = await getDocs(collection(db, "materials")); let mHtml = '';
+                matSnap.forEach(d => { 
+                    mHtml += `<div class="admin-manage-item"><span>📄 ${d.data().title}</span><div style="display:flex; gap:8px;"><button onclick="openMaterialEdit('${d.id}')" style="background:var(--blue); color:white; border:none; padding:4px 8px; border-radius:6px; cursor:pointer;">✏️</button><button class="btn-delete" onclick="deleteMaterialNode('${d.id}')">🗑️</button></div></div>`; 
+                });
+                document.getElementById('admin-manage-materials').innerHTML = mHtml || "<p style='font-size:0.8rem; color:gray;'>No materials found.</p>";
 
-                        mcqSnap.forEach(d => { qHtml += `<div class="admin-manage-item"><span>📚 Unit: ${d.data().topic} (${d.data().questions.length} Items)</span><div style="display:flex; gap:8px;"><button onclick="openTestEdit('${d.id}')" style="background:var(--blue); color:white; border:none; padding:4px 8px; border-radius:6px; cursor:pointer;">✏️</button><button class="btn-delete" onclick="deleteTopicNode('${d.id}')">🗑️</button></div></div>`; })
+                // 3. MCQS (TESTS) LOAD KAREGA
+                const mcqSnap = await getDocs(collection(db, "manual_tests")); let qHtml = '';
+                mcqSnap.forEach(d => { 
+                    qHtml += `<div class="admin-manage-item"><span>📚 Unit: ${d.data().topic} (${d.data().questions.length} Items)</span><div style="display:flex; gap:8px;"><button onclick="openTestEdit('${d.id}')" style="background:var(--blue); color:white; border:none; padding:4px 8px; border-radius:6px; cursor:pointer;">✏️</button><button class="btn-delete" onclick="deleteTopicNode('${d.id}')">🗑️</button></div></div>`; 
+                });
+                document.getElementById('admin-manage-mcqs').innerHTML = qHtml || "<p style='font-size:0.8rem; color:gray;'>No manual tests found.</p>";
+            } catch(error) {
+                console.log("Admin Dashboard Load Error:", error);
+            }
         }
 
         window.deleteLectureNode = async function(id) { if(confirm("Permanently delete this video lecture?")) { await deleteDoc(doc(db, "lectures", id)); fetchLectures(); fetchAdminManageContent(); } }
