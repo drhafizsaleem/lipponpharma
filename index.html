@@ -450,26 +450,27 @@
     </div>
 
         <!-- 3. TEST EDIT MODAL (WITH MCQs EDITOR) -->
+    <div    <!-- 3. TEST EDIT MODAL (PROFESSIONAL MCQ UI) -->
     <div id="test-edit-modal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.6); z-index:9999; justify-content:center; align-items:center;">
-        <div style="background:white; width:90%; max-width:600px; padding:20px; border-radius:12px; box-shadow: 0 5px 15px rgba(0,0,0,0.3);">
-            <h3 style="color:var(--dark-green); margin-top:0;">✏️ Edit Test (MCQs)</h3>
+        <div style="background:white; width:95%; max-width:700px; padding:20px; border-radius:12px; box-shadow: 0 5px 15px rgba(0,0,0,0.3); display: flex; flex-direction: column; max-height: 90vh;">
+            <h3 style="color:var(--dark-green); margin-top:0; flex-shrink: 0;">✏️ Edit Test MCQs</h3>
             <input type="hidden" id="edit-test-id">
             
-            <label style="font-weight:bold; font-size:0.85rem; color: gray;">Test Unit Title:</label>
-            <input type="text" id="edit-test-title" class="input-field" style="width:100%; margin-bottom:15px; box-sizing: border-box;">
+            <label style="font-weight:bold; font-size:0.85rem; color: gray; flex-shrink: 0;">Test Unit Title:</label>
+            <input type="text" id="edit-test-title" class="input-field" style="width:100%; margin-bottom:15px; box-sizing: border-box; flex-shrink: 0;">
             
-            <label style="font-weight:bold; font-size:0.85rem; color: gray;">Questions Data (JSON Code):</label>
-            <textarea id="edit-test-questions" class="input-field" style="width:100%; height:200px; margin-bottom:10px; box-sizing: border-box; resize: vertical; font-family: monospace; font-size: 0.85rem;"></textarea>
-            <p style="font-size: 0.75rem; color: var(--danger); margin-top: -5px; margin-bottom: 15px;">⚠️ Warning: Be careful! Only edit the text inside the quotes (" "). Do not delete any brackets [ { } ].</p>
+            <!-- Is container mein saare MCQs inputs dynamically aayenge -->
+            <div id="mcq-edit-container" style="flex-grow: 1; overflow-y: auto; background: #f1f5f9; padding: 10px; border-radius: 8px; margin-bottom: 15px; border: 1px solid #e2e8f0;">
+                <!-- JavaScript yahan questions generate karega -->
+            </div>
             
-            <div style="display:flex; gap:10px;">
+            <div style="display:flex; gap:10px; flex-shrink: 0;">
                 <button onclick="saveTestEdit()" class="btn btn-green" style="flex:1;">💾 Update Live Test</button>
                 <button onclick="closeTestEdit()" class="btn" style="flex:1; background: var(--danger); color: white;">Cancel</button>
             </div>
         </div>
     </div>
-
-
+        
     
     <!-- Core Database Modules Execution Pipeline -->
     <script type="module">
@@ -1066,8 +1067,8 @@
             } catch(e) { showToast("Update failed", "error"); }
         }
 
-                // ==========================================
-        // 3. TEST EDIT FUNCTIONS (WITH JSON PARSER)
+                        // ==========================================
+        // 3. TEST EDIT FUNCTIONS (PROFESSIONAL UI)
         // ==========================================
         window.openTestEdit = async function(id) {
             showToast("Fetching test data...", "success");
@@ -1078,29 +1079,82 @@
                     document.getElementById('edit-test-id').value = id;
                     document.getElementById('edit-test-title').value = data.topic || "";
                     
-                    // MCQs array ko JSON string mein convert kar ke box mein dalna
-                    document.getElementById('edit-test-questions').value = JSON.stringify(data.questions || [], null, 4);
+                    let mcqContainer = document.getElementById('mcq-edit-container');
+                    let html = '';
                     
+                    // Har MCQ ke liye ek form block generate karna
+                    if(data.questions && data.questions.length > 0) {
+                        data.questions.forEach((q, i) => {
+                            let optA = q.options[0] || '';
+                            let optB = q.options[1] || '';
+                            let optC = q.options[2] || '';
+                            let optD = q.options[3] || '';
+                            let reason = q.reason || '';
+                            
+                            html += `
+                            <div class="mcq-edit-block" style="background: white; padding: 15px; border-radius: 8px; margin-bottom: 15px; border: 1px solid #cbd5e0; box-shadow: 0 2px 4px rgba(0,0,0,0.02);">
+                                <label style="font-weight:bold; color:var(--primary-green);">Q${i+1}:</label>
+                                <input type="text" class="mcq-q-text input-field" value="${q.question}" style="width:100%; margin-bottom:10px; margin-top:5px; box-sizing: border-box;">
+                                
+                                <div style="display:grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 10px;">
+                                    <div><span style="font-size:0.75rem; color:gray;">Option A:</span><input type="text" class="mcq-opt-0 input-field" value="${optA}" style="width:100%; margin-bottom:0; box-sizing: border-box;"></div>
+                                    <div><span style="font-size:0.75rem; color:gray;">Option B:</span><input type="text" class="mcq-opt-1 input-field" value="${optB}" style="width:100%; margin-bottom:0; box-sizing: border-box;"></div>
+                                    <div><span style="font-size:0.75rem; color:gray;">Option C:</span><input type="text" class="mcq-opt-2 input-field" value="${optC}" style="width:100%; margin-bottom:0; box-sizing: border-box;"></div>
+                                    <div><span style="font-size:0.75rem; color:gray;">Option D:</span><input type="text" class="mcq-opt-3 input-field" value="${optD}" style="width:100%; margin-bottom:0; box-sizing: border-box;"></div>
+                                </div>
+                                
+                                <div style="display:flex; gap: 10px; align-items: center; background:#f8fafc; padding:10px; border-radius:6px;">
+                                    <label style="font-weight:bold; font-size:0.85rem; margin:0;">Correct Answer:</label>
+                                    <select class="mcq-correct-idx input-field" style="width: 80px; margin-bottom:0; padding:8px;">
+                                        <option value="0" ${q.correctIndex === 0 ? 'selected' : ''}>A</option>
+                                        <option value="1" ${q.correctIndex === 1 ? 'selected' : ''}>B</option>
+                                        <option value="2" ${q.correctIndex === 2 ? 'selected' : ''}>C</option>
+                                        <option value="3" ${q.correctIndex === 3 ? 'selected' : ''}>D</option>
+                                    </select>
+                                    <input type="text" class="mcq-reason input-field" value="${reason}" placeholder="Explanation (Optional)" style="flex:1; margin-bottom:0; box-sizing: border-box;">
+                                </div>
+                            </div>`;
+                        });
+                    } else {
+                        html = "<p style='text-align:center; color:gray; font-size:0.9rem;'>No questions found in this test.</p>";
+                    }
+                    
+                    mcqContainer.innerHTML = html;
                     document.getElementById('test-edit-modal').style.display = 'flex';
                 }
-            } catch(e) { showToast("Error loading data", "error"); }
+            } catch(e) { showToast("Error loading test data", "error"); }
         }
+        
         window.closeTestEdit = function() { document.getElementById('test-edit-modal').style.display = 'none'; }
         
         window.saveTestEdit = async function() {
             const id = document.getElementById('edit-test-id').value;
             const title = document.getElementById('edit-test-title').value.trim();
-            const questionsRaw = document.getElementById('edit-test-questions').value.trim();
-            
             if(!title) return showToast("Title required", "error");
             
+            showToast("Parsing and saving MCQs...", "success");
             let parsedQuestions = [];
-            try {
-                // Check karna ke admin ne koi bracket ghalti se delete toh nahi kiya
-                parsedQuestions = JSON.parse(questionsRaw);
-            } catch(err) {
-                return showToast("⚠️ Formatting Error! Please check brackets and quotes.", "error");
-            }
+            
+            // Saare generate kiye gaye MCQ blocks ka data read karna
+            let blocks = document.querySelectorAll('.mcq-edit-block');
+            blocks.forEach((block) => {
+                let questionText = block.querySelector('.mcq-q-text').value.trim();
+                let o0 = block.querySelector('.mcq-opt-0').value.trim();
+                let o1 = block.querySelector('.mcq-opt-1').value.trim();
+                let o2 = block.querySelector('.mcq-opt-2').value.trim();
+                let o3 = block.querySelector('.mcq-opt-3').value.trim();
+                let correctIdx = parseInt(block.querySelector('.mcq-correct-idx').value);
+                let reason = block.querySelector('.mcq-reason').value.trim();
+                
+                if(questionText) {
+                    parsedQuestions.push({
+                        question: questionText,
+                        options: [o0, o1, o2, o3],
+                        correctIndex: correctIdx,
+                        reason: reason
+                    });
+                }
+            });
 
             try {
                 await updateDoc(doc(db, "manual_tests", id), { 
@@ -1113,8 +1167,6 @@
                 fetchAdminManageContent(); fetchManualMCQs();
             } catch(e) { showToast("Update failed", "error"); }
         }
-
-
                                     
 
         // ------------------------------------------------------------------
