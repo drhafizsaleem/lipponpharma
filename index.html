@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>LippinPharma | Pharmacology</title>
+    <!-- PDF Generation Library Connection -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
     <style>
         /* Premium Pharmacy Theme Base Config */
@@ -35,6 +36,230 @@
         #splash-screen { display: flex; flex-direction: column; justify-content: center; align-items: center; height: 100vh; background-color: var(--primary-green); color: var(--white); position: absolute; width: 100%; z-index: 5000; transition: opacity 0.4s ease; }
         .app-logo-splash { width: 120px; height: 120px; object-fit: cover; border-radius: 50%; border: 4px solid var(--white); box-shadow: 0 0 0 4px var(--dark-green), 0 6px 15px rgba(0,0,0,0.25); margin-bottom: 25px; background-color: var(--white); }
         .splash-title { font-size: 2.2rem; font-weight: 700; margin: 0; letter-spacing: 1px; }
+        .spinner { border: 3px solid rgba(255,255,255,0.3); border-top: 3px solid var(--white); border-radius: 50%; width: 35px; height: 35px; animation: spin 1s linear infinite; margin-top: 30px; }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+
+        /* Forms Auth Wrapper */
+        .center-wrapper { display: flex; justify-content: center; align-items: center; min-height: 100vh; background-color: var(--light-green); padding: 15px; box-sizing: border-box; flex-direction: column; }
+        .card-box { background: var(--white); padding: 35px 30px; border-radius: 16px; width: 100%; max-width: 360px; text-align: center; box-shadow: 0 10px 30px rgba(6, 156, 84, 0.1); border: 1px solid rgba(6, 156, 84, 0.05); }
+        .app-logo-form { width: 70px; height: 70px; object-fit: cover; border-radius: 50%; border: 2px solid var(--primary-green); margin-bottom: 15px; background-color: var(--white); }
+        
+        .input-group { margin-bottom: 15px; text-align: left; }
+        input, select, textarea { width: 100%; padding: 12px 14px; border: 1.5px solid #e2e8f0; border-radius: 8px; box-sizing: border-box; font-size: 0.95rem; background-color: #f8fafc; transition: 0.3s; color: var(--text-dark); font-family: inherit; margin-bottom:12px; }
+        input:focus, textarea:focus, select:focus { outline: none; border-color: var(--primary-green); background-color: var(--white); box-shadow: 0 0 0 3px rgba(6, 156, 84, 0.1); }
+        
+        .profile-pic-container { width: 100px; height: 100px; background-color: #f8fafc; background-size: cover; background-position: center; border-radius: 50%; margin: 15px auto 20px auto; display: flex; flex-direction: column; align-items: center; justify-content: center; border: 3px dashed var(--primary-green); cursor: pointer; color: var(--primary-green); font-size: 0.85rem; font-weight: 600; box-shadow: 0 4px 10px rgba(0,0,0,0.05); overflow: hidden; position: relative; }
+        .profile-pic-container span { font-size: 1.6rem; margin-bottom: 2px; }
+
+        /* Action Buttons */
+        .btn { border: none; padding: 12px; border-radius: 8px; cursor: pointer; width: 100%; font-weight: 600; font-size: 1rem; transition: 0.3s; display: flex; justify-content: center; align-items: center; gap: 10px; position: relative; z-index: 10; }
+        .btn-primary { background: var(--primary-green); color: var(--white); }
+        .btn-primary:hover:not(:disabled) { background: var(--dark-green); }
+        .btn-danger { background: var(--danger); color: var(--white); }
+        .btn-blue { background: var(--blue); color: var(--white); }
+        .btn-google { background: var(--white); color: var(--text-dark); border: 1px solid #e2e8f0; margin-top: 15px; }
+        .btn-google:hover { background: #f1f5f9; }
+        .btn:disabled { opacity: 0.5; cursor: not-allowed !important; }
+
+        /* Master Application Layout Viewports */
+        .main-content { flex-grow: 1; padding: 20px; overflow-y: auto; height: calc(100vh - 75px); box-sizing: border-box; }
+        
+        /* Bottom Tab Nav Bar */
+        .nav-bar { background-color: var(--white); display: flex; justify-content: space-around; padding: 12px 10px; box-shadow: 0 -4px 20px rgba(0,0,0,0.05); z-index: 50; position: fixed; bottom: 0; width: 100%; border-top: 1px solid #edf2f7; box-sizing: border-box;}
+        .nav-item { color: var(--text-muted); text-align: center; font-size: 0.72rem; cursor: pointer; transition: 0.3s; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 4px; font-weight: 600; flex: 1; padding: 8px 0; border: 2px solid transparent; }
+        
+        .nav-item.active { 
+            color: var(--primary-green);
+            background-color: var(--light-green);
+            border-radius: 12px;
+            border-top-color: var(--primary-green);
+            border-left-color: var(--primary-green);
+            border-bottom-color: var(--accent-brown);
+            border-right-color: var(--accent-brown);
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+        }
+        
+        .nav-icon { font-size: 1.3rem; }
+        .admin-nav { color: var(--danger) !important; }
+
+        .app-tab { display: none; animation: fadeIn 0.3s ease; }
+        .app-tab.active-tab { display: block; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
+
+        /* Structural Design Units */
+        .content-card { background: var(--white); padding: 20px; border-radius: 12px; margin-bottom: 15px; box-shadow: 0 2px 10px rgba(0,0,0,0.03); border: 1px solid #edf2f7; }
+        
+        /* Fixed Video Container */
+        .video-container { position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden; border-radius: 8px; margin-bottom: 10px; background: #000; box-shadow: 0 4px 10px rgba(0,0,0,0.08); z-index: 10; }
+        .video-container iframe { position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: 0; pointer-events: all !important; z-index: 20; }
+        
+        .comment-box { display: flex; gap: 10px; margin-top: 15px; border-top: 1px solid #f1f5f9; padding-top: 12px; }
+        .comment-input { flex: 1; padding: 10px 14px; font-size: 0.85rem; border: 1px solid #e2e8f0; border-radius: 20px; background: #f8fafc; }
+        .btn-comment { background: var(--primary-green); color: white; border: none; padding: 0 16px; border-radius: 20px; font-size: 0.85rem; cursor: pointer; font-weight: bold; }
+
+        /* Admin Dashboard UI Nodes */
+        .admin-header { background: #fff5f5; border-left: 4px solid var(--danger); padding: 15px; border-radius: 8px; margin-bottom: 15px; }
+        .user-list-item { display: flex; flex-direction: column; gap: 8px; padding: 12px; border-bottom: 1px solid #edf2f7; }
+        .user-list-info-row { display: flex; align-items: center; gap: 15px; }
+        .user-list-img { width: 42px; height: 42px; border-radius: 50%; background-size: cover; background-color: #f1f5f9; border: 1px solid #e2e8f0; flex-shrink: 0; }
+        .admin-comment-item { background: #f8fafc; padding: 12px; border-radius: 8px; margin-bottom: 10px; border-left: 3px solid var(--primary-green); box-shadow: 0 1px 3px rgba(0,0,0,0.02); }
+        .admin-manage-item { display: flex; justify-content: space-between; align-items: center; padding: 10px; border-bottom: 1px solid #edf2f7; font-size: 0.85rem; }
+        .btn-delete { background: var(--danger); color: white; border: none; border-radius: 6px; padding: 6px 12px; font-size: 0.75rem; cursor: pointer; font-weight: bold; }
+
+        /* WhatsApp Overlay Framework */
+        #wa-widget { position: fixed; bottom: 85px; right: 20px; z-index: 1000; display: none; }
+        .wa-btn { width: 56px; height: 56px; background-color: var(--whatsapp); color: white; border-radius: 50%; display: flex; justify-content: center; align-items: center; box-shadow: 0 4px 16px rgba(37, 211, 102, 0.4); cursor: pointer; transition: 0.3s; }
+        .wa-btn svg { width: 30px; height: 30px; fill: white; }
+        .wa-btn:hover { transform: scale(1.08); }
+        #wa-chat-box { position: absolute; bottom: 68px; right: 0; background: white; width: 280px; border-radius: 12px; box-shadow: 0 8px 30px rgba(0,0,0,0.15); padding: 15px; display: none; flex-direction: column; gap: 10px; border: 1px solid #edf2f7; }
+
+        /* Quiz Component Frame */
+        .quiz-option { display: block; background: #f8fafc; padding: 12px 15px; border: 1.5px solid #e2e8f0; border-radius: 8px; margin-top: 8px; cursor: pointer; transition: 0.2s; font-weight: 500; font-size: 0.92rem; }
+        .quiz-option.selected { background: #d1fae5; border-color: var(--primary-green); font-weight: bold; }
+        .quiz-option.correct { background: #d1fae5; border-color: var(--primary-green); font-weight: bold; }
+        .quiz-option.wrong { background: #fee2e2; border-color: var(--danger); font-weight: bold; }
+
+        .topic-btn { background: #f1f5f9; color: var(--dark-green); border: 1px solid #cbd5e0; padding: 8px 15px; border-radius: 20px; font-size: 0.85rem; cursor: pointer; margin: 5px; font-weight: bold; }
+        .topic-btn:hover { background: var(--primary-green); color: white; border-color: var(--primary-green); }
+
+        /* History Result Item */
+        .history-item { background: #f8fafc; border-left: 4px solid var(--primary-green); padding: 12px; margin-bottom: 10px; border-radius: 8px; }
+
+        /* In-App PDF View Modal Layout */
+        #reader-modal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); z-index: 4500; display: none; justify-content: center; align-items: center; padding: 20px; box-sizing: border-box; }
+        .reader-content { background: white; width: 100%; max-width: 600px; height: 90vh; border-radius: 12px; display: flex; flex-direction: column; overflow: hidden; }
+        .reader-header { background: var(--primary-green); color: white; padding: 15px; display: flex; justify-content: space-between; align-items: center; }
+        .reader-body { padding: 20px; overflow-y: auto; flex-grow: 1; font-size: 1rem; line-height: 1.6; color: #333; white-space: pre-wrap; text-align: justify; }
+
+        @media (min-width: 769px) {
+            #dashboard-screen { display: flex; flex-direction: column-reverse; height: 100vh; }
+            .nav-bar { position: sticky; top: 0; bottom: auto; box-shadow: 0 4px 20px rgba(0,0,0,0.05); border-bottom: 1px solid #edf2f7; border-top: none; padding: 14px 0; }
+            .main-content { height: auto; padding: 30px; }
+            .nav-item { flex-direction: row; font-size: 0.9rem; justify-content: center; gap: 8px; }
+            #wa-widget { bottom: 30px; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Professional Notification Framework -->
+    <div id="notification-box"><span id="noti-icon">✅</span><span id="noti-msg">System Action</span></div>
+
+    <!-- Modal Framework -->
+    <div id="reader-modal">
+        <div class="reader-content">
+            <div class="reader-header">
+                <h3 id="reader-title" style="margin: 0; font-size: 1.1rem;">Window View</h3>
+                <button onclick="closeReaderModal()" style="background: none; border: none; color: white; font-size: 1.5rem; cursor: pointer;">&times;</button>
+            </div>
+            <div class="reader-body" id="reader-text"></div>
+        </div>
+    </div>
+
+    <!-- Invisible DOM sandbox for pure dynamic PDF conversion elements -->
+    <div id="pdf-export-container" style="display: none;"></div>
+
+    <!-- 1. Splash Loader -->
+    <div id="splash-screen">
+        <img src="logo.webp" alt="Logo" class="app-logo-splash" onerror="this.src='https://via.placeholder.com/120/069C54/ffffff?text=LP'">
+        <h1 class="splash-title">LippinPharma</h1>
+        <p style="font-size: 0.95rem; opacity: 0.9; margin-top: 5px;">Pharmacology App</p>
+        <div class="spinner"></div>
+        <p style="position: absolute; bottom: 30px; font-size: 0.85rem; opacity: 0.8; font-weight: 500;">Powered by Arfi</p>
+    </div>
+
+    <!-- 2. Authentication View Gate -->
+    <div id="login-screen" class="center-wrapper hidden">
+        <div class="card-box">
+            <img src="logo.webp" alt="Logo" class="app-logo-form" onerror="this.src='https://via.placeholder.com/70/069C54/ffffff?text=LP'">
+            <h2 style="margin: 0 0 5px 0;">Welcome Back</h2>
+            <p style="color: var(--text-muted); font-size: 0.85rem; margin-bottom: 20px;">Sign in to access your dashboard</p>
+            <input type="email" id="email" placeholder="Email Address">
+            <input type="password" id="password" placeholder="Password">
+            <button class="btn btn-primary" id="btn-login">Sign In / Sign Up</button>
+            <div style="margin: 15px 0; color: gray; font-size: 0.8rem; font-weight: bold;">OR</div>
+            <button class="btn btn-google" id="btn-google">🌐 Continue with Google</button>
+        </div>
+        <p style="margin-top: 25px; font-size: 0.85rem; color: var(--text-muted); font-weight: 600;">Powered by Arfi</p>
+    </div>
+
+    <!-- 3. Profile Onboarding Wizard Form -->
+    <div id="profile-screen" class="center-wrapper hidden">
+        <div class="card-box">
+            <h2 style="margin: 0 0 5px 0;">Setup Profile</h2>
+            <p style="color: var(--text-muted); font-size: 0.85rem; margin-bottom: 10px;">Complete registration for admin records</p>
+            
+            <input type="file" id="prof-pic-input" accept="image/*" style="display:none !important;">
+            <div class="profile-pic-container" id="prof-pic-preview">
+                <span>📷</span><div>Add Photo</div>
+            </div>
+            
+            <input type="text" id="prof-name" placeholder="Full Name" required>
+            <input type="tel" id="prof-phone" placeholder="Mobile / WhatsApp" required>
+            <input type="text" id="prof-college" placeholder="College Name" required>
+            <button class="btn btn-primary" id="btn-save-profile" style="margin-top: 10px;">Save Profile</button>
+        </div>
+        <p style="margin-top: 25px; font-size: 0.85rem; color: var(--text-muted); font-weight: 600;">Powered by Arfi</p>
+    </div>
+
+    <!-- 4. Master Shell Container Frame -->
+    <div id="dashboard-screen" class="hidden">
+        <div class="main-content">
+            
+            <!-- Tab Element Node: Home System Feed -->
+            <div id="tab-home" class="app-tab active-tab">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+                    <h2 style="margin:0; color: var(--dark-green);" id="welcome-title">Dashboard</h2>
+                    <div id="dashboard-user-pic" style="width: 45px; height: 45px; border-radius: 50%; background-size:cover; border:2px solid var(--primary-green); background-image:url('https://via.placeholder.com/45')"></div>
+                </div>
+                
+                <div style="background: linear-gradient(135deg, var(--primary-green), var(--dark-green)); color: white; padding: 25px 20px; border-radius: 12px; margin-bottom: 20px; box-shadow: 0 8px 20px rgba(6, 156, 84, 0.25);">
+                    <h3 style="margin: 0 0 5px 0; font-size: 1.3rem;">Pharmacology Evaluation</h3>
+                    <p style="margin: 0; font-size: 0.9rem; opacity: 0.9;">Evaluate your progress parameters via manual structural topic tests.</p>
+                    <button onclick="switchTab('tab-tests')" style="background: white; color: var(--primary-green); border: none; padding: 10px 20px; border-radius: 6px; font-weight: bold; margin-top: 15px; cursor: pointer;">Launch Test Matrix ⏱️</button>
+                </div>
+                <h3 style="color: var(--text-dark); margin-bottom: 12px; font-size: 1.1rem;">Latest Uploads (24h)</h3>
+                <div id="home-recent-activity"><p style="font-size:0.85rem; color:var(--text-muted);">Syncing platform activity feed...</p></div>
+            </div>
+
+            <!-- Tab Element Node: Lectures Node Video Player -->
+            <div id="tab-lectures" class="app-tab">
+                <h2 style="color: var(--dark-green); margin-bottom: 15px;">Smart Lectures</h2>
+                <div style="margin-bottom: 20px;">
+                    <input type="text" id="search-lectures" placeholder="🔍 Filter topics index..." style="border-radius: 25px; padding-left: 20px; border: 2px solid var(--primary-green);">
+                </div>
+                <div id="lectures-container"></div>
+            </div>
+
+            <!-- Tab Element Node: Download Packages Matrix -->
+            <div id="tab-material" class="app-tab">
+                <h2 style="color: var(--dark-green); margin-bottom: 15px;">Study Material</h2>
+                <p style="color: var(--text-muted); font-size: 0.9rem; margin-bottom: 20px;">Download direct reference packs, textbook notes and dynamic cloud files.</p>
+                <div id="materials-container"></div>
+            </div>
+
+            <!-- Tab Element Node: Dynamic Quiz Framework Evaluation Shell -->
+            <div id="tab-tests" class="app-tab">
+                <h2 style="color: var(--dark-green); margin-bottom: 10px;">Topic-Wise Evaluation</h2>
+                
+                <div class="content-card" style="background: var(--light-green); border: 1px solid var(--primary-green);">
+                    <h3 style="margin-top:0; color: var(--dark-green); font-size:1.1rem;">📚 Available Syllabus Topics</h3>
+                    <div id="manual-topics-container" style="display: flex; flex-wrap: wrap;"></div>
+                </div>
+
+                <div class="content-card" style="border: 1px dashed var(--blue);">
+                    <h3 style="margin-top:0; color: var(--blue); font-size:1.1rem;">⚡ AI Generator Engine</h3>
+                    <div style="display: flex; gap:10px;">
+                        <input type="text" id="ai-topic" placeholder="Topic Target">
+                        <input type="number" id="ai-count" value="5" style="width:70px;">
+                    </div>
+                    <button class="btn btn-blue" id="btn-generate-ai-test">Execute Generator Script</button>
+                </div>
+
+                <div class="content-card" id="quiz-block-space">
+                    <h3 id="quiz-title-heading" style="margin-top:0; color:var(--primary-green);">Quiz Sheet Window</h3>
+                    <div id="quiz-render-area"><p style="font-size:0.9rem; color:var(--text-muted);">Select a test above to begin.</p></div>
+                    <button class="btn btn-primary hidden"        .splash-title { font-size: 2.2rem; font-weight: 700; margin: 0; letter-spacing: 1px; }
         .spinner { border: 3px solid rgba(255,255,255,0.3); border-top: 3px solid var(--white); border-radius: 50%; width: 35px; height: 35px; animation: spin 1s linear infinite; margin-top: 30px; }
         @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
 
