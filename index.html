@@ -803,15 +803,46 @@
         document.getElementById('btn-logout').addEventListener('click', performSafeLogout);
         document.getElementById('btn-admin-logout').addEventListener('click', performSafeLogout);
 
+                // PROFILE SAVE & GOOGLE SHEET NOTIFICATION SYSTEM
         document.getElementById('btn-save-profile').addEventListener('click', async () => {
-            const name = document.getElementById('prof-name').value; const phone = document.getElementById('prof-phone').value; const college = document.getElementById('prof-college').value;
+            const name = document.getElementById('prof-name').value; 
+            const phone = document.getElementById('prof-phone').value; 
+            const college = document.getElementById('prof-college').value;
             if(!name || !phone || !college) return showToast("Identity elements required.", "error");
-            showToast("Writing synchronized profile elements...");
+            
+            showToast("Registering account and syncing data...", "success");
             try {
-                await setDoc(doc(db, "users", currentUser.uid), { name, phone, college, email: currentUser.email, profilePic: base64ProfilePicString || "", isBlocked: false, createdAt: new Date().toISOString() });
-                window.location.reload(); 
-            } catch(dbErr) { showToast("Database rules intercept.", "error"); }
+                // 1. Firebase mein data save karna
+                await setDoc(doc(db, "users", currentUser.uid), { 
+                    name, phone, college, 
+                    email: currentUser.email, 
+                    profilePic: base64ProfilePicString || "", 
+                    isBlocked: false, 
+                    createdAt: new Date().toISOString() 
+                });
+
+                // 2. Google Sheet par Notification aur Data bhejna (Aap ki Link ke sath)
+                const GOOGLE_SHEET_WEBHOOK_URL = "https://script.google.com/macros/s/AKfycbzPdCtphO51RTjc06UXu3ZwYJhRdLqk07ySX5IrkXKcoG0joS8JYGyBKHEInd4TMDmJ/exec"; 
+                
+                fetch(GOOGLE_SHEET_WEBHOOK_URL, {
+                    method: 'POST',
+                    mode: 'no-cors', // Ye lazmi hai taa ke CORS error na aaye
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ 
+                        name: name, 
+                        email: currentUser.email, 
+                        phone: phone, 
+                        college: college 
+                    })
+                }).catch(e => console.log("Google Sheet Error: ", e));
+
+                // 3. Page Reload taake dashboard khul jaye
+                setTimeout(() => { window.location.reload(); }, 1500); 
+            } catch(dbErr) { 
+                showToast("Database error.", "error"); 
+            }
         });
+
 
 
         // ------------------------------------------------------------------
