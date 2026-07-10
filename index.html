@@ -235,11 +235,18 @@
             </div>
 
             <!-- Tab Element Node: Download Packages Matrix -->
-            <div id="tab-material" class="app-tab">
+                        <div id="tab-material" class="app-tab">
                 <h2 style="color: var(--dark-green); margin-bottom: 15px;">Study Material</h2>
-                <p style="color: var(--text-muted); font-size: 0.9rem; margin-bottom: 20px;">Download direct reference packs, textbook notes and dynamic cloud files.</p>
-                <div id="materials-container"></div>
+                
+                <div style="display: flex; gap: 10px; margin-bottom: 15px; border-bottom: 2px solid #edf2f7; padding-bottom: 10px;">
+                    <button id="btn-tab-notes" style="flex:1; background:var(--primary-green); color:white; border:none; padding:10px; border-radius:8px; font-weight:bold; cursor:pointer;">📝 Smart Notes</button>
+                    <button id="btn-tab-pdfs" style="flex:1; background:#f1f5f9; color:var(--text-dark); border:none; padding:10px; border-radius:8px; font-weight:bold; cursor:pointer;">📄 PDF Files</button>
+                </div>
+
+                <div id="materials-notes-container"></div>
+                <div id="materials-pdfs-container" class="hidden"></div>
             </div>
+
 
             <!-- Tab Element Node: Dynamic Quiz Framework Evaluation Shell -->
             <div id="tab-tests" class="app-tab">
