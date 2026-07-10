@@ -1261,16 +1261,21 @@
             await updateDoc(doc(db, "comments", commentId), { adminReply: text }); fetchAdminComments(); 
         }
 
+                // RENDERING ADMIN DIRECTORY WITH NUMBERS
         function renderAdminUserDirectory(usersArr) {
             const listContainer = document.getElementById('admin-users-list');
             listContainer.innerHTML = ''; 
+            
+            // Oopar wale Total Count ko update karna
+            const countEl = document.getElementById('total-users-count');
+            if(countEl) countEl.innerText = usersArr.length;
 
             if (usersArr.length === 0) {
                 listContainer.innerHTML = "<p style='font-size:0.85rem; color:gray;'>No students found.</p>";
                 return;
             }
 
-            usersArr.forEach(u => {
+            usersArr.forEach((u, index) => {
                 let cleanPhone = u.phone ? u.phone.replace(/[^0-9]/g, '') : ""; 
                 if(cleanPhone.startsWith('0')) cleanPhone = '92' + cleanPhone.substring(1);
 
@@ -1278,6 +1283,9 @@
                 div.className = 'user-list-item';
                 div.innerHTML = `
                     <div class="user-list-info-row">
+                        <!-- Serial Number (1, 2, 3...) -->
+                        <div style="font-weight:900; font-size:1.2rem; color:var(--primary-green); width:30px;">${index + 1}.</div>
+                        
                         <div class="user-list-img" style="background-image:url(${u.profilePic || 'https://via.placeholder.com/40'})"></div>
                         <div>
                             <div style="font-weight:bold; font-size:0.9rem; color:${u.isBlocked ? 'var(--danger)' : 'var(--text-dark)'};">
@@ -1286,7 +1294,7 @@
                             <div style="font-size:0.72rem; color:gray;">${u.college} | ID: ${u.email}</div>
                         </div>
                     </div>
-                    <div style="display:flex; gap:8px; width:100%; margin-top:5px; flex-wrap: wrap;">
+                    <div style="display:flex; gap:8px; width:100%; margin-top:5px; flex-wrap: wrap; padding-left: 45px; box-sizing: border-box;">
                         <button class="btn-delete" style="flex:1; padding: 6px; background: ${u.isBlocked ? 'var(--primary-green)' : 'var(--danger)'};" onclick="toggleBlockUser('${u.id}', ${u.isBlocked || false})">
                             ${u.isBlocked ? '✅ Unblock' : '🚫 Block'}
                         </button>
@@ -1298,11 +1306,31 @@
             });
         }
 
+        // REAL-TIME DIRECTORY FETCHER (LIVE NOTIFICATION SYSTEM)
+        let isFirstLoad = true;
         async function fetchAdminDirectory() {
             fetchAdminComments(); 
-            const snap = await getDocs(collection(db, "users")); adminAllUsers = [];
-            snap.forEach(doc => { adminAllUsers.push({ id: doc.id, ...doc.data() }); }); renderAdminUserDirectory(adminAllUsers);
+            
+            // Ab Database ko live 'onSnapshot' se sunen ge (Listen karenge)
+            onSnapshot(collection(db, "users"), (snap) => {
+                let currentCount = adminAllUsers.length;
+                adminAllUsers = [];
+                
+                snap.forEach(doc => { adminAllUsers.push({ id: doc.id, ...doc.data() }); });
+                
+                // Naye aane wale users ko sab se oopar (Top) par rakhna
+                adminAllUsers.sort((a,b) => new Date(b.createdAt || 0) - new Date(a.createdAt || 0));
+                
+                renderAdminUserDirectory(adminAllUsers);
+                
+                // Naya user aane par live notification bhejna
+                if(!isFirstLoad && adminAllUsers.length > currentCount) {
+                    showToast(`🔔 New User Registered! Total Count: ${adminAllUsers.length}`, "success");
+                }
+                isFirstLoad = false;
+            });
         }
+
 
         window.viewUserFullHistory = async function(userId, userName, createdAt) {
             showToast(`Loading history for ${userName}...`, "success");
