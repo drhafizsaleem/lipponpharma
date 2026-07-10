@@ -599,10 +599,18 @@
             appId: "1:828017458601:web:ae687eea3978a7002198b8"
         };
 
+                // Sab se oopar (Script ke start mein) yeh check lagayen
         const app = initializeApp(firebaseConfig);
         const auth = getAuth(app);
         const db = getFirestore(app);
-        const provider = new GoogleAuthProvider();
+
+        // Loading Timeout Guard (Agar data na aaye to screen reset kare)
+        let loadTimer = setTimeout(() => {
+            if (document.getElementById('splash-screen').style.display !== 'none') {
+                showToast("Connection slow, retrying...", "error");
+                window.location.reload();
+            }
+        }, 10000); // 10 second ka wait
 
         // GLOBAL VARIABLES
         let GEMINI_API_KEY = "";
