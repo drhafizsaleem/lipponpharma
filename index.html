@@ -417,24 +417,52 @@
         </div>
     </div>
     
-<!-- ADMIN EDIT MODAL -->
-<div id="admin-edit-modal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.6); z-index:9999; justify-content:center; align-items:center;">
-    <div style="background:white; width:90%; max-width:500px; padding:20px; border-radius:12px; box-shadow: 0 5px 15px rgba(0,0,0,0.3);">
-        <h3 style="color:var(--dark-green); margin-top:0;">✏️ Edit Material</h3>
-        <input type="hidden" id="edit-doc-id">
-        
-        <label style="font-weight:bold; font-size:0.85rem; color: gray;">Document Title:</label>
-        <input type="text" id="edit-title" class="input-field" style="width:100%; margin-bottom:15px; box-sizing: border-box;">
-        
-        <label style="font-weight:bold; font-size:0.85rem; color: gray;">Content / PDF Link:</label>
-        <textarea id="edit-content" class="input-field" style="width:100%; height:150px; margin-bottom:15px; box-sizing: border-box; resize: vertical;"></textarea>
-        
-        <div style="display:flex; gap:10px;">
-            <button onclick="saveAdminEdit()" class="btn btn-green" style="flex:1;">💾 Update Data</button>
-            <button onclick="closeAdminEdit()" class="btn" style="flex:1; background: var(--danger); color: white;">Cancel</button>
+    <!-- 1. LECTURE EDIT MODAL -->
+    <div id="lecture-edit-modal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.6); z-index:9999; justify-content:center; align-items:center;">
+        <div style="background:white; width:90%; max-width:500px; padding:20px; border-radius:12px; box-shadow: 0 5px 15px rgba(0,0,0,0.3);">
+            <h3 style="color:var(--dark-green); margin-top:0;">✏️ Edit Lecture</h3>
+            <input type="hidden" id="edit-lecture-id">
+            <label style="font-weight:bold; font-size:0.85rem; color: gray;">Lecture Title:</label>
+            <input type="text" id="edit-lecture-title" class="input-field" style="width:100%; margin-bottom:15px; box-sizing: border-box;">
+            <label style="font-weight:bold; font-size:0.85rem; color: gray;">YouTube Video URL:</label>
+            <input type="text" id="edit-lecture-url" class="input-field" style="width:100%; margin-bottom:15px; box-sizing: border-box;">
+            <div style="display:flex; gap:10px;">
+                <button onclick="saveLectureEdit()" class="btn btn-green" style="flex:1;">💾 Update Lecture</button>
+                <button onclick="closeLectureEdit()" class="btn" style="flex:1; background: var(--danger); color: white;">Cancel</button>
+            </div>
         </div>
     </div>
-</div>
+
+    <!-- 2. MATERIAL EDIT MODAL -->
+    <div id="material-edit-modal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.6); z-index:9999; justify-content:center; align-items:center;">
+        <div style="background:white; width:90%; max-width:500px; padding:20px; border-radius:12px; box-shadow: 0 5px 15px rgba(0,0,0,0.3);">
+            <h3 style="color:var(--dark-green); margin-top:0;">✏️ Edit Material / Note</h3>
+            <input type="hidden" id="edit-material-id">
+            <label style="font-weight:bold; font-size:0.85rem; color: gray;">Document Title:</label>
+            <input type="text" id="edit-material-title" class="input-field" style="width:100%; margin-bottom:15px; box-sizing: border-box;">
+            <label style="font-weight:bold; font-size:0.85rem; color: gray;">Content or PDF Link:</label>
+            <textarea id="edit-material-content" class="input-field" style="width:100%; height:150px; margin-bottom:15px; box-sizing: border-box; resize: vertical;"></textarea>
+            <div style="display:flex; gap:10px;">
+                <button onclick="saveMaterialEdit()" class="btn btn-green" style="flex:1;">💾 Update Material</button>
+                <button onclick="closeMaterialEdit()" class="btn" style="flex:1; background: var(--danger); color: white;">Cancel</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 3. TEST EDIT MODAL -->
+    <div id="test-edit-modal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.6); z-index:9999; justify-content:center; align-items:center;">
+        <div style="background:white; width:90%; max-width:500px; padding:20px; border-radius:12px; box-shadow: 0 5px 15px rgba(0,0,0,0.3);">
+            <h3 style="color:var(--dark-green); margin-top:0;">✏️ Edit Test Name</h3>
+            <input type="hidden" id="edit-test-id">
+            <label style="font-weight:bold; font-size:0.85rem; color: gray;">Test Unit Title:</label>
+            <input type="text" id="edit-test-title" class="input-field" style="width:100%; margin-bottom:15px; box-sizing: border-box;">
+            <div style="display:flex; gap:10px;">
+                <button onclick="saveTestEdit()" class="btn btn-green" style="flex:1;">💾 Update Test Name</button>
+                <button onclick="closeTestEdit()" class="btn" style="flex:1; background: var(--danger); color: white;">Cancel</button>
+            </div>
+        </div>
+    </div>
+
     
     <!-- Core Database Modules Execution Pipeline -->
     <script type="module">
