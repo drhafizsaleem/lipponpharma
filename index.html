@@ -480,34 +480,59 @@
             }
         }
 
-        // PDF READER
+                // ----------------------------------------------------
+        // SMART NOTES AUTO-FORMATTER LOGIC
+        // ----------------------------------------------------
+        function formatSmartNoteText(text) {
+            let lines = text.split('\n');
+            let formattedHtml = '';
+            lines.forEach(line => {
+                let trimLine = line.trim();
+                if(trimLine === '') {
+                    formattedHtml += '<br>';
+                } 
+                // System khud check karega: Agar line choti hai aur aakhir mein full-stop nahi hai, to usay Heading bana dega
+                else if(trimLine.length > 0 && trimLine.length < 55 && !trimLine.endsWith('.') && !trimLine.endsWith('?') && !trimLine.endsWith(',')) {
+                    formattedHtml += `<div style="font-size: 14pt; font-weight: bold; color: var(--primary-green); margin: 15px 0 5px 0;">${trimLine}</div>`;
+                } else {
+                    // Baqi normal text 12pt mein rahega
+                    formattedHtml += `<div style="font-size: 12pt; margin-bottom: 5px; color: var(--text-dark); line-height: 1.6;">${trimLine}</div>`;
+                }
+            });
+            return formattedHtml;
+        }
+
+        // PDF READER (WITH AUTO-FORMATTING)
         window.viewComposedNote = function(matId) {
             let node = localMaterialsArrayCache.find(m => m.id === matId);
             if(node) {
                 document.getElementById('reader-title').innerText = node.title;
-                document.getElementById('reader-text').innerText = node.content;
+                // Yahan Auto-formatter lag gaya hai
+                document.getElementById('reader-text').innerHTML = formatSmartNoteText(node.content); 
                 document.getElementById('reader-modal').style.display = 'flex';
             }
         }
         window.closeReaderModal = function() { document.getElementById('reader-modal').style.display = 'none'; }
 
-        // PDF DOWNLOAD
+        // PDF DOWNLOAD (WITH AUTO-FORMATTING & NEW FOOTER)
         window.downloadComposedPDF = function(matId) {
             let node = localMaterialsArrayCache.find(m => m.id === matId);
             if(!node) return showToast("File node context dropped.", "error");
             showToast("Structuring PDF parameters. Please hold...", "success");
             
+            let formattedContent = formatSmartNoteText(node.content);
+
             let htmlTemplate = `
                 <div style="padding: 40px; font-family: sans-serif; color: #2d3748; background: #ffffff;">
                     <div style="text-align: center; border-bottom: 3px solid #069C54; padding-bottom: 15px; margin-bottom: 30px;">
                         <h1 style="color: #047840; margin: 0; font-size: 26px;">${node.title}</h1>
                         <p style="color: #718096; margin: 5px 0 0 0; font-size: 13px;">Official Reference Notes Summary Node</p>
                     </div>
-                    <div style="font-size: 15px; line-height: 1.8; white-space: pre-wrap; text-align: justify;">
-                        ${node.content}
+                    <div style="text-align: justify;">
+                        ${formattedContent}
                     </div>
                     <div style="margin-top: 50px; text-align: center; border-top: 1px solid #e2e8f0; padding-top: 20px;">
-                        <p style="color: #069C54; font-weight: bold; margin: 0; font-size:16px;">Powered by LippinPharma App by Arfi</p>
+                        <p style="font-size: 14pt; font-weight: bold; color: #069C54; margin: 0;">Composed by Arfi</p>
                     </div>
                 </div>`;
             
@@ -524,6 +549,70 @@
                 targetSandbox.style.display = 'none'; showToast("PDF File Download Successful!", "success");
             });
         }
+
+        // ----------------------------------------------------
+        // MATERIAL TABS SWITCHING LOGIC
+        // ----------------------------------------------------
+        if(document.getElementById('btn-tab-notes')) {
+            document.getElementById('btn-tab-notes').addEventListener('click', () => {
+                document.getElementById('materials-notes-container').classList.remove('hidden');
+                document.getElementById('materials-pdfs-container').classList.add('hidden');
+                document.getElementById('btn-tab-notes').style.background = 'var(--primary-green)';
+                document.getElementById('btn-tab-notes').style.color = 'white';
+                document.getElementById('btn-tab-pdfs').style.background = '#f1f5f9';
+                document.getElementById('btn-tab-pdfs').style.color = 'var(--text-dark)';
+            });
+            document.getElementById('btn-tab-pdfs').addEventListener('click', () => {
+                document.getElementById('materials-pdfs-container').classList.remove('hidden');
+                document.getElementById('materials-notes-container').classList.add('hidden');
+                document.getElementById('btn-tab-pdfs').style.background = 'var(--primary-green)';
+                document.getElementById('btn-tab-pdfs').style.color = 'white';
+                document.getElementById('btn-tab-notes').style.background = '#f1f5f9';
+                document.getElementById('btn-tab-notes').style.color = 'var(--text-dark)';
+            });
+        }
+
+        // ----------------------------------------------------
+        // FETCH MATERIALS (SPLIT INTO NOTES AND PDFS)
+        // ----------------------------------------------------
+        async function fetchMaterials() {
+            const snap = await getDocs(collection(db, "materials"));
+            localMaterialsArrayCache = []; 
+            let notesHtml = '';
+            let pdfsHtml = '';
+            
+            snap.forEach(doc => {
+                let item = doc.data(); 
+                localMaterialsArrayCache.push({ id: doc.id, ...item });
+                let isComposed = item.type === 'composed';
+                
+                if(isComposed) {
+                    notesHtml += `
+                    <div class="content-card" style="display:flex; justify-content:space-between; align-items:center;">
+                        <div>
+                            <div style="font-weight:600; color:var(--text-dark);">📝 ${item.title}</div>
+                            <div style="font-size:0.75rem; color:var(--text-muted);">Smart Format Topic Note</div>
+                        </div>
+                        <div style="display:flex; gap:5px;">
+                            <button onclick="viewComposedNote('${doc.id}')" style="background:var(--blue); color:white; border:none; padding:8px 12px; border-radius:6px; cursor:pointer;">👁️ View</button>
+                            <button onclick="downloadComposedPDF('${doc.id}')" style="background:var(--primary-green); color:white; border:none; padding:8px 12px; border-radius:6px; cursor:pointer;">⬇️ PDF</button>
+                        </div>
+                    </div>`;
+                } else {
+                    pdfsHtml += `
+                    <div class="content-card" style="display:flex; justify-content:space-between; align-items:center;">
+                        <div>
+                            <div style="font-weight:600; color:var(--text-dark);">📄 ${item.title}</div>
+                            <div style="font-size:0.75rem; color:var(--text-muted);">Admin File Link</div>
+                        </div>
+                        <a href="${item.fileUrl}" target="_blank" style="background:var(--primary-green); color:white; text-decoration:none; padding:8px 14px; border-radius:6px; display:inline-block;">Launch PDF</a>
+                    </div>`;
+                }
+            });
+            document.getElementById('materials-notes-container').innerHTML = notesHtml || "<p style='font-size:0.9rem; color:gray;'>No smart notes available.</p>";
+            document.getElementById('materials-pdfs-container').innerHTML = pdfsHtml || "<p style='font-size:0.9rem; color:gray;'>No PDF files available.</p>";
+        }
+
 
         // VIEW RESULT CARD MODAL
         window.viewResultCard = function(historyId) {
@@ -1024,36 +1113,6 @@
                 } else { showToast("Failed to extract structural JSON.", "error"); }
             } catch (err) { showToast("Network error or invalid API token format.", "error"); }
         });
-
-
-        // ----------------------------------------------------
-        // PDF VIEW & DOWNLOAD MECHANICS (FIXED BASE64 ENCODING)
-        // ----------------------------------------------------
-        async function fetchMaterials() {
-            const snap = await getDocs(collection(db, "materials"));
-            localMaterialsArrayCache = []; let html = '';
-            snap.forEach(doc => {
-                let item = doc.data(); 
-                localMaterialsArrayCache.push({ id: doc.id, ...item });
-                let isComposed = item.type === 'composed';
-                let actionBtn = isComposed ? 
-                    `<div style="display:flex; gap:5px;">
-                        <button onclick="viewComposedNote('${doc.id}')" style="background:var(--blue); color:white; border:none; padding:8px 12px; border-radius:6px; cursor:pointer;">👁️ View</button>
-                        <button onclick="downloadComposedPDF('${doc.id}')" style="background:var(--primary-green); color:white; border:none; padding:8px 12px; border-radius:6px; cursor:pointer;">⬇️ PDF</button>
-                    </div>` :
-                    `<a href="${item.fileUrl}" target="_blank" style="background:var(--primary-green); color:white; text-decoration:none; padding:8px 14px; border-radius:6px; display:inline-block;">Launch Link</a>`;
-                
-                html += `
-                <div class="content-card" style="display:flex; justify-content:space-between; align-items:center;">
-                    <div>
-                        <div style="font-weight:600; color:var(--text-dark);">${isComposed ? '📝' : '📄'} ${item.title}</div>
-                        <div style="font-size:0.75rem; color:var(--text-muted);">${isComposed ? 'Smart Format Topic Note' : 'Admin File Link'}</div>
-                    </div>
-                    ${actionBtn}
-                </div>`;
-            });
-            document.getElementById('materials-container').innerHTML = html || "<p style='font-size:0.9rem; color:gray;'>Empty references catalog.</p>";
-        }
 
         // Profile Update Fix
         document.getElementById('btn-edit-profile-trigger').addEventListener('click', () => {
