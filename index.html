@@ -882,9 +882,57 @@
                 currentUserData.name = newName; currentUserData.phone = newPhone; currentUserData.college = newCollege;
                 updateProfileUI(currentUserData, currentUser.email);
                 document.getElementById('edit-profile-form').classList.add('hidden');
-                document.getElementById('btn-edit-profile-trigger').classList.remove('hidden');
-            } catch (error) { showToast(`Update failed: ${error.message}`, "error"); }
+                        // PROFILE EDIT: Show Form Button
+        document.getElementById('btn-edit-profile-trigger').addEventListener('click', () => {
+            if(!currentUserData) return showToast("Loading data, please wait...", "error");
+            
+            // Form ko dikhana hai aur Edit button ko chhupana hai
+            document.getElementById('edit-profile-form').classList.remove('hidden'); 
+            document.getElementById('btn-edit-profile-trigger').classList.add('hidden');
+            
+            // Pehle se mojood data dabbon (inputs) mein daalna hai
+            document.getElementById('edit-prof-name').value = currentUserData.name || ''; 
+            document.getElementById('edit-prof-phone').value = currentUserData.phone || ''; 
+            document.getElementById('edit-prof-college').value = currentUserData.college || '';
         });
+
+        // PROFILE EDIT: Cancel Button
+        document.getElementById('btn-cancel-edit').addEventListener('click', () => {
+            // Form ko chhupana hai aur Edit button wapis lana hai
+            document.getElementById('edit-profile-form').classList.add('hidden'); 
+            document.getElementById('btn-edit-profile-trigger').classList.remove('hidden');
+        });
+
+        // PROFILE EDIT: Save System Updates Button
+        document.getElementById('btn-update-profile').addEventListener('click', async () => {
+            const n = document.getElementById('edit-prof-name').value; 
+            const p = document.getElementById('edit-prof-phone').value; 
+            const c = document.getElementById('edit-prof-college').value;
+            
+            if(!n || !p || !c) return showToast("All fields are required.", "error"); 
+            
+            showToast("Updating profile details...", "success");
+            
+            try {
+                // Database mein update karega
+                await updateDoc(doc(db, "users", currentUser.uid), { name: n, phone: p, college: c });
+                
+                // Screen par foran naya data dikhayega
+                currentUserData.name = n; 
+                currentUserData.phone = p; 
+                currentUserData.college = c; 
+                updateProfileUI(currentUserData, currentUser.email);
+                
+                // Form band kar ke wapis Edit button layega
+                document.getElementById('edit-profile-form').classList.add('hidden'); 
+                document.getElementById('btn-edit-profile-trigger').classList.remove('hidden');
+                
+                showToast("Profile Updated Successfully!", "success");
+            } catch (error) { 
+                showToast("Failed to update profile.", "error"); 
+            }
+        });
+
 
                 async function fetchLectures() {
             const snap = await getDocs(collection(db, "lectures")); 
