@@ -1605,14 +1605,18 @@
             document.getElementById('admin-lec-title').value = ''; document.getElementById('admin-lec-link').value = ''; fetchLectures(); fetchAdminManageContent(); fetchRecentActivityFeed(); btn.disabled = false;
         });
 
-        document.getElementById('btn-add-material').addEventListener('click', async (e) => {
-            let btn = e.target; let title = document.getElementById('admin-mat-title').value; let linkInput = document.getElementById('admin-mat-link').value;
+                document.getElementById('btn-add-material').addEventListener('click', async (e) => {
+            let btn = e.target; 
+            let ch = document.getElementById('admin-mat-chapter').value.trim() || 'General Files';
+            let title = document.getElementById('admin-mat-title').value; 
+            let linkInput = document.getElementById('admin-mat-link').value;
             if(!title || !linkInput) return showToast("Provide title and link.", "error");
             btn.disabled = true;
-            await addDoc(collection(db, "materials"), { title: title, fileUrl: linkInput, fileName: "External Link", type: 'file', timestamp: new Date().toISOString() });
+            await addDoc(collection(db, "materials"), { chapter: ch, title: title, fileUrl: linkInput, fileName: "External Link", type: 'file', timestamp: new Date().toISOString() });
             showToast("Material synced live.");
-            document.getElementById('admin-mat-title').value = ''; document.getElementById('admin-mat-link').value = ''; fetchMaterials(); fetchAdminManageContent(); fetchRecentActivityFeed(); btn.disabled = false;
+            document.getElementById('admin-mat-chapter').value = ''; document.getElementById('admin-mat-title').value = ''; document.getElementById('admin-mat-link').value = ''; fetchMaterials(); fetchAdminManageContent(); fetchRecentActivityFeed(); btn.disabled = false;
         });
+
 
                 async function fetchAdminManageContent() {
             try {
