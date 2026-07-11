@@ -1575,12 +1575,17 @@
             document.getElementById('lectures-container').innerHTML = html || "<p style='font-size:0.8rem; color:gray;'>No matching lectures found.</p>";
         });
 
-        // ----------------------------------------------------
+                // ----------------------------------------------------
         // ADMIN CONTROLS (BULK MCQs & NOTES)
         // ----------------------------------------------------
         document.getElementById('btn-add-bulk-mcq').addEventListener('click', async (e) => {
-            let btn = e.target; let topic = document.getElementById('admin-bulk-topic').value; let textData = document.getElementById('admin-bulk-text').value;
-            if(!topic || !textData) return showToast("All parameters required.", "error");
+            let btn = e.target; 
+            let topicRaw = document.getElementById('admin-bulk-topic').value.trim(); 
+            let textData = document.getElementById('admin-bulk-text').value;
+            let chapterVal = document.getElementById('admin-bulk-chapter').value.trim() || 'General Tests';
+            let testNo = document.getElementById('admin-bulk-testno').value.trim();
+
+            if(!topicRaw || !textData || !testNo) return showToast("Topic, Test No. and MCQs are required.", "error");
             
             btn.disabled = true; showToast("Running bulk parser...", "success");
             
@@ -1596,9 +1601,7 @@
                     
                     lines.forEach(line => {
                         let lUpper = line.toUpperCase();
-                        if (lUpper.startsWith('QUESTION:')) {
-                            qText = line.replace(/Question:/i, '').trim();
-                        }
+                        if (lUpper.startsWith('QUESTION:')) qText = line.replace(/Question:/i, '').trim();
                         else if (lUpper.startsWith('A)') || lUpper.startsWith('A:')) o1 = line.substring(2).trim();
                         else if (lUpper.startsWith('B)') || lUpper.startsWith('B:')) o2 = line.substring(2).trim();
                         else if (lUpper.startsWith('C)') || lUpper.startsWith('C:')) o3 = line.substring(2).trim();
@@ -1617,20 +1620,23 @@
 
                 if(parsedQs.length === 0) { btn.disabled = false; return showToast("Format broke. Check structure.", "error"); }
 
-                let docRef = doc(db, "manual_tests", topic.trim()); let existingDoc = await getDoc(docRef);
+                // SYSTEM KHUD TOPIC AUR TEST NO. KO JORH KAR EK NAAM BANA DE GA (Merge Rule)
+                let finalTopicName = `${topicRaw} (Test ${testNo})`;
+                let docRef = doc(db, "manual_tests", finalTopicName); 
+                let existingDoc = await getDoc(docRef);
+                
+                // Agar same Topic aur same Test no pehle se hai, toh naye questions purane mein merge hongy
                 let currentQs = existingDoc.exists() ? existingDoc.data().questions : [];
                 
-                        // Pura function dhoond kar is tarah save karna hai (Sirf chapter wali line add ki hai):
-        let chapterVal = document.getElementById('admin-bulk-chapter').value.trim() || 'General Tests';
-        // ... (purani parsing logic wesi rahegi) ...
-        // Save karte waqt ye change karein:
-        await setDoc(docRef, { topic: topic.trim(), chapter: chapterVal, questions: [...currentQs, ...parsedQs], updatedAt: new Date().toISOString() });
+                await setDoc(docRef, { topic: finalTopicName, chapter: chapterVal, questions: [...currentQs, ...parsedQs], updatedAt: new Date().toISOString() });
 
                 showToast(`Pushed ${parsedQs.length} MCQs!`, "success");
-                document.getElementById('admin-bulk-text').value = ''; fetchManualMCQs(); fetchAdminManageContent(); fetchRecentActivityFeed();
+                document.getElementById('admin-bulk-text').value = ''; 
+                fetchManualMCQs(); fetchAdminManageContent(); fetchRecentActivityFeed();
             } catch(error) { showToast("Error setting database blocks.", "error"); }
             btn.disabled = false;
         });
+
 
                 document.getElementById('btn-compose-note').addEventListener('click', async (e) => {
             let btn = e.target; 
