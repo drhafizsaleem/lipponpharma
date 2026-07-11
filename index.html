@@ -1575,17 +1575,21 @@
             btn.disabled = false;
         });
 
-        document.getElementById('btn-compose-note').addEventListener('click', async (e) => {
-            let btn = e.target; let t = document.getElementById('admin-note-title').value; let c = document.getElementById('admin-note-content').value;
+                document.getElementById('btn-compose-note').addEventListener('click', async (e) => {
+            let btn = e.target; 
+            let ch = document.getElementById('admin-note-chapter').value.trim() || 'General Notes';
+            let t = document.getElementById('admin-note-title').value; 
+            let c = document.getElementById('admin-note-content').value;
             if(!t || !c) return showToast("Missing content.", "error");
             btn.disabled = true; showToast("Publishing Note...");
             try {
-                await addDoc(collection(db, "materials"), { title: t, content: c, type: 'composed', timestamp: new Date().toISOString() });
+                await addDoc(collection(db, "materials"), { chapter: ch, title: t, content: c, type: 'composed', timestamp: new Date().toISOString() });
                 showToast("Note published.", "success");
-                document.getElementById('admin-note-title').value = ''; document.getElementById('admin-note-content').value = '';
+                document.getElementById('admin-note-chapter').value = ''; document.getElementById('admin-note-title').value = ''; document.getElementById('admin-note-content').value = '';
                 fetchMaterials(); fetchAdminManageContent(); fetchRecentActivityFeed();
             } catch(err) { } btn.disabled = false;
         });
+
 
         document.getElementById('btn-save-gemini').addEventListener('click', async () => {
             let key = document.getElementById('admin-gemini-input').value; if(!key) return;
