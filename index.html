@@ -646,46 +646,73 @@
             });
         }
 
-        // ----------------------------------------------------
-        // FETCH MATERIALS (SPLIT INTO NOTES AND PDFS)
-        // ----------------------------------------------------
+                // ========================================================
+        // CHAPTER-WISE RENDER LOGIC FOR MATERIALS (NOTES & PDFS)
+        // ========================================================
         async function fetchMaterials() {
             const snap = await getDocs(collection(db, "materials"));
             localMaterialsArrayCache = []; 
-            let notesHtml = '';
-            let pdfsHtml = '';
+            snap.forEach(doc => { localMaterialsArrayCache.push({ id: doc.id, ...doc.data() }); });
+            renderMaterialsUI(localMaterialsArrayCache);
+        }
+
+        function renderMaterialsUI(dataArray) {
+            let notesGroups = {}; let pdfsGroups = {};
             
-            snap.forEach(doc => {
-                let item = doc.data(); 
-                localMaterialsArrayCache.push({ id: doc.id, ...item });
-                let isComposed = item.type === 'composed';
-                
-                if(isComposed) {
-                    notesHtml += `
-                    <div class="content-card" style="display:flex; justify-content:space-between; align-items:center;">
-                        <div>
-                            <div style="font-weight:600; color:var(--text-dark);">📝 ${item.title}</div>
-                            <div style="font-size:0.75rem; color:var(--text-muted);">Smart Format Topic Note</div>
-                        </div>
-                        <div style="display:flex; gap:5px;">
-                            <button onclick="viewComposedNote('${doc.id}')" style="background:var(--blue); color:white; border:none; padding:8px 12px; border-radius:6px; cursor:pointer;">👁️ View</button>
-                            <button onclick="downloadComposedPDF('${doc.id}')" style="background:var(--primary-green); color:white; border:none; padding:8px 12px; border-radius:6px; cursor:pointer;">⬇️ PDF</button>
-                        </div>
-                    </div>`;
+            dataArray.forEach(item => {
+                let chap = item.chapter || "General Resources";
+                if(item.type === 'composed') {
+                    if(!notesGroups[chap]) notesGroups[chap] = [];
+                    notesGroups[chap].push(item);
                 } else {
-                    pdfsHtml += `
-                    <div class="content-card" style="display:flex; justify-content:space-between; align-items:center;">
-                        <div>
-                            <div style="font-weight:600; color:var(--text-dark);">📄 ${item.title}</div>
-                            <div style="font-size:0.75rem; color:var(--text-muted);">Admin File Link</div>
-                        </div>
-                        <a href="${item.fileUrl}" target="_blank" style="background:var(--primary-green); color:white; text-decoration:none; padding:8px 14px; border-radius:6px; display:inline-block;">Launch PDF</a>
-                    </div>`;
+                    if(!pdfsGroups[chap]) pdfsGroups[chap] = [];
+                    pdfsGroups[chap].push(item);
                 }
             });
-            document.getElementById('materials-notes-container').innerHTML = notesHtml || "<p style='font-size:0.9rem; color:gray;'>No smart notes available.</p>";
-            document.getElementById('materials-pdfs-container').innerHTML = pdfsHtml || "<p style='font-size:0.9rem; color:gray;'>No PDF files available.</p>";
+
+            // NOTES FOLDERS HTML
+            let notesHtml = '';
+            for(let chap in notesGroups) {
+                notesHtml += `<div class="chapter-header" onclick="this.nextElementSibling.classList.toggle('active')">📚 ${chap} <span style="font-size:0.8rem;">▼</span></div><div class="chapter-content">`;
+                notesGroups[chap].forEach(item => {
+                    notesHtml += `
+                    <div class="content-card" style="display:flex; justify-content:space-between; align-items:center;">
+                        <div><div style="font-weight:600; color:var(--text-dark);">📝 ${item.title}</div><div style="font-size:0.75rem; color:var(--text-muted);">Smart Format Topic Note</div></div>
+                        <div style="display:flex; gap:5px;">
+                            <button onclick="viewComposedNote('${item.id}')" style="background:var(--blue); color:white; border:none; padding:8px 12px; border-radius:6px; cursor:pointer;">👁️</button>
+                            <button onclick="downloadComposedPDF('${item.id}')" style="background:var(--primary-green); color:white; border:none; padding:8px 12px; border-radius:6px; cursor:pointer;">⬇️</button>
+                        </div>
+                    </div>`;
+                });
+                notesHtml += `</div>`;
+            }
+
+            // PDF FOLDERS HTML
+            let pdfsHtml = '';
+            for(let chap in pdfsGroups) {
+                pdfsHtml += `<div class="chapter-header" onclick="this.nextElementSibling.classList.toggle('active')">📂 ${chap} <span style="font-size:0.8rem;">▼</span></div><div class="chapter-content">`;
+                pdfsGroups[chap].forEach(item => {
+                    pdfsHtml += `
+                    <div class="content-card" style="display:flex; justify-content:space-between; align-items:center;">
+                        <div><div style="font-weight:600; color:var(--text-dark);">📄 ${item.title}</div><div style="font-size:0.75rem; color:var(--text-muted);">Admin File Link</div></div>
+                        <a href="${item.fileUrl}" target="_blank" style="background:var(--primary-green); color:white; text-decoration:none; padding:8px 14px; border-radius:6px;">Launch</a>
+                    </div>`;
+                });
+                pdfsHtml += `</div>`;
+            }
+            
+            document.getElementById('materials-notes-container').innerHTML = notesHtml || "<p style='font-size:0.9rem; color:gray;'>No data available.</p>";
+            document.getElementById('materials-pdfs-container').innerHTML = pdfsHtml || "<p style='font-size:0.9rem; color:gray;'>No PDF available.</p>";
         }
+
+        document.getElementById('search-materials')?.addEventListener('input', (e) => {
+            let key = e.target.value.toLowerCase(); 
+            let matches = localMaterialsArrayCache.filter(m => (m.title && m.title.toLowerCase().includes(key)) || (m.chapter && m.chapter.toLowerCase().includes(key))); 
+            renderMaterialsUI(matches);
+            // Search karne par automatically saare folders open rakhna
+            if(key.length > 0) document.querySelectorAll('.chapter-content').forEach(el => el.classList.add('active'));
+        });
+
 
 
         // VIEW RESULT CARD MODAL
