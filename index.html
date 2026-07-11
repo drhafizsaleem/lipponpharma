@@ -66,6 +66,12 @@
 
         /* Master Application Layout Viewports */
         .main-content { flex-grow: 1; padding: 20px; overflow-y: auto; height: calc(100vh - 75px); box-sizing: border-box; }
+
+                /* CHAPTER FOLDERS STYLING */
+        .chapter-header { background: var(--primary-green); color: white; padding: 12px 15px; border-radius: 8px; font-weight: bold; cursor: pointer; margin-bottom: 5px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 2px 5px rgba(0,0,0,0.1); transition: 0.3s; }
+        .chapter-header:hover { background: var(--dark-green); }
+        .chapter-content { display: none; padding: 15px 10px; background: #f8fafc; border-left: 4px solid var(--primary-green); margin-bottom: 15px; border-radius: 0 0 8px 8px; animation: fadeIn 0.3s ease; }
+        .chapter-content.active { display: block; }
         
         /* Bottom Tab Nav Bar */
         .nav-bar { background-color: var(--white); display: flex; justify-content: space-around; padding: 12px 10px; box-shadow: 0 -4px 20px rgba(0,0,0,0.05); z-index: 50; position: fixed; bottom: 0; width: 100%; border-top: 1px solid #edf2f7; box-sizing: border-box;}
